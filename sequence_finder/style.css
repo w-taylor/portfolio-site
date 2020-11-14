@@ -1,0 +1,7 @@
+.output-box{
+    visibility: hidden;
+  }
+
+.targeted{
+    background-color: red;
+}
