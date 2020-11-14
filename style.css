@@ -1,0 +1,9 @@
+html {
+    background-color: black;
+    color: white;
+}
+
+.projects {
+    display:grid;
+    grid-template-columns: auto auto auto;
+}
