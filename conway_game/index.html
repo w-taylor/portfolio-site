@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Conway's Game of Life</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+        
+    </head>
+    <body>
+        <div class="main-body">
+        <h1>Conway's <em>Game of Life</em></h1>
+        <div class="game">
+        <div class="grid"></div>
+        <div class="start-button button">Start</div>
+        <div class="reset-button button">Reset</div>
+        </div>
+        <h2>Rules</h2>
+        <p>Each square in the grid represents an empty cell. Click on empty cells to breath life into them. Press the Start button to allow time to pass. 
+            As time passes, each cell will live or die according to their interaction with the eight neighboring cells directly adjacent to them: </p>
+        <ul>
+            <li>A living cell will die due to underpopulation if it has less than two living neighbors</li>
+            <li>A living cell will die due to overpopulation if it has more than three living neighbors</li>
+            <li>A living cell will survive if it has two or three living neighbors</li>
+            <li>An empty square will become a live cell due to reproduction if it has exactly three living neighbors</li>
+        </ul>
+        <p>In this implementation, the area beyond the grid is desolate and cannot support life even if it has three neighbors.</p>
+        <h2>Patterns</h2>
+        <p>Over the years, a number of interesting starting patterns have been discovered. Below are some examples, but many more exist. Try them out or come up with some of your own!</p>
+        <img src="glider.png">
+        <h3>Glider</h3>
+        <p>Perhaps the most famous pattern in the game. If free from obstruction, it will crawl across the screen infinitely. The glider is the simplest example of a "spaceship" pattern; much larger and more complicated examples exist.</p>
+        <img src="blinker.png">
+        <h3>Blinker</h3>
+        <p>A simple pattern that switches between a horizontal and a vertical line. The blinker is a simple example of an "oscillator" pattern that will remain stationary and endlessly loop through a sequence</p>
+        <img src="block.png">
+        <h3>Block</h3>
+        <p>An example of a stable "still life" pattern that will remain unchanged between generations.</p>
+        </div>
+    </body>
+</html>

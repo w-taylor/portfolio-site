@@ -1,0 +1,60 @@
+.alive-cell {
+    background-color: black;
+}
+
+.dead-cell {
+    background-color: white;
+}
+
+[class*="cell"] {
+    height: .75em;
+    width: .75em;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+    display: inline-block;
+    margin-left: -1px;
+}
+
+.row {
+    margin-top: -7px;
+
+}
+
+.button {
+    font-size: 2em; 
+    border: 1px solid black;
+    display: inline;
+}
+
+.main-body {
+    width: 50em;
+    margin: auto;
+}
+
+body {
+    background-color: #008060 ;
+    font-family: monospace;
+    color: #99ffe7;
+}
+
+h1 {
+    font-size: 3.5em;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+.game {
+    text-align: center;
+}
+
+img {
+    height: 4em;
+}
