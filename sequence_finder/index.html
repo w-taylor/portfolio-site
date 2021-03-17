@@ -4,43 +4,79 @@
         <title>DNA Sequence Finder</title>
         <meta charset="utf-8">
         <link rel="stylesheet" href="style.css">
-        <script src="script.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@800&display=swap" rel="stylesheet"> 
+        <script src="script.js"></script>
     </head>
     <body>
-        <h1>DNA Sequence Finder</h1>
-        <p>Enter DNA sequence to search through in the 'template' field. Enter sequence you want to look for in the 'target' field. Click 'find' button to get results.
-        Use 'N' for a space that will match any character. Example: CNG will match CAG, CGG, CCG, and CTG. </p>
 
-        <form>
-            <input type="checkbox" id="visual-check">
-            <label for="visual-check">Visual Output</label>
-            <h2>Template:</h2>
-            <textarea class="dna-template" rows="4" cols="50"></textarea>
-            <h2>Target:</h2>
-            <textarea class="look-for" rows="4" cols="50"></textarea>
-            <br>
-            <button type="button" class="find-btn">Find</button>
-        </form>
+        <div class="vert-bar"></div>
 
-        <div class="output-box">
-            <h3>Output:</h3>
-            <table>
-                <tr>
-                  <th>Target</th>
-                  <th>Total in Template</th>
-                  <th>Total / Template Length</th>
-                  <th>Indices of Occurrences</th>
-                </tr>
-                <tr>
-                  <td class='table-target'></td>
-                  <td class='table-tot'></td>
-                  <td class='table-ratio'></td>
-                  <td class='table-ind'></td>
-                </tr>
-            </table>
-            <div class="template-vis"></div>
+        <nav>
+            <p>wctaylor.xyz</p>
+            <div class="nav-right">
+                <p>About</p>
+                <p>Projects</p>
+                <p>Contact</p>
+            </div>
+        </nav>
+
+        <div class="rest">
+            
+            <div class="spacer"></div>
+
+            
+            <div class="horiz-bar">
+                <h1>DNA Sequence Finder</h1>
+            </div>
+            <div class="content">
+                <p>Enter DNA sequence to search through in the 'template' field.</p>
+                
+                <p>Enter sequence you want to look for in the 'target' field.</p> 
+                
+                <p>Click 'find' button to get results.</p>
+                
+                <p>Use 'N' for a space in your target that will match any character. Example: CNG will match CAG, CGG, CCG, and CTG.</p>
+
+                <p>'U' is also accepted if you want to search an RNA template.</p>
+
+                <p>Need help finding a template? Search for a gene in the <a href="https://www.ncbi.nlm.nih.gov/nuccore">NIH nucleotide database</a> and paste your FASTA sequence here.</p>
+
+                <form>
+                    <input type="checkbox" id="visual-check">
+                    <label for="visual-check">Visual Output</label>
+                    <h2>Template:</h2>
+                    <textarea class="dna-template"></textarea>
+                    <h2>Target:</h2>
+                    <textarea class="look-for"></textarea>
+                    <br>
+                    <button type="button" class="find-btn">Find</button>
+                    <h2 class="bad-input">Error: make sure to only use A, T, C, G, U, or N</h2>
+                </form>
+
+                <div class="output-box">
+                    <h2>Output:</h2><table>
+                        <tr>
+                            <th>Target</th>
+                            <th>Total in Template</th>
+                            <th>Total / Template Length</th>
+                            <th>Indices of Occurrences</th>
+                        </tr>
+                        <tr>
+                            <td class='table-target'></td>
+                            <td class='table-tot'></td>
+                            <td class='table-ratio'></td>
+                            <td class='table-ind'></td>
+                        </tr>
+                    </table>
+                    <div class="template-vis"></div>
+                </div>
+            </div>
         </div>
+
+
 
     </body>
 </html>
