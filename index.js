@@ -12,5 +12,13 @@ app.get('/', function(req,res){
 	res.sendFile(__dirname+"/public/"+"index.html");
 });
 
+app.get('/conway', function(req,res){
+	res.sendFile(__dirname+"/public/conway_game/"+"index.html");
+});
+
+app.get('/sequence', function(req,res){
+	res.sendFile(__dirname+"/public/sequence_finder/"+"index.html");
+});
+
 
 app.listen(80);
