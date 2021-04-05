@@ -70,6 +70,10 @@ h3 {
     border-radius: .5rem;
 }
 
+a {
+    text-decoration: none;
+}
+
 .proj-desc{
     padding: 0 0.5rem;
     height: 16rem;
