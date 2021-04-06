@@ -7,8 +7,8 @@
 }
 
 [class*="cell"] {
-    height: .75em;
-    width: .75em;
+    height: 1.75em;
+    width: 1.75em;
     border: 1px;
     border-color: black;
     border-style: solid;
@@ -25,17 +25,24 @@
     font-size: 2em; 
     border: 1px solid black;
     display: inline;
+    padding: 1px 20px;
+    cursor: pointer;
 }
 
 .main-body {
     width: 50em;
     margin: auto;
+    background-color: #8bff56 ;
+    padding: 5rem;
 }
 
 body {
-    background-color: #008060 ;
-    font-family: monospace;
-    color: #99ffe7;
+    background-image: url(leaves2.jpg);
+    font-family: 'Dela Gothic One', cursive;
+    color: #070707;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
 }
 
 h1 {
