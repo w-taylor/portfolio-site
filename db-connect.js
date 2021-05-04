@@ -19,6 +19,7 @@ CREATE TABLE users (
 
 client.query(query, (err, res) => {
     if (err) {
+	console.log('Failed...');
         console.error(err);
         return;
     }
