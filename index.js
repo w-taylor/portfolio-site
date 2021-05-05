@@ -20,5 +20,9 @@ app.get('/sequence', function(req,res){
 	res.sendFile(__dirname+"/public/sequence_finder/"+"index.html");
 });
 
+app.get('/wall', function(req,res){
+	res.sendFile(__dirname+"/public/the_wall/"+"index.html");
+});
+
 
 app.listen(80);

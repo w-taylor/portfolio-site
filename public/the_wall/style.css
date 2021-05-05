@@ -1,0 +1,19 @@
+
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    width: 70%;
+    margin: auto;
+}
+
+.new-entry {
+    width: 100%;
+    height: 10rem;
+}
+
+.tags {
+    width: 25%;
+    height: 1.5rem;
+}
