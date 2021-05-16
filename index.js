@@ -1,6 +1,7 @@
-let express = require('express');
-let app = express();
-let bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const { addRow } = require('./add-row.js'); 
 
 app.use(express.static('public'));
 
@@ -30,6 +31,9 @@ app.get('/wall', function(req,res){
 
 app.post('/wall', function(req,res){
 	console.log("posted");
+	let d = new Date();
+	let n = d.getTime();
+	addRow(n,req.body.newpost);
 	console.log(req.body.newpost);
 });
 
