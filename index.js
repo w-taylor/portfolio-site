@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const { addRow } = require('./add-row.js'); 
+const { getPosts } = require('./get-posts.js');
 
 app.use(express.static('public'));
 
@@ -37,5 +38,9 @@ app.post('/wall', function(req,res){
 	console.log(req.body.newpost);
 });
 
+app.get('/wall/main', function(req,res){
+	getPosts();
+});
 
-app.listen(80);
+
+app.listen(1024);

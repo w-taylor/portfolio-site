@@ -12,3 +12,5 @@ function dbtest() {
 module.exports = {
 	dbtest
 };
+
+dbtest();

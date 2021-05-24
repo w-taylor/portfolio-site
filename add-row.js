@@ -1,7 +1,7 @@
-function addRow(postBody,date) {
+function addRow(date,postBody) {
 	const { Pool } = require('pg');
     const query = {
-        text: 'INSERT INTO posts(date,postBody) VALUES($1,$2)',
+        text: 'INSERT INTO testtwo(age,pbody) VALUES($1,$2) RETURNING *',
         values: [date, postBody],
     };
 
