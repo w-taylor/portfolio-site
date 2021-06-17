@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendPost() {
         const data = {"newpost":newpost.value};
 
-        fetch('wall', {
+        fetch('wall/new_post', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

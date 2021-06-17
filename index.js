@@ -26,11 +26,11 @@ app.get('/sequence', function(req,res){
 	res.sendFile(__dirname+"/public/sequence_finder/"+"index.html");
 });
 
-app.get('/wall', function(req,res){
-	res.sendFile(__dirname+"/public/the_wall/"+"index.html");
+app.get('/wall/new_post', function(req,res){
+	res.sendFile(__dirname+"/public/the_wall/"+"new_post.html");
 });
 
-app.post('/wall', function(req,res){
+app.post('/wall/new_post', function(req,res){
 	console.log("posted");
 	let d = new Date();
 	let n = d.getTime();
@@ -39,7 +39,7 @@ app.post('/wall', function(req,res){
 });
 
 app.get('/wall/main', function(req,res){
-	getPosts();
+	res.sendFile(__dirname+"/public/the_wall/"+"main_page.html");
 });
 
 
