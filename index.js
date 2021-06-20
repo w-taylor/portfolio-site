@@ -42,5 +42,23 @@ app.get('/wall/main', function(req,res){
 	res.sendFile(__dirname+"/public/the_wall/"+"main_page.html");
 });
 
+app.get('/wall/get_posts', function(req,res){
+	console.log('req received');
+	const { Pool } = require('pg');
+	const pool = new Pool();
+	const query = {
+		name: 'get-posts',
+		text: 'SELECT pbody FROM testtwo'
+	};
+	
+	pool.query(query, (err, resp) => {
+		if (err) {
+			console.log(err.stack)
+		} else {
+			res.send(resp.rows)
+		}
+	});
+});
+
 
 app.listen(1024);
