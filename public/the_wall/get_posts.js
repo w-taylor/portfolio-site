@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let toAdd = "";
         for (let x = 0; x < posts.length; x++) {
             toAdd += '<p class="post-body">';
+            posts[x] = posts[x].replace("\n","&#10;");
             toAdd += posts[x]['pbody'];
             toAdd += '</p><div class="divider-line"></div>';
         };

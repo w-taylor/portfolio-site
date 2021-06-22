@@ -1,11 +1,17 @@
 
 html {
     font-family: 'Montserrat', sans-serif;
+    color: black;
 }
 
 body {
     width: 70%;
     margin: auto;
+}
+
+a {
+    text-decoration: none;
+    color: black;
 }
 
 .new-entry {
@@ -26,4 +32,18 @@ body {
 .post-body {
     width: 85%;
     margin: 2rem auto;
+    white-space: pre-line;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.desc {
+    clear: both;
+    padding-top: 2rem;
 }
