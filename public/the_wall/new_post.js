@@ -3,8 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let newpost = document.querySelector(".new-entry");
 
     function sendPost() {
+	if (newpost.value.length > 2000) {
+		tooLong(parseInt(newpost.value.length));
+		return;
+	};
         const data = {"newpost":newpost.value};
-
         fetch('new_post', {
             method: 'POST',
             headers: {
@@ -20,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error:', error);
         });
     };
+
+	function tooLong(curr) {
+		let toAdd = "Input is too long! ";
+		toAdd += curr;
+		toAdd += "/2000 characters";
+		document.querySelector(".too-long").innerHTML = toAdd;
+};
 
     submitbtn.onclick = sendPost;
 });

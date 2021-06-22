@@ -47,3 +47,8 @@ a {
     clear: both;
     padding-top: 2rem;
 }
+
+.too-long {
+	color: red;
+	padding-top: 2rem;
+}
