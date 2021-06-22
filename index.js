@@ -3,6 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const { addRow } = require('./add-row.js'); 
 const { getPosts } = require('./get-posts.js');
+const Filter = require('bad-words');
+const filter = new Filter();
 
 app.use(express.static('public'));
 
@@ -34,8 +36,9 @@ app.post('/wall/new_post', function(req,res){
 	console.log("posted");
 	let d = new Date();
 	let n = d.getTime();
-	addRow(n,req.body.newpost);
-	console.log(req.body.newpost);
+	let newPost = filter.clean(req.body.newpost);
+	console.log(newPost);
+	addRow(n,newPost);
 });
 
 app.get('/wall/main', function(req,res){
