@@ -69,6 +69,7 @@ h3 {
 
 a {
     text-decoration: none;
+    color: rgb(202, 202, 202);
 }
 
 .proj-desc{
@@ -141,15 +142,25 @@ textarea {
     resize: vertical;
 }
 
+.center-text {
+    text-align: center;
+}
+
 .div-line {
     margin-top: 10rem;
     width: 100%;
-    height: 0.5rem;
+    height: 0.3rem;
     background-color: rgb(223, 209, 209);
 }
 
 footer {
-    padding: 3rem 10rem;
+    padding: 2rem 7rem;
+    font-size: 1.2rem;
+}
+
+.foot-block {
+    height: 5rem;
+    background-color: black;
 }
 
 .row {
@@ -157,7 +168,7 @@ footer {
 }
 
 .col {
-    flex: 50%;
+    flex: 33%;
 }
 
 .right-align {

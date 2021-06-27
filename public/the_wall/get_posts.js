@@ -14,11 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         };
         let toAdd = "";
+        let entry = "";
         for (let x = 0; x < posts.length; x++) {
-            toAdd += '<p class="post-body">';
+            entry = '<p class="post-body">';
             posts[x]['pbody'] = posts[x]['pbody'].replace("\n","&#10;");
-            toAdd += posts[x]['pbody'];
-            toAdd += '</p><div class="divider-line"></div>';
+            entry += posts[x]['pbody'];
+            entry += '</p><div class="divider-line"></div>';
+            toAdd = entry + toAdd;
         };
         document.querySelector(".posts").innerHTML = toAdd;
     }

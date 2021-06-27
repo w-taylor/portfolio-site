@@ -11,11 +11,10 @@
     </head>
     <body>
         <nav>
-            <p>wtaylor.xyz</p>
+            <a href="/"><p>wtaylor.xyz</p></a>
             <div class="nav-right">
-                <p>About</p>
-                <p>Projects</p>
-                <p>Contact</p>
+                <a href="#projects"><p>Projects</p></a>
+                <a href="#contact"><p>Contact</p></a>
             </div>
         </nav>
         
@@ -33,7 +32,7 @@
         <br />
         <div class="content">
 
-            <h2>Projects</h2>
+            <h2 id="projects">Projects</h2>
             
             <div class="projects">
                 <div class="project-box">
@@ -68,7 +67,7 @@
                 </div>
             </div>
             <br />
-            <h3>If you'd like to get in touch, you can use the form below or email me directly at admin@wctaylor.xyz</h3>
+            <h3 class="center-text" id="contact">If you'd like to get in touch, you can use the form below or email me directly at admin@wctaylor.xyz</h3>
             <br />
             <div class="contact-form">
                 <h3>
@@ -100,25 +99,28 @@
         <footer>
             <div class="row">
                 <div class="col">wtaylor.xyz</div>
+                <div class="col">Contact</div>
                 <div class="col right-align">Navigate</div>
             </div>
             <div class="row">
                 <div class="col"></div>
-                
-                <div class="col right-align">Main Page</div>
+                <div class="col"><a href="mailto:admin@wtaylor.xyz">admin@wtaylor.xyz</a></div>
+                <div class="col right-align"><a href="/">Main Page</a></div>
             </div>
             <div class="row">
-                <div class="col">Contact</div>
-                
-                <div class="col right-align">the wall</div>
+                <div class="col"></div>
+                <div class="col"><a href="#contact">Contact Form</a></div>
+                <div class="col right-align"><a href="/wall/main">the wall</a></div>
             </div>
             <div class="row">
-                <div class="col">admin@wtaylor.xyz</div>
-                <div class="col right-align">DNA Seq Finder</div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col right-align"><a href="/sequence">DNA Seq Finder</a></div>
             </div>
             <div class="row">
-                <div class="col">Contact Form</div>
-                <div class="col right-align">Conway's Game of Life</div>
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col right-align"><a href="/conway">Conway's Game of Life</a></div>
             </div>
         </footer>
     </body>
