@@ -49,6 +49,7 @@ app.post('/wall/new_post', function(req,res){
 	let newPost = filter.clean(req.body.newpost);
 	console.log(newPost);
 	addRow(n,newPost);
+	res.end("done");
 });
 
 app.get('/wall/main', function(req,res){

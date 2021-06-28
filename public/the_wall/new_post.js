@@ -15,10 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify(data),
         })
-        .then(response => response.json())
-        .then(data => {
-        console.log('Success:', data);
-        })
+	.then(() => {location.replace("http://wtaylor.xyz/wall/main")})
         .catch((error) => {
         console.error('Error:', error);
         });
