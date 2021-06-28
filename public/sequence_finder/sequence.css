@@ -22,6 +22,11 @@ nav p{
   padding-left: 2vw;
 }
 
+a {
+  text-decoration: none;
+  color: rgb(202, 202, 202);
+}
+
 .nav-right {
   float: right;
 }
@@ -40,6 +45,11 @@ h1 {
 
 p {
   font-size: 1.5rem;
+}
+
+.nih-link {
+  color:black;
+  text-decoration: underline;
 }
 
 textarea{
@@ -96,6 +106,26 @@ table, th, td {
 table{
   border-collapse: collapse;
   width: 100%;
+}
+
+footer {
+  padding: 2rem 7rem;
+  font-size: 1.2rem;
+  background-color: rgb(19, 19, 19);
+  color: rgb(202, 202, 202);
+  font-family: 'PT Mono', monospace;
+}
+
+footer .foot-row {
+  display: flex;
+}
+
+footer .foot-col {
+  flex: 33%;
+}
+
+footer .right-align {
+  text-align: right;
 }
 
 @media only screen and (max-width: 800px) {

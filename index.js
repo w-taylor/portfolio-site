@@ -23,20 +23,23 @@ app.use(function(req, res, next){
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.set('view engine', 'ejs');
+
 app.get('/', function(req,res){
-	res.sendFile(__dirname+"/public/"+"index.html");
+	//res.sendFile(__dirname+"/public/"+"index.html");
+	res.render(__dirname+"/public/"+"index.ejs");
 });
 
 app.get('/conway', function(req,res){
-	res.sendFile(__dirname+"/public/conway_game/"+"index.html");
+	res.render(__dirname+"/public/conway_game/"+"index.ejs");
 });
 
 app.get('/sequence', function(req,res){
-	res.sendFile(__dirname+"/public/sequence_finder/"+"index.html");
+	res.render(__dirname+"/public/sequence_finder/"+"index.ejs");
 });
 
 app.get('/wall/new_post', function(req,res){
-	res.sendFile(__dirname+"/public/the_wall/"+"new_post.html");
+	res.render(__dirname+"/public/the_wall/"+"new_post.ejs");
 });
 
 app.post('/wall/new_post', function(req,res){
@@ -49,7 +52,7 @@ app.post('/wall/new_post', function(req,res){
 });
 
 app.get('/wall/main', function(req,res){
-	res.sendFile(__dirname+"/public/the_wall/"+"main_page.html");
+	res.render(__dirname+"/public/the_wall/"+"main_page.ejs");
 });
 
 app.get('/wall/get_posts', function(req,res){
