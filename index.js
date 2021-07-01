@@ -12,7 +12,7 @@ const { addRow } = require('./add-row.js');
 const { getPosts } = require('./get-posts.js');
 const Filter = require('bad-words');
 const filter = new Filter();
-const sendMail = require('./send-mail.js');
+const { sendMail } = require('./send-mail.js');
 
 app.use(express.static('public'));
 
