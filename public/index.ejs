@@ -11,14 +11,6 @@
         <script src="mailform.js"></script> 
     </head>
     <body>
-        <!--<nav>
-            <a href="/"><p>wtaylor.xyz</p></a>
-            <div class="nav-right">
-                <a href="#projects"><p>Projects</p></a>
-                <a href="#contact"><p>Contact</p></a>
-            </div>
-        </nav>-->
-
         <%- include('../views/header'); %>
         
         <div class="hero">
@@ -76,58 +68,28 @@
                 <h3>
                     Contact me 
                 </h3>
-                <form>
                     <div class="form-topline">
                         <div class="form-name">
-                            <label for="contact-name">Name</label><br>
-                            <input type="text" class="from-name" name="contact-name"><br>
+                            <p>Name</p><br>
+                            <input type="text" class="from-name"><br>
                         </div>
                         <div class="form-email">
-                            <label for="contact-email">Email</label><br>
-                            <input type="text" class="from-address" name="contact-email"><br>
+                            <p>Email</p><br>
+                            <input type="text" class="from-address"><br>
                         </div>
                     </div>
                     <div class="form-subject">
-                        <label for="contact-subject">Subject</label><br>
-                        <input type="text" class="mes-subject" name="contact-subject"><br>
+                        <p>Subject</p><br>
+                        <input type="text" class="mes-subject"><br>
                     </div>
-                    <label for="contact-message">Message</label><br>
-                    <textarea class="message" name="contact-message"></textarea><br>
+                    <p>Message</p><br>
+                    <textarea class="message"></textarea><br>
                     <button class="submit">Submit</button>
                     <p class="mail-error"></p><p class="mail-success"></p>
-                </form> 
             </div>
         </div>
         <br />
         <div class="div-line"></div>
         <%- include('../views/footer'); %>
-        <!--
-        <footer>
-            <div class="row">
-                <div class="col">wtaylor.xyz</div>
-                <div class="col">Contact</div>
-                <div class="col right-align">Navigate</div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"><a href="mailto:admin@wtaylor.xyz">admin@wtaylor.xyz</a></div>
-                <div class="col right-align"><a href="/">Main Page</a></div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"><a href="#contact">Contact Form</a></div>
-                <div class="col right-align"><a href="/wall/main">the wall</a></div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col right-align"><a href="/sequence">DNA Seq Finder</a></div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-                <div class="col right-align"><a href="/conway">Conway's Game of Life</a></div>
-            </div>
-        </footer>-->
     </body>
 </html>
