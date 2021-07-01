@@ -12,6 +12,7 @@ const { addRow } = require('./add-row.js');
 const { getPosts } = require('./get-posts.js');
 const Filter = require('bad-words');
 const filter = new Filter();
+const sendMail = require('./send-mail.js');
 
 app.use(express.static('public'));
 
@@ -28,6 +29,11 @@ app.set('view engine', 'ejs');
 app.get('/', function(req,res){
 	//res.sendFile(__dirname+"/public/"+"index.html");
 	res.render(__dirname+"/public/"+"index.ejs");
+});
+
+app.post('/send_mail', function (req,res) {
+	sendMail(req.body.fromName, req.body.fromAddress, req.body.mesSubject, req.body.message);
+	res.end("mail sent");
 });
 
 app.get('/conway', function(req,res){
