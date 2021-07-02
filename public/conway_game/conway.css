@@ -55,7 +55,7 @@ nav p{
 }
 
 .main-body {
-    width: 50em;
+    width: 50rem;
     margin: auto;
     background-color: #8bff56 ;
     padding: 5rem;
@@ -117,8 +117,8 @@ text-align: right;
     }
 
     .main-body {
-        width: 80vw;
         min-height: 90vh;
+        max-width: 80vw;
     }
 
     body {
