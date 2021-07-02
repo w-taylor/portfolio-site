@@ -182,8 +182,8 @@ footer {
         display:block;
     }
     .project-box{
-        width: 100%;
-        margin-top: 5vh;
+        width: 95%;
+        margin: 5vh auto 0 auto;
     }
 
     .contact-form {
