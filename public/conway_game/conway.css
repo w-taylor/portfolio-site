@@ -110,3 +110,19 @@ flex: 33%;
 footer .right-align {
 text-align: right;
 }
+
+@media only screen and (max-width: 800px) {
+    html {
+        font-size: 8px;
+    }
+
+    .main-body {
+        width: 80vw;
+        min-height: 90vh;
+    }
+
+    body {
+        background-image: none;
+        background-color: #8bff56 ;
+    }
+}

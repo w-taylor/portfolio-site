@@ -13,7 +13,7 @@ body {
 .content {
     width: 70%;
     margin: auto;
-    min-height: 80vh;
+    min-height: 90vh;
     padding-bottom: 2rem;
 }
 
@@ -124,3 +124,9 @@ footer {
   footer .right-align {
     text-align: right;
   }
+
+@media only screen and (max-width: 800px) {
+    html{
+        font-size: 8px;
+    }
+}

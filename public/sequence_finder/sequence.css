@@ -3,6 +3,7 @@ body {
   padding: 0;
   font-family: 'Shippori Mincho B1', serif;
   height: 100%;
+  min-height: 80vh;
   background-color: rgb(175, 115, 167);
 }
 
@@ -35,6 +36,7 @@ a {
   width: 50vw;
   height: 100%;
   padding: 10px 10vw; 
+  min-height: 80vh;
   background-color: white;
   margin: 0px auto;
 }
@@ -128,6 +130,10 @@ footer .right-align {
   text-align: right;
 }
 
+.rest {
+  min-height: 90vh;
+}
+
 @media only screen and (max-width: 800px) {
   html{
       font-size: 8px;
@@ -140,5 +146,9 @@ footer .right-align {
   .vert-bar{
     margin-left: 6vw;
     width: 6vw;
+  }
+
+  .content{
+    width: 65vw;
   }
 }

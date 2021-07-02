@@ -87,6 +87,7 @@ a {
     border: 2px solid white;
     border-radius: 1rem;
     padding: 1rem 3rem;
+    font-size: 2rem;
 }
 
 form {
@@ -110,9 +111,6 @@ form {
     clear:both;
 }
 
-form label {
-    font-size: 2rem;
-}
 
 input[type=text], textarea{
     font-size: 2rem;
@@ -126,7 +124,7 @@ input[type=text], textarea{
     font-family: 'PT Mono', monospace;
 }
 
-input[type=submit] {
+.submit {
     background-color: rgb(82, 78, 78);
     color: rgb(223, 209, 209);
     font: inherit;
@@ -187,6 +185,11 @@ footer {
         width: 100%;
         margin-top: 5vh;
     }
+
+    .contact-form {
+        width: 60vw;
+    }
+
     .form-email, .form-name{
         display:block;
         width: 100%;
