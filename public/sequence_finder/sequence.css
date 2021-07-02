@@ -151,4 +151,9 @@ footer .right-align {
   .content{
     width: 65vw;
   }
+
+  footer {
+    padding: 2rem 2rem;
+  }
+
 }
