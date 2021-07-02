@@ -117,12 +117,16 @@ text-align: right;
     }
 
     .main-body {
-        width: 80vw;
+        max-width: 80vw;
         min-height: 90vh;
     }
 
     body {
         background-image: none;
         background-color: #8bff56 ;
+    }
+
+    footer {
+        padding: 2rem 2rem;
     }
 }

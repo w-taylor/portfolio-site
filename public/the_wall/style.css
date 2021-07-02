@@ -129,4 +129,8 @@ footer {
     html{
         font-size: 8px;
     }
+
+    footer {
+        padding: 2rem 2rem;
+    }
 }
