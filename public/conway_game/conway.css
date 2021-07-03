@@ -100,15 +100,15 @@ footer {
 }
 
 footer .foot-row {
-display: flex;
+    display: flex;
 }
 
 footer .foot-col {
-flex: 33%;
+    flex: 33%;
 }
 
 footer .right-align {
-text-align: right;
+    text-align: right;
 }
 
 @media only screen and (max-width: 800px) {

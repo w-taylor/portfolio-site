@@ -2,43 +2,43 @@ body {
     background-color: rgb(19, 19, 19);
     color: rgb(202, 202, 202);
     font-family: 'PT Mono', monospace;
+    height: 100%;
     margin: 0;
     padding: 0;
-    height: 100%;
 }
 
 nav {
     background-color: rgb(19, 19, 19);
     color: rgb(202, 202, 202);
     font-family: 'PT Mono', monospace;
-    padding-bottom: 1rem;
     height: 2rem;
+    padding-bottom: 1rem;
   }
   
-  nav p{
+nav p{
     float:left;
-    text-align: center;
     font-size: 1rem;
-    padding-right:5vw;
     padding-left: 2vw;
-  }
+    padding-right:5vw;
+    text-align: center;
+}
   
-  .nav-right {
+.nav-right {
     float: right;
-  }
+}
 
 .hero{
     background-color: rgb(42, 104, 133);
     background-size: cover;
+    color:rgb(19, 19, 19);
     min-height: 30rem;
     padding: 2rem 20rem;
-    color:rgb(19, 19, 19);
 }
 
 h1 {
-    margin:0;   
-    font-size: 10rem;
     font-family: 'Kaushan Script', cursive;
+    font-size: 10rem;
+    margin:0;   
 }
 
 h2 {
@@ -50,8 +50,8 @@ h3 {
 }
 
 .content {
-    width: 70%;
     margin: auto;
+    width: 70%;
 }
 
 .projects {
@@ -61,20 +61,20 @@ h3 {
 }
 
 .project-box {
-    width: 27%;
-    margin: auto;
-    border: 4px solid white;
     border-radius: .5rem;
+    border: 4px solid white;
+    margin: auto;
+    width: 27%;
 }
 
 a {
-    text-decoration: none;
     color: rgb(202, 202, 202);
+    text-decoration: none;
 }
 
 .proj-desc{
-    padding: 0 0.5rem;
     height: 16rem;
+    padding: 0 0.5rem;
 }
 
 .preview {
@@ -82,11 +82,11 @@ a {
 }
 
 .contact-form {
-    width: 50vw;
-    margin: auto;
-    border: 2px solid white;
     border-radius: 1rem;
+    border: 2px solid white;
     font-size: 2rem;
+    margin: auto;
+    width: 50vw;
 }
 
 .contact-content {
@@ -94,8 +94,8 @@ a {
 }
 
 form {
-    width: 100%;
     margin: auto;
+    width: 100%;
 }
 
 .form-name{
@@ -116,24 +116,24 @@ form {
 
 
 input[type=text], textarea{
+    background-color: rgb(223, 209, 209);
+    border-radius: .4rem;
+    border: 1px solid gray;
+    font-family: 'PT Mono', monospace;
     font-size: 2rem;
     height: 2.2rem;
-    width: 100%;
-    padding: .2rem;
-    border: 1px solid gray;
-    border-radius: .4rem;
     margin-bottom: 1rem;
-    background-color: rgb(223, 209, 209);
-    font-family: 'PT Mono', monospace;
+    padding: .2rem;
+    width: 100%;
 }
 
 .submit {
     background-color: rgb(82, 78, 78);
-    color: rgb(223, 209, 209);
-    font: inherit;
-    font-size: 2rem;
-    border: 2px solid white;
     border-radius: .5rem;
+    border: 2px solid white;
+    color: rgb(223, 209, 209);
+    font-size: 2rem;
+    font: inherit;
     height: 3rem;
     padding: .2rem;
 }
@@ -148,15 +148,15 @@ textarea {
 }
 
 .div-line {
+    background-color: rgb(223, 209, 209);
+    height: 0.3rem;
     margin-top: 10rem;
     width: 100%;
-    height: 0.3rem;
-    background-color: rgb(223, 209, 209);
 }
 
 footer {
-    padding: 2rem 7rem;
     font-size: 1.2rem;
+    padding: 2rem 7rem;
 }
 
 .foot-row {
@@ -193,8 +193,8 @@ footer {
         display:inline-block;
     }
     .project-box{
-        width: 95%;
         margin: 5vh auto 0 auto;
+        width: 95%;
     }
 
     .contact-form {

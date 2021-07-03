@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function postMail() {
         const fields = [fromName,fromAddress,mesSubject,message];
+        //Quit function if any form fields are empty
         for (let x = 0; x < fields.length; x++) {
             if (fields[x].value === "") {
                 document.querySelector(".mail-error").innerHTML = "Please fill out all fields";
@@ -28,13 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
-        console.log('Success:', data);
+        //console.log('Success:', data);
         })
         .catch((error) => {
-        console.error('Error:', error);
+        //console.error('Error:', error);
         });
         document.querySelector(".mail-error").innerHTML = "";
         document.querySelector(".mail-success").innerHTML = "Message sent!";
+        //Disable submit button after mail successfully sent
         submitBtn.onclick = "";
     };
 

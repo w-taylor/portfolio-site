@@ -37,11 +37,11 @@ app.post('/send_mail', function (req,res) {
 });
 
 app.get('/conway', function(req,res){
-	res.render(__dirname+"/public/conway_game/"+"index.ejs");
+	res.render(__dirname+"/public/conway_game/"+"conway.ejs");
 });
 
 app.get('/sequence', function(req,res){
-	res.render(__dirname+"/public/sequence_finder/"+"index.ejs");
+	res.render(__dirname+"/public/sequence_finder/"+"sequence.ejs");
 });
 
 app.get('/wall/new_post', function(req,res){

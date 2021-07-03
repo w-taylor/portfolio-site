@@ -6,11 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function parsePosts(posts){
-	console.log('parse');
-	console.log(posts);
         if (posts.length == 0){
-            //Post some message saying "no posts found"
-		console.log("no posts");
             return;
         };
         let toAdd = "";
