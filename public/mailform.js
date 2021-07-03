@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function postMail() {
         const fields = [fromName,fromAddress,mesSubject,message];
-        for (entry in fields) {
-            if (entry.value === "") {
+        for (let x = 0; x < fields.length; x++) {
+            if (fields[x].value === "") {
                 document.querySelector(".mail-error").innerHTML = "Please fill out all fields";
                 return;
             }
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.querySelector(".mail-error").innerHTML = "";
         document.querySelector(".mail-success").innerHTML = "Message sent!";
+        submitBtn.onclick = "";
     };
 
     submitBtn.onclick = postMail;

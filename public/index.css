@@ -171,6 +171,14 @@ footer {
     text-align: right;
 }
 
+.mail-error{
+    color: red;
+}
+
+.mail-success{
+    color: green;
+}
+
 @media only screen and (max-width: 800px) {
     html{
         font-size: 8px;
