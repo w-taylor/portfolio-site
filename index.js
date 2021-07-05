@@ -1,9 +1,9 @@
-/*const fs = require('fs');
+const fs = require('fs');
 const http = require('http');
 const https = require('https');
 const privKey = fs.readFileSync('/etc/letsencrypt/live/wtaylor.xyz/privkey.pem');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/wtaylor.xyz/fullchain.pem');
-const cred = {key: privKey, cert: certificate};*/
+const cred = {key: privKey, cert: certificate};
 
 const express = require('express');
 const app = express();
@@ -81,9 +81,9 @@ app.get('/wall/get_posts', function(req,res){
 });
 
 
-app.listen(80);
-/*const httpServer = http.createServer(app);
+//app.listen(80);
+const httpServer = http.createServer(app);
 const httpsServer = https.createServer(cred, app);
 
 httpServer.listen(80);
-httpsServer.listen(443);*/
+httpsServer.listen(443);
