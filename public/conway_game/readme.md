@@ -1,1 +1,3 @@
-Place holder text
+## Conway's Game of Life
+
+Conway's Game of Life is an implementation of the classic cellular automata simulation. A grid of squares is shown, where each square can be clicked on to fill in the "dead" cell and make it a "live" cell. Once an initial pattern is set, hitting the start button will begin the simulation. In each cycle of the simulation, the grid will be redrawn depending on how many living neighbors each cell has (you can read the full set of rules on the page). This can be used to create interesting patterns depending on your initial input. A list of some known patterns to try out is shown on the page as a source of inspiration.
