@@ -2,9 +2,9 @@
 
 This is a portfolio website to publicly display projects I've been working on.
 
-# Back End
+# Backend
 
-The back end for the site is written for the Node.js runtime and uses Express for routing. Additional packages include body-parser for parsing AJAX requests, nodemailer for sending email from the server, bad-words for word filters on user-submitted input, ejs for templating to add header/footer to each page, and node-postgres for interacting with the postgreSQL database. Https was enabled with certificates obtained using certbot and Let's Encrypt.
+The backend for the site is written for the Node.js runtime and uses Express for routing. Additional packages include body-parser for parsing AJAX requests, nodemailer for sending email from the server, bad-words for word filters on user-submitted input, ejs for templating to add header/footer to each page, and node-postgres for interacting with the postgreSQL database. Https was enabled with certificates obtained using certbot and Let's Encrypt.
 
 # Projects
 ## The Wall
