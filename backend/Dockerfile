@@ -1,5 +1,5 @@
 # Build stage (install everything)
-FROM node:18-alpine as base
+FROM node:18-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
@@ -11,9 +11,9 @@ RUN if [ "$DEV_MODE" = "true" ]; then npm ci; \
 COPY . .
 
 # Final stage (production)
-FROM base as production
+FROM base AS production
 CMD ["npm", "start"]
 
 # Dev stage (extends base)
-FROM base as development
+FROM base AS development
 CMD ["npm", "run", "dev"]
