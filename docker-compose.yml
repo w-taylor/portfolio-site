@@ -20,12 +20,19 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      target: development
+      args:
+        DEV_MODE: "true"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      PORT: 3000
+      DB_HOST: db
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
+      BACKEND_PORT: 3000
+      NODE_ENV: development
+    command: npm run dev
     networks:
       - frontend-net
       - backend-net

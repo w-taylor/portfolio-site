@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { query } from './db.js';
 
 const app = express();
 app.use(cors());
@@ -31,10 +32,10 @@ app.post('/api/data', async (req, res) => {
   }
 });*/
 
-app.get('/api/data', async (req, res) => {
+app.get('/api/get_users', async (req, res) => {
   try {
-    const out = {"output": "my test output"}
-    res.json(out);
+    const { rows } = await query('SELECT * FROM users');
+    res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -43,7 +44,7 @@ app.get('/api/data', async (req, res) => {
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.BACKEND_PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
