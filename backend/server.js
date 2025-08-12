@@ -32,9 +32,10 @@ app.post('/api/data', async (req, res) => {
   }
 });*/
 
-app.get('/api/get_users', async (req, res) => {
+// Get existing tasks from database
+app.get('/api/get_tasks', async (req, res) => {
   try {
-    const { rows } = await query('SELECT * FROM users');
+    const { rows } = await query('SELECT * FROM todo_tasks');
     res.json(rows);
   } catch (err) {
     console.error(err);
@@ -42,6 +43,31 @@ app.get('/api/get_users', async (req, res) => {
   }
 });
 
+// Update selected task status to complete
+app.put('/api/tasks/:id/complete', async (req, res) => {
+  const { id } = req.params;
+  const { is_completed } = req.body;
+
+  try {
+    const result = await query(
+      `UPDATE todo_tasks 
+       SET is_completed = $1, 
+           date_completed = CASE WHEN $1 THEN NOW() ELSE NULL END
+       WHERE id = $2
+       RETURNING *`,
+      [is_completed, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: `Server error - ${id}` });
+  }
+});
 
 
 const PORT = process.env.BACKEND_PORT || 3000;

@@ -16,14 +16,17 @@ SQL=$(cat <<-EOSQL
     GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${POSTGRES_USER};
 
     -- Create tables
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE TABLE IF NOT EXISTS todo_tasks (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL
-    );
+    description TEXT NOT NULL,
+    date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    date_completed TIMESTAMP WITH TIME ZONE,
+    is_completed BOOLEAN NOT NULL DEFAULT FALSE
+);
 
-    -- Create indexes
-    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    -- Index for filtering by completion status
+    CREATE INDEX idx_todo_completed ON todo_tasks(is_completed);
+    
 EOSQL
 )
 
