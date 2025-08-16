@@ -1,10 +1,11 @@
 <!-- UserTable.svelte -->
 <script>
   // State for storing the user data
-  export let apiUrl = 'http://localhost:3000/api/get_tasks';
-  let tasks = [];
-  let isLoading = true;
-  let error = null;
+  let apiUrl = 'http://localhost:3000/api/get_tasks';
+  let tasks = $state([]);
+  let isLoading = $state(true);
+  let error = $state(null);
+  let newDesc = $state("");
 
   // Function to fetch data from API
   async function fetchTasks() {
@@ -51,23 +52,45 @@
   }
   
   async function updateTask(updatedTask) {
-    // Send the update to your backend
-    try {
-      const response = await fetch(`http://localhost:3000/api/tasks/${updatedTask.id}/complete`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedTask)
-      })
-      
+    // Toggle completion of task
+    fetch(`http://localhost:3000/api/tasks/${updatedTask.id}/complete`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedTask)
+    }).then(response => {
       if (!response.ok) throw new Error('Update failed');
-    } catch (error) {
+    }).catch(error => {
       console.error('Error updating task:', error);
       // Revert the checkbox if update fails
       updatedTask.is_completed = !updatedTask.is_completed;
       updatedTask.date_completed = updatedTask.is_completed ? new Date().toISOString() : null;
-    }
+    })
+  }
+
+  async function submitTask(){
+    // Add new task
+    fetch(`http://localhost:3000/api/submit_task`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"newDesc":newDesc})
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to submit new task.');
+      } else {
+        return response.json()
+      }
+    }).then(data => {
+      console.log(data);
+      tasks.push(data);
+      newDesc = "";
+    })
+    .catch(error => {
+      console.error('Error creating new task:', error);
+    })
   }
 
   // Fetch data when component mounts
@@ -87,7 +110,7 @@
           <th>Task</th>
           <th>Date Added</th>
           <th>Date Completed</th>
-          <th>Select</th>
+          <th>Complete</th>
         </tr>
       </thead>
       <tbody>
@@ -106,6 +129,13 @@
       </tbody>
     </table>
   {/if}
+</div>
+
+<div>
+  <h1>Add New Task</h1>
+  <p>New Task Description</p>
+  <textarea rows="4" cols="50" bind:value={newDesc}></textarea><br /><br />
+  <button on:click={submitTask}>Submit New Task</button>
 </div>
 
 <style>

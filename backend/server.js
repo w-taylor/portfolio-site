@@ -69,6 +69,24 @@ app.put('/api/tasks/:id/complete', async (req, res) => {
   }
 });
 
+app.post('/api/submit_task', async (req,res) => {
+  const {newDesc} = req.body;
+
+  try {
+    const result = await query(
+      `INSERT INTO todo_tasks (description, date_added, date_completed, is_completed)
+      VALUES ($1, NOW(), NULL, FALSE)
+      RETURNING *`,
+      [newDesc]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: `Error submitting new task.` });
+
+  }
+});
+
 
 const PORT = process.env.BACKEND_PORT || 3000;
 app.listen(PORT, () => {
