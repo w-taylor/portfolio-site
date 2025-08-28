@@ -1,8 +1,21 @@
-Template site to use as starting point for development. Utilizes svelte frontend, express.js api server, and postgresql database. Set up initially as very basic To Do App for demonstration purposes.
+Dockerized template site to use as starting point for development. Set up initially as very basic To Do App for demonstration purposes.
 
-Access frontend from port 80, backend on port 3000, db on port 5432
+Docker Services:
+  - Frontend: contains Svelte+Vite for developing frontend components
+  - Backend: API server using Node.js/Express.js for interacting with database
+  - DB: Postgres Database
+  - Reverse-Proxy: Nginx reverse-proxy for routing incoming requests to either frontend or backend services
 
-Create .env file from .env.example template and fill in with necessary info before running.
+Intended for use with small sites, may want to make changes for bigger use-cases, like taking the database/nginx out of the container.
 
-To bring up, run `docker-compose up -d`
+To Install on Remote Server:
+  - Install docker (see Docker documentation appropriate for your server OS)
+  - Clone this repo onto the server
+  - Create .env file from .env.example template and fill in with necessary info before running.
+  - Bring up the containers with `docker compose build && docker compose -f docker-compose.prod.yml up -d`
+
+To Install Locally for Development:
+  - Same as above but bring containers up with `docker compose build && docker compose up -d`
+  - Site will be available at `http://localhost:8080`
+
 

@@ -6,31 +6,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/*
-
-app.get('/api/data', async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM items');
-    res.json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-});
-
-app.post('/api/data', async (req, res) => {
-  const { name } = req.body;
-  try {
-    const { rows } = await pool.query(
-      'INSERT INTO items (name) VALUES ($1) RETURNING *',
-      [name]
-    );
-    res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-});*/
 
 // Get existing tasks from database
 app.get('/api/get_tasks', async (req, res) => {
