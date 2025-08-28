@@ -31,11 +31,11 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
       BACKEND_PORT: 3000
+    expose:
+      - "3000"
     networks:
       - frontend-net
       - backend-net
-    ports:
-      - "3000:3000"
     depends_on:
       db:
         condition: service_healthy
