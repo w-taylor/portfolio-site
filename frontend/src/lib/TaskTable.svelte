@@ -1,7 +1,7 @@
 <!-- UserTable.svelte -->
 <script>
   // State for storing the user data
-  let apiUrl = 'http://localhost:3000/api/get_tasks';
+  const apiBaseUrl = window.location.origin + '/api';
   let tasks = $state([]);
   let isLoading = $state(true);
   let error = $state(null);
@@ -14,7 +14,8 @@
       error = null;
       
       // Replace with your actual API endpoint
-      const response = await fetch(apiUrl);
+      const getTasksUrl = apiBaseUrl + "/get_tasks";
+      const response = await fetch(getTasksUrl);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,7 +54,8 @@
   
   async function updateTask(updatedTask) {
     // Toggle completion of task
-    fetch(`http://localhost:3000/api/tasks/${updatedTask.id}/complete`, {
+    const updateTaskUrl = apiBaseUrl + `/tasks/${updatedTask.id}/complete`;
+    fetch(updateTaskUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -71,7 +73,8 @@
 
   async function submitTask(){
     // Add new task
-    fetch(`http://localhost:3000/api/submit_task`, {
+    const submitTaskUrl = apiBaseUrl + '/submit_task';
+    fetch(submitTaskUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
