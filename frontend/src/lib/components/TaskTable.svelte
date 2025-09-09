@@ -1,7 +1,15 @@
 <!-- UserTable.svelte -->
 <script>
+  import { onMount } from 'svelte';
+
+  let apiBaseUrl = '';
+
+  onMount(() => {
+    apiBaseUrl = window.location.origin + '/api';
+  });
+
   // State for storing the user data
-  const apiBaseUrl = window.location.origin + '/api';
+  
   let tasks = $state([]);
   let isLoading = $state(true);
   let error = $state(null);

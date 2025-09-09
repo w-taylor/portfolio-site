@@ -50,6 +50,11 @@ services:
       - frontend-net
     volumes:
       - frontend-dist:/app/dist 
+      - ./frontend:/app                 
+      - /app/node_modules      
+      - /app/.svelte-kit       
+      - /app/src/routes        
+      - /app/src/lib     
   
   reverse-proxy:
     build: 

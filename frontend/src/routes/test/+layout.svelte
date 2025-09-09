@@ -1,5 +1,6 @@
 <script>
-  import TaskTable from './lib/TaskTable.svelte'
+  import '../lib/app.css';
+  import TaskTable from '$lib/components/TaskTable.svelte';
 </script>
 
 <svelte:head>
