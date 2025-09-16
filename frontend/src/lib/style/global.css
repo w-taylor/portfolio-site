@@ -1,0 +1,10 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: monospace, sans-serif;
+}
+
+.main-page-content {
+  width: 50vw;
+  margin: auto;
+}
