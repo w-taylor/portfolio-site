@@ -3,31 +3,60 @@
 </script>
 
 <div class="main-page-content">
-    <h1>Welcome</h1>
+    <pre class="section-header"> 
+:::       ::: :::::::::: :::        ::::::::   ::::::::  ::::    ::::  :::::::::: 
+:+:       :+: :+:        :+:       :+:    :+: :+:    :+: +:+:+: :+:+:+ :+:        
++:+       +:+ +:+        +:+       +:+        +:+    +:+ +:+ +:+:+ +:+ +:+        
++#+  +:+  +#+ +#++:++#   +#+       +#+        +#+    +:+ +#+  +:+  +#+ +#++:++#   
++#+ +#+#+ +#+ +#+        +#+       +#+        +#+    +#+ +#+       +#+ +#+        
+ #+#+# #+#+#  #+#        #+#       #+#    #+# #+#    #+# #+#       #+# #+#        
+  ###   ###   ########## ########## ########   ########  ###       ### ########## 
+    </pre>
+    
 
-    <p>Little blurb about me blah blah blah, github link</p>
+    <p>Hello! I'm William, a full stack developer located in Austin, Texas. I love creating frontend user interfaces, developing backend scripts for business logic, and crafting efficient SQL queries. Take a look at my projects below if you want to see some of what I've been working on lately.</p>
 
-    <p>Put this little image montage next to about me:</p>
-
-    <ul>
-        <li>html, css, javascript</li>
-        <li>svelte, vue.js, node.js</li>
-        <li>python, bash, postgresql</li>
-        <li>docker, linux, git</li>
-    </ul>
+    <p><a href="https://github.com/w-taylor">Here's my Github</a></p>
 
     <LogoGrid />
 
-    <h1>Projects</h1>
+    <pre class="section-header" id="projects-header"> 
+:::::::::  :::::::::   ::::::::  ::::::::::: :::::::::: :::::::: ::::::::::: ::::::::  
+:+:    :+: :+:    :+: :+:    :+:     :+:     :+:       :+:    :+:    :+:    :+:    :+: 
++:+    +:+ +:+    +:+ +:+    +:+     +:+     +:+       +:+           +:+    +:+        
++#++:++#+  +#++:++#:  +#+    +:+     +#+     +#++:++#  +#+           +#+    +#++:++#++ 
++#+        +#+    +#+ +#+    +#+     +#+     +#+       +#+           +#+           +#+ 
+#+#        #+#    #+# #+#    #+# #+# #+#     #+#       #+#    #+#    #+#    #+#    #+# 
+###        ###    ###  ########   #####      ########## ########     ###     ########  
+    </pre>
 
     <p>A little card for each project with a link to page for each</p>
 
-    <h1>About this site</h1>
+    <pre class="section-header" id="site-info-header"> 
+ :::::::: ::::::::::: ::::::::::: ::::::::::      ::::::::::: ::::    ::: :::::::::: ::::::::  
+:+:    :+:    :+:         :+:     :+:                 :+:     :+:+:   :+: :+:       :+:    :+: 
++:+           +:+         +:+     +:+                 +:+     :+:+:+  +:+ +:+       +:+    +:+ 
++#++:++#++    +#+         +#+     +#++:++#            +#+     +#+ +:+ +#+ :#::+::#  +#+    +:+ 
+       +#+    +#+         +#+     +#+                 +#+     +#+  +#+#+# +#+       +#+    +#+ 
+#+#    #+#    #+#         #+#     #+#                 #+#     #+#   #+#+# #+#       #+#    #+# 
+ ######## ###########     ###     ##########      ########### ###    #### ###        ########  
+    </pre>
 
-    <p>Short description of this site with github link</p>
+    <p>This site uses the Portable Site project as a template, with a Svelte frontend, Node.js api server, Postgres database, and deployed in a Docker container. Sveltekit was used for allowing multiple pages unlike the SPA setup in the Portable Template</p>
+    <p>A lot of what was used here is probably overkill for a simple site like this, it's mostly an excuse to play with these different technologies.</p>
+    <p>You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site">here</a></p>
 
-    <h1>Contact Me</h1>
+    <pre class="section-header" id="contact-header"> 
+ ::::::::   ::::::::  ::::    ::: ::::::::::: :::      :::::::: ::::::::::: 
+:+:    :+: :+:    :+: :+:+:   :+:     :+:   :+: :+:   :+:    :+:    :+:     
++:+        +:+    +:+ :+:+:+  +:+     +:+  +:+   +:+  +:+           +:+     
++#+        +#+    +:+ +#+ +:+ +#+     +#+ +#++:++#++: +#+           +#+     
++#+        +#+    +#+ +#+  +#+#+#     +#+ +#+     +#+ +#+           +#+     
+#+#    #+# #+#    #+# #+#   #+#+#     #+# #+#     #+# #+#    #+#    #+#     
+ ########   ########  ###    ####     ### ###     ###  ########     ###     
+    </pre>
 
-    <p>Email link, probably a little comment form. Wont actually bother with emailing myself through it, just store in database</p>
+    <p>If you'd like to get in touch or want to recieve a resume, you can email me at <a href="mailto:william@wtaylor.xyz">william@wtaylor.xyz</a></p>
+
 </div>
 
