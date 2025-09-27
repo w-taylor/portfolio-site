@@ -54,9 +54,7 @@ services:
     volumes:
       - ./frontend:/app                 
       - /app/node_modules      
-      - /app/.svelte-kit       
-      - /app/src/routes        
-      - /app/src/lib           
+      - /app/.svelte-kit
     depends_on:
       - backend
     networks:
