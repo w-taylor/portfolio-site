@@ -6,6 +6,28 @@ body {
 }
 
 .main-page-content {
-  width: 50vw;
+  width: 70vw;
   margin: auto;
+}
+
+.section-header {
+  text-align: center;
+}
+
+.intro-box {
+  display: flex;
+}
+
+.intro-box > div {
+  flex: 1;
+}
+
+.intro-box-left {
+  font-size: 1.25em;
+  line-height: 1.5em;
+}
+
+.intro-box-right {
+  display: flex;
+  justify-content: center;
 }

@@ -13,12 +13,17 @@
   ###   ###   ########## ########## ########   ########  ###       ### ########## 
     </pre>
     
+    <div class="intro-box">
+        <div class="intro-box-left">
+            <p>Hello! I'm William, a full stack developer located in Austin, Texas. I love creating frontend user interfaces, developing backend scripts for business logic, and crafting efficient SQL queries. Take a look at my projects below if you want to see some of what I've been working on lately.</p>
 
-    <p>Hello! I'm William, a full stack developer located in Austin, Texas. I love creating frontend user interfaces, developing backend scripts for business logic, and crafting efficient SQL queries. Take a look at my projects below if you want to see some of what I've been working on lately.</p>
-
-    <p><a href="https://github.com/w-taylor">Here's my Github</a></p>
-
-    <LogoGrid />
+            <p><a href="https://github.com/w-taylor">Here's my Github</a></p>
+        </div>
+    
+        <div class="intro-box-right">
+            <LogoGrid />
+        </div>
+    </div>
 
     <pre class="section-header" id="projects-header"> 
 :::::::::  :::::::::   ::::::::  ::::::::::: :::::::::: :::::::: ::::::::::: ::::::::  

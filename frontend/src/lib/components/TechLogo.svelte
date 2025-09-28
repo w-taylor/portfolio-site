@@ -5,15 +5,24 @@
 </script>
 
 <div class="tech-logo-cont">
-<img src="{imgSrc}" width="75" height="75" >
-<p>{imgTxt}</p>
+<img src="{imgSrc}" class="tech-logo-img" >
+<p class="tech-logo-caption">{imgTxt}</p>
 </div>
 
 
 <style>
 .tech-logo-cont {
-    width: 150px;
-    height: 150px;
     text-align: center;
+    margin: 1em;
 }
+
+.tech-logo-caption {
+    margin: 0.2em;
+}
+
+.tech-logo-img {
+    height: 3.5em;
+    width: 3.5em;
+}
+
 </style>
