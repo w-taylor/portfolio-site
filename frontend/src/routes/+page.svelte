@@ -1,5 +1,6 @@
 <script>
     import LogoGrid from '$lib/components/LogoGrid.svelte';
+    import MainPageBreak from '$lib/components/MainPageBreak.svelte';
 </script>
 
 <div class="main-page-content">
@@ -25,6 +26,8 @@
         </div>
     </div>
 
+    <MainPageBreak />
+
     <pre class="section-header" id="projects-header"> 
 :::::::::  :::::::::   ::::::::  ::::::::::: :::::::::: :::::::: ::::::::::: ::::::::  
 :+:    :+: :+:    :+: :+:    :+:     :+:     :+:       :+:    :+:    :+:    :+:    :+: 
@@ -36,6 +39,8 @@
     </pre>
 
     <p>A little card for each project with a link to page for each</p>
+
+    <MainPageBreak />
 
     <pre class="section-header" id="site-info-header"> 
  :::::::: ::::::::::: ::::::::::: ::::::::::      ::::::::::: ::::    ::: :::::::::: ::::::::  
@@ -50,6 +55,8 @@
     <p>This site uses the Portable Site project as a template, with a Svelte frontend, Node.js api server, Postgres database, and deployed in a Docker container. Sveltekit was used for allowing multiple pages unlike the SPA setup in the Portable Template</p>
     <p>A lot of what was used here is probably overkill for a simple site like this, it's mostly an excuse to play with these different technologies.</p>
     <p>You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site">here</a></p>
+
+    <MainPageBreak />
 
     <pre class="section-header" id="contact-header"> 
  ::::::::   ::::::::  ::::    ::: ::::::::::: :::      :::::::: ::::::::::: 
