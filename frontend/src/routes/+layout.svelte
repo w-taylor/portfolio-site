@@ -5,9 +5,10 @@
 <div class="header-wrapper">
   <div class="header-left"><strong>wtaylor.xyz</strong></div>
   <div class="header-right"><nav>
-    <a href="#projects-header">Projects</a> | 
-    <a href="#site-info-header">Site Info</a> | 
-    <a href="#contact-header">Contact</a>
+    <a href="https://github.com/w-taylor" class="github-link"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
+    <a href="#projects-header">&lt;Projects&gt;</a> | 
+    <a href="#site-info-header">&lt;Site Info&gt;</a> | 
+    <a href="#contact-header">&lt;Contact&gt;</a>
   </nav></div>
 </div>
 
@@ -25,10 +26,10 @@
     </div>
   </div>
   <div class="footer-right">
-    <a href="" class="footer-link">Home</a>
-    <a href="#projects-header" class="footer-link">Projects</a>
-    <a href="#site-info-header" class="footer-link">Site Info</a>
-    <a href="#contact-header" class="footer-link">Contact</a>
+    <a href="" class="footer-link">&lt;Home&gt;</a>
+    <a href="#projects-header" class="footer-link">&lt;Projects&gt;</a>
+    <a href="#site-info-header" class="footer-link">&lt;Site Info&gt;</a>
+    <a href="#contact-header" class="footer-link">&lt;Contact&gt;</a>
   </div>
 </div>
 
@@ -91,9 +92,21 @@
     height: 8em;
   }
 
-  nav{
+  nav {
     margin: auto 2em;
     font-size: 1.5em;
+    display: flex;
+    align-items: center;
+  }
+
+  nav > a {
+    margin: 0 0.25em;
+  }
+
+  .github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
 </style>

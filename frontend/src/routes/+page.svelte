@@ -18,7 +18,7 @@
         <div class="intro-box-left">
             <p>Hello! I'm William, a full stack developer located in Austin, Texas. I love creating frontend user interfaces, developing backend scripts for business logic, and crafting efficient SQL queries. Take a look at my projects below if you want to see some of what I've been working on lately.</p>
 
-            <p><a href="https://github.com/w-taylor">Here's my Github</a></p>
+            <div style="display: flex;">Here's a link to my <a href="https://github.com/w-taylor" style="display: flex; align-items: center; justify-content: center;">&nbsp;&lt;<img src="/images/github-mark-white.png" style="height: 1em; width: 1em; vertical-align: middle;">&thinsp;Github&gt;</a></div>
         </div>
     
         <div class="intro-box-right">
@@ -68,7 +68,7 @@
  ########   ########  ###    ####     ### ###     ###  ########     ###     
     </pre>
 
-    <p>If you'd like to get in touch or want to recieve a resume, you can email me at <a href="mailto:william@wtaylor.xyz">william@wtaylor.xyz</a></p>
+    <p>If you'd like to get in touch or want to recieve a resume, you can email me at <a href="mailto:william@wtaylor.xyz">&lt;william@wtaylor.xyz&gt;</a></p>
 
 </div>
 
