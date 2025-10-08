@@ -100,27 +100,57 @@
     
 </script>
 
-<div class="conway-grid">
-    {#each simGrid as gridRow, rowIdx}
-        <div class="row">
-            {#each gridRow as gridCell, colIdx}
-                <div onclick={() => toggleCell(rowIdx, colIdx)} class={gridCell ? 'alive-cell' : 'dead-cell'} >
-                    <div class="dot"></div>
-                </div>
-            {/each}
-        </div>
-    {/each}
+<div class="conway-content">
+    <div class="conway-grid">
+        {#each simGrid as gridRow, rowIdx}
+            <div class="row">
+                {#each gridRow as gridCell, colIdx}
+                    <div onclick={() => toggleCell(rowIdx, colIdx)} class={gridCell ? 'alive-cell' : 'dead-cell'} >
+                        <div class="dot"></div>
+                    </div>
+                {/each}
+            </div>
+        {/each}
+    </div>
+    <div class="grid-buttons">
+        <span class="conway-start conway-btn" onclick={runContinuous}>{startBtnTxt}</span>
+        <span class="conway-step conway-btn" onclick={runSim}>Step 1 Cycle</span>
+        <span class="conway-reset conway-btn" onclick={resetGrid}>Reset</span>
+        <span class="conway-counter conway-btn">{cycleNum} Cycles</span>
+    </div>
 </div>
-<div class="conway-start" onclick={runContinuous}>{startBtnTxt}</div>
-<div class="conway-step" onclick={runSim}>Step 1 Cycle</div>
-<div class="conway-reset" onclick={resetGrid}>Reset</div>
-<div class="conway-counter">{cycleNum} Cycles</div>
 
 <style>
+    .conway-content {
+        max-width: min(70ch, 100% - 4rem);
+        margin-inline: auto;
+    }
+
+    .conway-grid {
+        height: calc(1.81em*15);
+        width: calc(1.81em*15);
+        margin: auto;
+    }
+
+    .grid-buttons {
+        display: flex;
+        justify-content: center;
+    }
+
+    .conway-btn {
+        border: .06em white solid;
+        padding: .5em;
+        border-radius: .5em;
+    }
+
+    .row {
+        height: 1.75em;
+    }
+
     [class*="cell"] {
         height: 1.75em;
         width: 1.75em;
-        border: 1px;
+        border: .06em;
         border-color: black;
         border-style: solid;
         display: inline-block;
