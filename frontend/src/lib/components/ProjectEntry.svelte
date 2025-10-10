@@ -19,6 +19,7 @@
     .project-container {
         display: flex;
         justify-content: center;
+        margin-top: 1.5em;
     }
 
     .preview-img {

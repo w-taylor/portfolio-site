@@ -40,6 +40,14 @@
     </pre>
 
     <ProjectEntry 
+        imgSrc="/images/port-site-preview.png"
+        projTitle="Portable Site Template"
+        descText="Template for quickly getting started with a simple SPA site. Dockerized with a Svelte frontend, Node.js API server, Postgres database, and Nginx reverse proxy. Includes a basic To-Do app as an example but intended to be used as a jumping off point."
+        projLink="https://github.com/w-taylor/portable-template"
+        linkText="Github Repo"
+    />
+
+    <ProjectEntry 
         imgSrc="/images/conway-preview.png"
         projTitle="Conway's <i>Game of Life</i>"
         descText="An implentation of Conway's <i>Game of Life</i> cellular automata simulation using Svelte 5"
