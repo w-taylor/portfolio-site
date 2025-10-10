@@ -1,6 +1,7 @@
 <script>
     import LogoGrid from '$lib/components/LogoGrid.svelte';
     import MainPageBreak from '$lib/components/MainPageBreak.svelte';
+    import ProjectEntry from '../lib/components/ProjectEntry.svelte';
 </script>
 
 <div class="main-page-content">
@@ -38,7 +39,13 @@
 ###        ###    ###  ########   #####      ########## ########     ###     ########  
     </pre>
 
-    <p>A little card for each project with a link to page for each</p>
+    <ProjectEntry 
+        imgSrc="/images/conway-preview.png"
+        projTitle="Conway's <i>Game of Life</i>"
+        descText="An implentation of Conway's <i>Game of Life</i> cellular automata simulation using Svelte 5"
+        projLink="http://localhost:8080/conway"
+        linkText="Live Project"
+    />
 
     <MainPageBreak />
 
@@ -54,7 +61,7 @@
 
     <p>This site uses the Portable Site project as a template, with a Svelte frontend, Node.js api server, Postgres database, and deployed in a Docker container. Sveltekit was used for allowing multiple pages unlike the SPA setup in the Portable Template</p>
     <p>A lot of what was used here is probably overkill for a simple site like this, it's mostly an excuse to play with these different technologies.</p>
-    <p>You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site">here</a></p>
+    <p>You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site">&lt;here&gt;</a></p>
 
     <MainPageBreak />
 
