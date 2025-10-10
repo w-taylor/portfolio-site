@@ -28,13 +28,11 @@
 
     // Iterate through current grid to determine new grid after one cycle
     function runSim(){
-        console.log("sim loop...");
         let newGrid = [];
         simGrid.forEach((gridRow, rowIdx) => {
             newGrid.push([]);
             gridRow.forEach((gridCell, colIdx) => {
                 let neighbors = getNeighbors(rowIdx, colIdx);
-                console.log(rowIdx + "," + colIdx + ": " + neighbors)
 
                 if (gridCell == true && (neighbors < 2 || neighbors > 3)){
                     newGrid[rowIdx].push(false);
@@ -107,8 +105,6 @@
             modalDisplay = "none";
         }
     }
-
-    $inspect(simGrid);
     
 </script>
 
@@ -240,6 +236,6 @@
         background-color: black;
         padding: 2em;
         border: 1px solid #888;
-        max-width: min(70ch, 100% - 4rem); /* Could be more or less, depending on screen size */
+        max-width: min(70ch, 100% - 4rem);
     }
 </style>
