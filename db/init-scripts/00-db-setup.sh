@@ -16,16 +16,15 @@ SQL=$(cat <<-EOSQL
     GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${POSTGRES_USER};
 
     -- Create tables
-    CREATE TABLE IF NOT EXISTS todo_tasks (
-    id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL,
-    date_added TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    date_completed TIMESTAMP WITH TIME ZONE,
-    is_completed BOOLEAN NOT NULL DEFAULT FALSE
-);
+    CREATE TABLE IF NOT EXISTS short_urls (
+        id SERIAL PRIMARY KEY,
+        short_code VARCHAR(10) UNIQUE NOT NULL,
+        original_url TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        clicks INTEGER DEFAULT 0
+    );
 
-    -- Index for filtering by completion status
-    CREATE INDEX idx_todo_completed ON todo_tasks(is_completed);
+    CREATE INDEX idx_short_code ON short_urls(short_code);
     
 EOSQL
 )
