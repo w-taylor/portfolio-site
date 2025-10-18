@@ -27,6 +27,37 @@ app.get('/link/:shortCode', async (req, res) => {
   res.redirect(302, dbResult.rows[0].original_url);
 });
 
+app.post('/api/shorten', async (req, res) => {
+  let { url } = req.body;
+  
+  // Add protocol if missing
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url; // Default to HTTPS
+  }
+  
+  try {
+    // Validate the structure is consistent with a URL
+    new URL(url);
+    
+    // Save to database
+    const result = await query(
+      'INSERT INTO short_urls (short_code, original_url) VALUES ($1, $2) RETURNING *',
+      [generateShortCode(), url]
+    );
+    
+    res.json({ shortUrl: `${result.rows[0].short_code}` });
+    
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid URL' });
+  }
+});
+
+function generateShortCode() {
+  return Array(6).fill(0).map(() => 
+    'abcdefghijklmnopqrstuvwxyz0123456789'[Math.floor(Math.random() * 36)]
+  ).join('');
+}
+
 
 const PORT = process.env.BACKEND_PORT || 3000;
 app.listen(PORT, () => {
