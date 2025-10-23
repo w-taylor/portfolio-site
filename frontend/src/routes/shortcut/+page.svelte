@@ -6,7 +6,7 @@
     let errorMsg = $state("");
     let recentLinks = $state([]);
     const baseUrl = "http://localhost:8080/link/";
-    const MAX_URL_LEN = 25;
+    const MAX_URL_LEN = 2000;
 
     // Get saved recentLinks, if any
     if (browser) {
