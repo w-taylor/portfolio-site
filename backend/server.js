@@ -29,6 +29,12 @@ app.get('/link/:shortCode', async (req, res) => {
 
 app.post('/api/shorten', async (req, res) => {
   let { url } = req.body;
+
+  url = url.trim();
+
+  if (url.length >= 2000) {
+    return res.status(400).json({ error: 'URL must be under 2000 characters!' });
+  }
   
   // Add protocol if missing
   if (!url.startsWith('http://') && !url.startsWith('https://')) {
@@ -37,7 +43,11 @@ app.post('/api/shorten', async (req, res) => {
   
   try {
     // Validate the structure is consistent with a URL
-    new URL(url);
+    const parsed = new URL(url);
+
+    if (!(parsed.hostname && parsed.hostname.length >= 3 && /[a-z0-9-]+\.[a-z0-9-]+/i.test(parsed.hostname))) {
+      throw "Invalid URL";
+    }
     
     // Save to database
     const result = await query(

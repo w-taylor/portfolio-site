@@ -6,6 +6,7 @@
     let errorMsg = $state("");
     let recentLinks = $state([]);
     const baseUrl = "http://localhost:8080/link/";
+    const MAX_URL_LEN = 25;
 
     // Get saved recentLinks, if any
     if (browser) {
@@ -17,8 +18,17 @@
 
     let hasRecentLinks = $derived(recentLinks.length > 0);
 
-    async function getCode() {
+    async function getCode(event) {
+        event.preventDefault();
+
         errorMsg = "";
+
+        if (longUrl.trim().length >= MAX_URL_LEN) {
+            errorMsg = 'URL must be under 2000 characters!';
+            shortUrl = '';
+            return;
+        }
+
         try {
             const response = await fetch('/api/shorten', {
                 method: 'POST',
@@ -57,8 +67,6 @@
             }
     }
 
-    $inspect(shortUrl);
-
 </script>
 
 <div class="shortcut-main-content">
@@ -75,9 +83,13 @@
         {#if errorMsg}
             <div class="shortcut-error-display">{errorMsg}</div><br />
         {/if}
-        <div>Enter URL</div>
-        <input type="url" bind:value={longUrl} />
-        <button onclick={getCode}>Submit</button>
+        
+        <form onsubmit={getCode}>
+            <div>Enter URL</div>
+            <input type="text" bind:value={longUrl} />
+            <button type="submit">Submit</button>
+        </form>
+        
         {#if shortUrl}
             <br /><br />
             <div class="shortcut-result">
