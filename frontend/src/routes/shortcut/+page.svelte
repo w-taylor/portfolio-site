@@ -5,6 +5,7 @@
     let longUrl = $state("");
     let errorMsg = $state("");
     let recentLinks = $state([]);
+    const baseUrl = "http://localhost:8080/link/";
 
     // Get saved recentLinks, if any
     if (browser) {
@@ -28,7 +29,7 @@
             const data = await response.json();
             
             if (response.ok) {
-                shortUrl = "http://localhost:8080/link/" + data.shortUrl;
+                shortUrl = baseUrl + data.shortUrl;
                 
                 // Add to recent links and update localStorage
                 recentLinks = [
@@ -48,9 +49,11 @@
                 longUrl = '';
             } else {
                 errorMsg = data.error || 'Failed to shorten URL - plesase try again';
+                shortUrl = '';
             }
             } catch (err) {
                 errorMsg = 'Network error - please try again';
+                shortUrl = '';
             }
     }
 
@@ -59,48 +62,107 @@
 </script>
 
 <div class="shortcut-main-content">
-    <div>ShortCut</div>
-    <div>Description of how to use with example</div>
+    <div class="shortcut-title">ShortCut</div>
+    <div class="shortcut-instructions">
+        Use this tool to create a handy redirect link for a long URL.
+        <br /><br />
+        Paste your original URL below and hit "Submit" to get the new link, which will be six random characters put on the end of {baseUrl}
+        <br /><br />
+        For example, &lt;<a href="{baseUrl}bp46j3" target="_blank" rel="noopener noreferrer">{baseUrl}bp46j3</a>&gt; will redirect to https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=42s
+    </div>
     <div class="shortcut-panel">
+        <div class="panel-content">
         {#if errorMsg}
-            <div class="shortcut-error-display">{errorMsg}</div>
+            <div class="shortcut-error-display">{errorMsg}</div><br />
         {/if}
         <div>Enter URL</div>
         <input type="url" bind:value={longUrl} />
-        <button onclick={getCode} role="button">Submit</button>
+        <button onclick={getCode}>Submit</button>
         {#if shortUrl}
+            <br /><br />
             <div class="shortcut-result">
                 Your link is: {shortUrl}
-                <a href="{shortUrl}" target="_blank" rel="noopener noreferrer">Try it out!</a>
+                <br /><br />
+                &lt;<a href="{shortUrl}" target="_blank" rel="noopener noreferrer">Try it out!</a>&gt;
             </div>
         {/if}
+        </div>
     </div>
     {#if hasRecentLinks}
+        <div class="recent-links-title">Recent Links</div>
         <div class="recent-links">
-            <div>Recent Links</div>
-            {#each recentLinks as link (link.shortCode)}
-                <div class="link-item">
-                    <a 
-                        href={link.shortUrl} 
-                        target="_blank" 
-                        class="short-link"
-                        rel="noopener noreferrer"
-                    >
-                        {link.shortUrl}
-                    </a>
-                    <div class="original-url" title={link.originalUrl}>
-                        {link.originalUrl}
-                    </div>
-                    <div class="link-meta">
-                        Created {new Date(link.createdAt).toLocaleDateString()}
-                    </div>
+        {#each recentLinks as link (link.shortUrl)}
+            <div class="link-item">
+                &lt;<a 
+                    href={link.shortUrl} 
+                    target="_blank" 
+                    class="short-link"
+                    rel="noopener noreferrer"
+                >
+                    {link.shortUrl}
+                </a>&gt; redirects to:
+                <br /><br />
+                <div class="original-url" title={link.originalUrl}>
+                    {link.originalUrl}
                 </div>
-            {/each}
+                <br />
+                <div class="link-meta">
+                    Created {new Date(link.createdAt).toLocaleDateString()}
+                </div>
+            </div>
+        {/each}
         </div>
     {/if}
 
 </div>
 
 <style>
+    .shortcut-main-content {
+        margin: 0 auto;
+        max-width: 50em;
+        min-height: 50vh;
+    }
+    
+    .shortcut-title {
+        justify-content: center;
+        display: flex;
+        font-size: 5em;
+        margin-bottom: 0.5em;
+    }
+
+    .shortcut-instructions{
+        font-size: 1.2em;
+    }
+
+    .shortcut-panel {
+        display: flex;
+        justify-content: center;
+    }
+
+    .panel-content {
+        border: solid white .1em;
+        border-radius: .2em;
+        padding: 1.5em;
+        margin: 3em auto;
+    }
+
+    .shortcut-error-display{
+        color: red;
+        display: flex;
+        justify-content: center;
+    }
+
+    .link-item {
+        border-top: solid white .1em;
+        margin: .5em 0;
+        padding-top: .5em;
+        overflow-wrap: anywhere;
+    }
+
+    .recent-links-title {
+        display: flex;
+        justify-content: center;
+        font-size: 2em;
+    }
 
 </style>

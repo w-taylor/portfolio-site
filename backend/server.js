@@ -48,7 +48,7 @@ app.post('/api/shorten', async (req, res) => {
     res.json({ shortUrl: `${result.rows[0].short_code}` });
     
   } catch (error) {
-    res.status(400).json({ error: 'Invalid URL' });
+    res.status(400).json({ error: 'Invalid URL - please try again' });
   }
 });
 
