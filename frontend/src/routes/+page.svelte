@@ -48,6 +48,14 @@
     />
 
     <ProjectEntry 
+        imgSrc="/images/shortcut-preview.png"
+        projTitle="ShortCut"
+        descText="Creates shortened, usable redirect links to long URLs using Svelte 5, Node.js, and Postgres"
+        projLink="http://localhost:8080/shortcut"
+        linkText="Live Project"
+    />
+
+    <ProjectEntry 
         imgSrc="/images/conway-preview.png"
         projTitle="Conway's <i>Game of Life</i>"
         descText="An implentation of Conway's <i>Game of Life</i> cellular automata simulation using Svelte 5"
