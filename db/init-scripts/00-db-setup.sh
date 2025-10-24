@@ -25,6 +25,28 @@ SQL=$(cat <<-EOSQL
     );
 
     CREATE INDEX idx_short_code ON short_urls(short_code);
+
+    CREATE TABLE monitored_services (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        url TEXT NOT NULL,
+        expected_status INTEGER DEFAULT 200,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        is_active BOOLEAN DEFAULT true
+    );
+
+    CREATE TABLE service_checks (
+        id SERIAL PRIMARY KEY,
+        service_id INTEGER REFERENCES monitored_services(id) ON DELETE CASCADE,
+        status_code INTEGER,
+        response_time INTEGER, -- milliseconds
+        status TEXT, -- 'up', 'down', 'slow'
+        error_message TEXT,
+        checked_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE INDEX idx_service_checks_service_id ON service_checks(service_id);
+    CREATE INDEX idx_service_checks_checked_at ON service_checks(checked_at);
     
 EOSQL
 )
