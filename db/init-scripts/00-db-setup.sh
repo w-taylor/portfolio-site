@@ -30,6 +30,8 @@ SQL=$(cat <<-EOSQL
         id SERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         url TEXT NOT NULL,
+        base_url TEXT NOT NULL,
+        description TEXT NOT NULL,
         expected_status INTEGER DEFAULT 200,
         created_at TIMESTAMPTZ DEFAULT NOW(),
         is_active BOOLEAN DEFAULT true

@@ -84,7 +84,7 @@ router.get('/services', async (req, res) => {
             LEFT JOIN service_checks sc ON ms.id = sc.service_id
             WHERE ms.is_active = true
             GROUP BY ms.id
-            ORDER BY ms.name
+            ORDER BY ms.id
         `);
         
         res.json(services.rows);
