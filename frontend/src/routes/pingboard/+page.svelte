@@ -3,8 +3,7 @@
     let { data } = $props();
     let { loadedServices, loadError } = data;
     let services = $state(loadedServices);
-    let modalDisplay = $state("none"); // TODO: change to "none"
-    let modalStats = $state({});
+    let modalDisplay = $state("none");
     let modalChecks = $state([]);
     let modalService = $state({});
 
@@ -21,10 +20,6 @@
         let checkRes = await fetch(baseURL+sid+'/checks');
         
         modalChecks = await checkRes.json();
-
-        let statsRes = await fetch(baseURL+sid+'/stats');
-        
-        modalStats = await statsRes.json();
 
         modalService = service;
 
@@ -45,9 +40,9 @@
                 <div>{modalService.name}</div>
                 <div>Uptime percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
                 <div>Total Checks Logged: {modalService.total_checks}</div>
-                <div>Average Response Time: {Number(modalStats.avg_response_time).toFixed(0)} ms</div>
-                <div>First Check (UTC): {modalStats.first_check}</div>
-                <div>Last Check (UTC): {modalStats.last_check}</div>
+                <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
+                <div>First Check (UTC): {modalService.first_check}</div>
+                <div>Last Check (UTC): {modalService.last_check}</div>
                 <div>Total Checks Logged: {modalService.total_checks}</div>
             {/if}
             <table>

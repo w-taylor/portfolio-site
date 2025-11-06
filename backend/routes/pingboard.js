@@ -78,8 +78,11 @@ router.get('/services', async (req, res) => {
     try {
         const services = await query(`
             SELECT ms.*, 
-                   COUNT(sc.id) as total_checks,
-                   AVG(CASE WHEN sc.status = 'up' THEN 1 ELSE 0 END) * 100 as uptime_percentage
+                COUNT(sc.id) as total_checks,
+                AVG(CASE WHEN sc.status = 'up' THEN 1 ELSE 0 END) * 100 as uptime_percentage,
+                AVG(sc.response_time) as avg_response_time,
+                MIN(sc.checked_at) as first_check,
+                MAX(sc.checked_at) as last_check
             FROM monitored_services ms
             LEFT JOIN service_checks sc ON ms.id = sc.service_id
             WHERE ms.is_active = true
@@ -107,40 +110,6 @@ router.get('/:id/checks', async (req, res) => {
         );
         
         res.json(checks.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/:id/stats', async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const stats = await query(`
-            SELECT 
-                COUNT(*) as total_checks,
-                AVG(CASE WHEN status = 'up' THEN 1 ELSE 0 END) * 100 as uptime_percentage,
-                AVG(response_time) as avg_response_time,
-                MIN(checked_at) as first_check,
-                MAX(checked_at) as last_check
-            FROM service_checks 
-            WHERE service_id = $1
-        `, [id]);
-        
-        // Get latest check
-        const latest = await query(
-            `SELECT status, response_time, checked_at 
-             FROM service_checks 
-             WHERE service_id = $1 
-             ORDER BY checked_at DESC 
-             LIMIT 1`,
-            [id]
-        );
-        
-        res.json({
-            ...stats.rows[0],
-            current_status: latest.rows[0] || null
-        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
