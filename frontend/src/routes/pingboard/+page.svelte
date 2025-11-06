@@ -96,6 +96,14 @@
         </div>
 
     </div>
+
+    <div class="pingboard-title">Pingboard</div>
+    <div class="pingboard-desc">
+        Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database logs the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
+        <br/><br/>
+        Below you can find a panel for each service tracked that includes a description, it's uptime percentage, and the total number of checks that have been logged for the service. Click the "Detail View" button next to any service to bring up a window that will show additional statistics for that service along with a table showing information from the last 50 individual checks that were performed.
+    </div>
+    
     {#if loadError}
         <div class="load-error">Error getting data from server, please try again.</div>
     {:else if services}
@@ -139,5 +147,16 @@
         padding: 2em;
         border: 1px solid #888;
         max-width: min(70ch, 100% - 4rem);
+    }
+
+    .pingboard-title {
+        justify-content: center;
+        display: flex;
+        font-size: 5em;
+        margin-bottom: 0.5em;
+    }
+
+    .pingboard-desc{
+        font-size: 1.2em;
     }
 </style>
