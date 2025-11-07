@@ -96,7 +96,7 @@
 
     </div>
 
-    <div class="pingboard-title">Pingboard</div>
+    <div class="pingboard-title"><div class="pulse-light green"></div>Pingboard<div class="pulse-light red"></div></div>
     <div class="pingboard-desc">
         Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database logs the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
         <br/><br/>
@@ -207,5 +207,61 @@
     tbody tr:hover {
         background-color: #232323;
     }
-    
+
+    .pulse-light {
+        --pulse-size: 13px;
+        --pulse-duration: 1.5s;
+        
+        width: var(--pulse-size);
+        height: var(--pulse-size);
+        border-radius: 50%;
+        animation: pulse-glow var(--pulse-duration) infinite;
+        margin: auto 20px;
+    }
+
+    .pulse-light.green {
+        --light-color: #00b300;
+        --light-color-rgb: 0, 255, 0;
+        --light-glow: #27e727;
+        background: var(--light-color);
+        box-shadow: 
+            0 0 5px var(--light-glow),
+            inset 0 0 10px var(--light-glow);
+    }
+
+    .pulse-light.red {
+        --light-color: #d00303;
+        --light-color-rgb: 255, 68, 68;
+        --light-glow: #ff3737;
+        background: var(--light-color);
+        box-shadow: 
+            0 0 5px var(--light-glow),
+            inset 0 0 10px var(--light-glow);
+        animation-delay: 0.75s;
+    }
+
+    @keyframes pulse-glow {
+        0% {
+            transform: scale(0.9);
+            box-shadow: 
+                0 0 5px var(--light-glow),
+                inset 0 0 10px var(--light-glow),
+                0 0 0 0 rgba(var(--light-color-rgb), 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 
+                0 0 20px var(--light-glow),
+                inset 0 0 15px var(--light-glow),
+                0 0 0 15px rgba(var(--light-color-rgb), 0);
+        }
+        100% {
+            transform: scale(0.9);
+            box-shadow: 
+                0 0 5px var(--light-glow),
+                inset 0 0 10px var(--light-glow),
+                0 0 0 0 rgba(var(--light-color-rgb), 0);
+        }
+    }
+
 </style>
