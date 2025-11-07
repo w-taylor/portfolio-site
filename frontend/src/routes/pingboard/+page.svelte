@@ -65,13 +65,12 @@
         <div class="pb-modal-content">
             <div onclick={toggleModal} style="float: right; font-size: 2em;">&times;</div>
             {#if modalService}
-                <div>{modalService.name}</div>
-                <div>Uptime percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
+                <div class="modal-name">{modalService.name}</div><br/>
+                <div>Uptime Percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
                 <div>Total Checks Logged: {modalService.total_checks}</div>
                 <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
                 <div>First Check (UTC): {formatTimestamp(modalService.first_check)}</div>
-                <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div>
-                <div>Total Checks Logged: {modalService.total_checks}</div>
+                <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div><br />
             {/if}
             <table>
                 <thead>
@@ -108,14 +107,17 @@
         <div class="load-error">Error getting data from server, please try again.</div>
     {:else if services}
         {#each services as service (service.id)}
-            <div>&lt;<a href="{service.base_url}" rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;</div>
-            <div>{service.description}</div>
-            <div>Uptime percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
-            <div>Total Checks Logged: {service.total_checks}</div>
-            <button onclick={() => getDetailInfo(service)}>Detail View</button>
+        <div class="pingboard-panel">
+            <div class="panel-name">&lt;<a href="{service.base_url}" rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;</div><br/>
+            <div class="panel-desc">{service.description}</div><br/>
+            <div>Uptime Percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
+            <div>Average Response Time: {Number(service.avg_response_time).toFixed(0)} ms</div>
+            <div>Total Checks Logged: {service.total_checks}</div><br/>
+            <div class="panel-button-cont"><button onclick={() => getDetailInfo(service)} class="panel-button">Detail View</button></div>
             {#if detailErrors[service.id]}
             <div style="font-color: red;">Failed to get Detail View, please try again.</div>
             {/if}
+        </div>
         {/each}
     {:else}
         <div>Loading...</div>
@@ -153,10 +155,57 @@
         justify-content: center;
         display: flex;
         font-size: 5em;
-        margin-bottom: 0.5em;
     }
 
     .pingboard-desc{
         font-size: 1.2em;
+        margin: 1em 0;
     }
+
+    .pingboard-panel{
+        margin: 1.25em 0;
+        border: solid white 2px;
+        padding: 1em;
+        border-radius: 0.5em;
+    }
+
+    .panel-name{
+        justify-content: center;
+        display: flex;
+        font-size: 2em;
+    }
+
+    .panel-button-cont{
+        justify-content: center;
+        display: flex;
+    }
+
+    .modal-name {
+        font-size: 2em;
+        justify-content: center;
+        display: flex;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+    }
+
+    th, td {
+        padding: 12px 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        color: #333;
+    }
+
+    tbody tr:hover {
+        background-color: #232323;
+    }
+    
 </style>
