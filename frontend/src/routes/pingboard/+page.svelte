@@ -7,6 +7,7 @@
     let modalDisplay = $state("none");
     let modalChecks = $state([]);
     let modalService = $state({});
+    let showAppInfo = $state(false);
 
     let savedChecks = $state({});
     let detailErrors = $state({});
@@ -16,6 +17,7 @@
             modalDisplay = "block";
         } else {
             modalDisplay = "none";
+            showAppInfo = false;
         }
     }
 
@@ -57,6 +59,11 @@
         }
     }
 
+    function toggleAppInfoModal(){
+        showAppInfo = true;
+        toggleModal();
+    }
+
 
 </script>
 
@@ -64,14 +71,24 @@
     <div class="pb-modal" style="display: {modalDisplay};">
         <div class="pb-modal-content">
             <div onclick={toggleModal} style="float: right; font-size: 2em;">&times;</div>
-            {#if modalService}
-                <div class="modal-name">{modalService.name}</div><br/>
-                <div>Uptime Percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
-                <div>Total Checks Logged: {modalService.total_checks}</div>
-                <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
-                <div>First Check (UTC): {formatTimestamp(modalService.first_check)}</div>
-                <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div><br />
-            {/if}
+
+            {#if showAppInfo}
+            <br/><div class="info-modal-title flex-center">Pingboard Info</div><br/>
+
+            <div>
+                Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
+                <br/><br/>
+                Below you can find a panel for each service tracked that includes a description, uptime percentage, average response time, and the total number of checks that have been logged for the service. Click the "Detail View" button next to any service to bring up a window that will show a table with information from the last 50 individual checks that were performed on that service.
+            </div>
+
+            {:else}
+            <div class="modal-name flex-center">{modalService.name}</div><br/>
+            <div>Uptime Percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
+            <div>Total Checks Logged: {modalService.total_checks}</div>
+            <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
+            <div>First Check (UTC): {formatTimestamp(modalService.first_check)}</div>
+            <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div><br />
+            
             <table>
                 <thead>
                     <tr>
@@ -92,28 +109,25 @@
                 {/each}
                 </tbody>
             </table>
+            {/if}
         </div>
 
     </div>
 
-    <div class="pingboard-title"><div class="pulse-light green"></div>Pingboard<div class="pulse-light red"></div></div>
-    <div class="pingboard-desc">
-        Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database logs the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
-        <br/><br/>
-        Below you can find a panel for each service tracked that includes a description, it's uptime percentage, and the total number of checks that have been logged for the service. Click the "Detail View" button next to any service to bring up a window that will show additional statistics for that service along with a table showing information from the last 50 individual checks that were performed.
-    </div>
+    <div class="pingboard-title flex-center"><div class="pulse-light green"></div>Pingboard<div class="pulse-light red"></div></div>
+    <br/><div class="flex-center"><button onclick={toggleAppInfoModal}>See Pingboard Info</button></div>
     
     {#if loadError}
         <div class="load-error">Error getting data from server, please try again.</div>
     {:else if services}
         {#each services as service (service.id)}
         <div class="pingboard-panel">
-            <div class="panel-name">&lt;<a href="{service.base_url}" rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;</div><br/>
+            <div class="panel-name flex-center">&lt;<a href="{service.base_url}" rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;</div><br/>
             <div class="panel-desc">{service.description}</div><br/>
             <div>Uptime Percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
             <div>Average Response Time: {Number(service.avg_response_time).toFixed(0)} ms</div>
             <div>Total Checks Logged: {service.total_checks}</div><br/>
-            <div class="panel-button-cont"><button onclick={() => getDetailInfo(service)} class="panel-button">Detail View</button></div>
+            <div class="flex-center"><button onclick={() => getDetailInfo(service)} class="panel-button">Detail View</button></div>
             {#if detailErrors[service.id]}
             <div style="font-color: red;">Failed to get Detail View, please try again.</div>
             {/if}
@@ -152,14 +166,11 @@
     }
 
     .pingboard-title {
-        justify-content: center;
-        display: flex;
         font-size: 5em;
     }
 
-    .pingboard-desc{
-        font-size: 1.2em;
-        margin: 1em 0;
+    .info-modal-title{
+        font-size: 1.25em;
     }
 
     .pingboard-panel{
@@ -170,20 +181,16 @@
     }
 
     .panel-name{
-        justify-content: center;
-        display: flex;
         font-size: 2em;
     }
 
-    .panel-button-cont{
+    .flex-center{
         justify-content: center;
         display: flex;
     }
 
     .modal-name {
         font-size: 2em;
-        justify-content: center;
-        display: flex;
     }
 
     table {
