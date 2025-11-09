@@ -1,11 +1,12 @@
 <script>
     import { browser } from '$app/environment';
+    import { page } from '$app/stores';
 
     let shortUrl = $state("");
     let longUrl = $state("");
     let errorMsg = $state("");
     let recentLinks = $state([]);
-    const baseUrl = "http://localhost:8080/link/";
+    const baseUrl = `${$page.url.origin}/link/`;
     const MAX_URL_LEN = 2000;
 
     // Get saved recentLinks, if any
