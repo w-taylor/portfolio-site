@@ -1,4 +1,6 @@
 <script>
+    import { run } from "svelte/legacy";
+
     let gridSize = 15;
 
     let modalDisplay = $state("none");
@@ -22,8 +24,16 @@
 
     // Reset the grid to the starting state
     function resetGrid() {
-        simGrid = Array.from({ length: gridSize }, () => new Array(gridSize).fill(false));
-        cycleNum = 0;
+        if (!running){
+            simGrid = Array.from({ length: gridSize }, () => new Array(gridSize).fill(false));
+            cycleNum = 0;
+        }
+    }
+
+    function cycleOneStep() {
+        if (!running) {
+            runSim();
+        }
     }
 
     // Iterate through current grid to determine new grid after one cycle
@@ -161,7 +171,7 @@
     </div>
     <div class="grid-buttons">
         <button class="conway-start conway-btn" onclick={runContinuous}>{startBtnTxt}</button>
-        <button class="conway-step conway-btn" onclick={runSim}>Step 1 Cycle</button>
+        <button class="conway-step conway-btn" onclick={cycleOneStep}>Step 1 Cycle</button>
         <button class="conway-reset conway-btn" onclick={resetGrid}>Reset</button>
         <div class="conway-counter conway-btn">{cycleNum} Cycles</div>
     </div>
