@@ -48,6 +48,14 @@
     />
 
     <ProjectEntry 
+        imgSrc="/images/pingboard-preview.png"
+        projTitle="Pingboard"
+        descText="Monitors performance of api endpoints by running scheduled requests and storing the results using Svelte 5, Node.js, and Postgres"
+        projLink="http://localhost:8080/pingboard"
+        linkText="Live Project"
+    />
+
+    <ProjectEntry 
         imgSrc="/images/shortcut-preview.png"
         projTitle="ShortCut"
         descText="Creates shortened, usable redirect links to long URLs using Svelte 5, Node.js, and Postgres"
