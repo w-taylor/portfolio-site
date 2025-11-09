@@ -12,6 +12,12 @@
     let savedChecks = $state({});
     let detailErrors = $state({});
 
+    const colorMap = {
+        "up": "green",
+        "down": "red",
+        "slow": "orange"
+    }
+
     function toggleModal() {
         if (modalDisplay === "none") {
             modalDisplay = "block";
@@ -64,6 +70,14 @@
         toggleModal();
     }
 
+    function statusColor(checkStatus){
+        if (checkStatus in colorMap){
+            return colorMap[checkStatus];
+        }
+
+        return "white";
+    }
+
 
 </script>
 
@@ -100,7 +114,7 @@
                 </thead>
                 <tbody>
                 {#each modalChecks as mCheck (mCheck.id)}
-                    <tr>
+                    <tr style="color: {statusColor(mCheck.status)};">
                         <td>{formatTimestamp(mCheck.checked_at)}</td>
                         <td>{mCheck.status_code || '-'}</td>
                         <td>{mCheck.response_time}</td>
@@ -118,7 +132,7 @@
     <br/><div class="flex-center"><button onclick={toggleAppInfoModal}>See Pingboard Info</button></div>
     
     {#if loadError}
-        <div class="load-error">Error getting data from server, please try again.</div>
+        <div class="load-error" style="color: red;">Error getting data from server, please try again.</div>
     {:else if services}
         {#each services as service (service.id)}
         <div class="pingboard-panel">
@@ -129,7 +143,7 @@
             <div>Total Checks Logged: {service.total_checks}</div><br/>
             <div class="flex-center"><button onclick={() => getDetailInfo(service)}>Detail View</button></div>
             {#if detailErrors[service.id]}
-            <div style="font-color: red;">Failed to get Detail View, please try again.</div>
+            <div style="color: red;">Failed to get Detail View, please try again.</div>
             {/if}
         </div>
         {/each}
