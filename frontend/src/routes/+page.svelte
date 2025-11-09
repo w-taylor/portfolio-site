@@ -51,7 +51,7 @@
         imgSrc="/images/pingboard-preview.png"
         projTitle="Pingboard"
         descText="Monitors performance of api endpoints by running scheduled requests and storing the results using Svelte 5, Node.js, and Postgres"
-        projLink="http://localhost:8080/pingboard"
+        projLink="/pingboard"
         linkText="Live Project"
     />
 
@@ -59,7 +59,7 @@
         imgSrc="/images/shortcut-preview.png"
         projTitle="ShortCut"
         descText="Creates shortened, usable redirect links to long URLs using Svelte 5, Node.js, and Postgres"
-        projLink="http://localhost:8080/shortcut"
+        projLink="/shortcut"
         linkText="Live Project"
     />
 
@@ -67,7 +67,7 @@
         imgSrc="/images/conway-preview.png"
         projTitle="Conway's <i>Game of Life</i>"
         descText="An implentation of Conway's <i>Game of Life</i> cellular automata simulation using Svelte 5"
-        projLink="http://localhost:8080/conway"
+        projLink="/conway"
         linkText="Live Project"
     />
 

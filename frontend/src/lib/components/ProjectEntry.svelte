@@ -5,7 +5,7 @@
 </script>
 
 <div class="project-container">
-    <img src={imgSrc} class="preview-img">
+    <a href={projLink}><img src={imgSrc} class="preview-img"></a>
     <div class="description-box">
         <div class="project-title"><b>{@html projTitle}</b></div>
         <br />
