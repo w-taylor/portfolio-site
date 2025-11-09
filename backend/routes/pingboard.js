@@ -61,7 +61,7 @@ router.get('/services', async (req, res) => {
         const services = await query(`
             SELECT ms.*, 
                 COUNT(sc.id) as total_checks,
-                AVG(CASE WHEN sc.status = 'up' THEN 1 ELSE 0 END) * 100 as uptime_percentage,
+                AVG(CASE WHEN NOT sc.status = 'down' THEN 1 ELSE 0 END) * 100 as uptime_percentage,
                 AVG(sc.response_time) as avg_response_time,
                 MIN(sc.checked_at) as first_check,
                 MAX(sc.checked_at) as last_check
