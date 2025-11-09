@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import { query } from '../db.js';
 
-// Service to check API status
+// Check individual service endpoint
 async function checkService(service) {
     const startTime = Date.now();
 
@@ -55,25 +55,7 @@ async function checkService(service) {
     }
 }
 
-// Scheduled task to check all services
-async function runAllChecks() {
-    try {
-        const services = await query(
-            'SELECT * FROM monitored_services WHERE is_active = true'
-        );
-        
-        for (const service of services.rows) {
-            console.log(`Checking ${service.name}...`);
-            await checkService(service);
-            // Small delay between checks to be respectful
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    } catch (error) {
-        console.error('Error running checks:', error);
-    }
-}
-
-// API Routes
+// Return summary info on all registered services
 router.get('/services', async (req, res) => {
     try {
         const services = await query(`
@@ -96,6 +78,7 @@ router.get('/services', async (req, res) => {
     }
 });
 
+// Return info on individual checks for a service
 router.get('/:id/checks', async (req, res) => {
     try {
         const { id } = req.params;
@@ -115,43 +98,22 @@ router.get('/:id/checks', async (req, res) => {
     }
 });
 
-// Adds service (may not want to open this up)
-/* router.post('/api/services', async (req, res) => {
+// Check all registered services
+export async function runAllChecks() {
     try {
-        const { name, url, expected_status = 200 } = req.body;
-        
-        const result = await query(
-            `INSERT INTO monitored_services (name, url, expected_status) 
-             VALUES ($1, $2, $3, $4) 
-             RETURNING *`,
-            [name, url, expected_status]
+        const services = await query(
+            'SELECT * FROM monitored_services WHERE is_active = true'
         );
         
-        res.status(201).json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}); */
-
-// Manual check endpoint
-router.post('/:id/check', async (req, res) => {
-    try {
-        const { id } = req.params;
-        
-        const service = await query(
-            'SELECT * FROM monitored_services WHERE id = $1',
-            [id]
-        );
-        
-        if (service.rows.length === 0) {
-            return res.status(404).json({ error: 'Service not found' });
+        for (const service of services.rows) {
+            console.log(`Checking ${service.name}...`);
+            await checkService(service);
+            // Small delay between checks to be respectful
+            await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        
-        const result = await checkService(service.rows[0]);
-        res.json(result);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error running checks:', error);
     }
-});
+}
 
 export default router;
