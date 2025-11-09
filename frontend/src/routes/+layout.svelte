@@ -3,12 +3,12 @@
 </script>
 
 <div class="header-wrapper">
-  <div class="header-left"><strong>wtaylor.xyz</strong></div>
+  <div class="header-left"><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
   <div class="header-right"><nav>
     <a href="https://github.com/w-taylor" class="github-link"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
-    <a href="#projects-header">&lt;Projects&gt;</a> | 
-    <a href="#site-info-header">&lt;Site Info&gt;</a> | 
-    <a href="#contact-header">&lt;Contact&gt;</a>
+    <a href="/#projects-header">&lt;Projects&gt;</a> | 
+    <a href="/#site-info-header">&lt;Site Info&gt;</a> | 
+    <a href="/#contact-header">&lt;Contact&gt;</a>
   </nav></div>
 </div>
 
@@ -21,15 +21,14 @@
 <div class="footer-wrapper">
   <div class="footer-left">
     <div class="footer-left-text">
-      <div style="font-size: 3em;"><strong>wtaylor.xyz</strong></div>
+      <div style="font-size: 3em;"><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
       <div>© 2025 William Taylor</div>
     </div>
   </div>
   <div class="footer-right">
-    <a href="" class="footer-link">&lt;Home&gt;</a>
-    <a href="#projects-header" class="footer-link">&lt;Projects&gt;</a>
-    <a href="#site-info-header" class="footer-link">&lt;Site Info&gt;</a>
-    <a href="#contact-header" class="footer-link">&lt;Contact&gt;</a>
+    <div class="footer-link"><a href="/#projects-header">&lt;Projects&gt;</a></div>
+    <div class="footer-link"><a href="/#site-info-header">&lt;Site Info&gt;</a></div>
+    <div class="footer-link"><a href="/#contact-header">&lt;Contact&gt;</a></div>
   </div>
 </div>
 
