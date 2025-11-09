@@ -83,8 +83,9 @@
  ######## ###########     ###     ##########      ########### ###    #### ###        ########  
     </pre>
 
-    <p>This site uses the Portable Site project as a template, with a Svelte frontend, Node.js api server, Postgres database, and deployed in a Docker container. Sveltekit was used for allowing multiple pages unlike the SPA setup in the Portable Template</p>
+    <p>This site uses the Portable Site project as a template, with a Svelte frontend, Node.js api server, Postgres database, Nginx reverse-proxy, and deployed in a Docker container. Sveltekit was used for allowing multiple pages unlike the SPA setup in the Portable Template</p>
     <p>A lot of what was used here is probably overkill for a simple site like this, it's mostly an excuse to play with these different technologies.</p>
+    <p>HTTPS is set up for this site using <a href="https://certbot.eff.org/" target="_blank" rel="noopener noreferrer">&lt;Certbot&gt;</a>, huge thanks to <a href="https://www.eff.org/" target="_blank" rel="noopener noreferrer">&lt;EFF&gt;</a> for maintaining the utility and <a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">&lt;Let's Encrypt&gt;</a> for providing the certificates.</p>
     <p>You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site" target="_blank" rel="noopener noreferrer">&lt;here&gt;</a></p>
 
     <MainPageBreak />
