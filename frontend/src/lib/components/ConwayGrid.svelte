@@ -154,7 +154,7 @@
                 If you want to let the simulation proceed for only a single cycle, you can hit the "Step 1 Cycle" button.
             </p>
             <p>
-                You can read more about Conway's <i>Game of Life</i> and find some starting patterns to play with <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">&lt;here&gt;</a>
+                You can read more about Conway's <i>Game of Life</i> and find some starting patterns to play with <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank" rel="noopener noreferrer">&lt;here&gt;</a>
             </p>
         </div>
     </div>

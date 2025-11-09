@@ -5,7 +5,7 @@
 <div class="header-wrapper">
   <div class="header-left"><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
   <div class="header-right"><nav>
-    <a href="https://github.com/w-taylor" class="github-link"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
+    <a href="https://github.com/w-taylor" class="github-link" target="_blank" rel="noopener noreferrer"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
     <a href="/#projects-header">&lt;Projects&gt;</a> | 
     <a href="/#site-info-header">&lt;Site Info&gt;</a> | 
     <a href="/#contact-header">&lt;Contact&gt;</a>
