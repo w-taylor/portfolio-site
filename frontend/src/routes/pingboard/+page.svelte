@@ -102,7 +102,7 @@
                 {#each modalChecks as mCheck (mCheck.id)}
                     <tr>
                         <td>{formatTimestamp(mCheck.checked_at)}</td>
-                        <td>{mCheck.status_code}</td>
+                        <td>{mCheck.status_code || '-'}</td>
                         <td>{mCheck.response_time}</td>
                         <td>{mCheck.status}</td>
                     </tr>
