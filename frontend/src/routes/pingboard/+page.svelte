@@ -115,7 +115,7 @@
     </div>
 
     <div class="pingboard-title flex-center"><div class="pulse-light green"></div>Pingboard<div class="pulse-light red"></div></div>
-    <br/><div class="flex-center"><button onclick={toggleAppInfoModal} class="pingboard-button">See Pingboard Info</button></div>
+    <br/><div class="flex-center"><button onclick={toggleAppInfoModal}>See Pingboard Info</button></div>
     
     {#if loadError}
         <div class="load-error">Error getting data from server, please try again.</div>
@@ -127,7 +127,7 @@
             <div>Uptime Percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
             <div>Average Response Time: {Number(service.avg_response_time).toFixed(0)} ms</div>
             <div>Total Checks Logged: {service.total_checks}</div><br/>
-            <div class="flex-center"><button onclick={() => getDetailInfo(service)} class="pingboard-button">Detail View</button></div>
+            <div class="flex-center"><button onclick={() => getDetailInfo(service)}>Detail View</button></div>
             {#if detailErrors[service.id]}
             <div style="font-color: red;">Failed to get Detail View, please try again.</div>
             {/if}
@@ -269,35 +269,6 @@
                 inset 0 0 10px var(--light-glow),
                 0 0 0 0 rgba(var(--light-color-rgb), 0);
         }
-    }
-
-    button {
-        all: unset;
-        cursor: pointer; /* Add cursor explicitly as all:unset might remove it */
-    }
-
-    button:focus {
-        outline: 1px solid blue; /* Re-add focus outline for accessibility */
-        outline-offset: 2px;
-    }
-
-    button:hover {
-        background-color: white;
-        color:black;
-    }
-
-    .pingboard-button{
-        background: 
-            linear-gradient(to right, #ffffff 0%, #ffffff 100%) top left / 10px 1px,
-            linear-gradient(to right, #ffffff 0%, #ffffff 100%) top right / 10px 1px,
-            linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom left / 10px 1px,
-            linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom right / 10px 1px,
-            linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top left / 1px 10px,
-            linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top right / 1px 10px,
-            linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom left / 1px 10px,
-            linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom right / 1px 10px;
-        background-repeat: no-repeat;
-        padding: .5em;
     }
 
 </style>

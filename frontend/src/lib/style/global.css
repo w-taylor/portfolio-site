@@ -36,3 +36,29 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+button {
+  all: unset;
+  cursor: pointer; /* Add cursor explicitly as all:unset might remove it */
+  background: 
+    linear-gradient(to right, #ffffff 0%, #ffffff 100%) top left / 10px 1px,
+    linear-gradient(to right, #ffffff 0%, #ffffff 100%) top right / 10px 1px,
+    linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom left / 10px 1px,
+    linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom right / 10px 1px,
+    linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top left / 1px 10px,
+    linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top right / 1px 10px,
+    linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom left / 1px 10px,
+    linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom right / 1px 10px;
+  background-repeat: no-repeat;
+  padding: .5em;
+}
+
+button:focus {
+  outline: 1px solid blue; /* Re-add focus outline for accessibility */
+  outline-offset: 2px;
+}
+
+button:hover {
+  background-color: white;
+  color:black;
+}

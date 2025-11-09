@@ -113,13 +113,13 @@
     <br />
     
     <div class="grid-buttons">
-        <span class="conway-btn" onclick={toggleModal}>Instructions</span>
+        <button class="conway-btn" onclick={toggleModal}>Instructions</button>
     </div>
     
     <br />
     <div class="conway-modal" style="display: {modalDisplay};">
         <div class="modal-content">
-            <div onclick={toggleModal} style="float: right; font-size: 2em;">&times;</div>
+            <div onclick={toggleModal} style="float: right; font-size: 2em; cursor: pointer;">&times;</div>
             <br />
             <p>
                 This is a simple implementation of British mathematician John Conway's <i>Game of Life</i>. 
@@ -160,10 +160,10 @@
         {/each}
     </div>
     <div class="grid-buttons">
-        <span class="conway-start conway-btn" onclick={runContinuous}>{startBtnTxt}</span>
-        <span class="conway-step conway-btn" onclick={runSim}>Step 1 Cycle</span>
-        <span class="conway-reset conway-btn" onclick={resetGrid}>Reset</span>
-        <span class="conway-counter conway-btn">{cycleNum} Cycles</span>
+        <button class="conway-start conway-btn" onclick={runContinuous}>{startBtnTxt}</button>
+        <button class="conway-step conway-btn" onclick={runSim}>Step 1 Cycle</button>
+        <button class="conway-reset conway-btn" onclick={resetGrid}>Reset</button>
+        <div class="conway-counter conway-btn">{cycleNum} Cycles</div>
     </div>
 </div>
 
@@ -190,10 +190,12 @@
         justify-content: center;
     }
 
-    .conway-btn {
-        border: .06em white solid;
+    .grid-buttons > button, .grid-buttons > div {
+        margin: 0 .5em;
+    }
+
+    .conway-counter {
         padding: .5em;
-        border-radius: .5em;
     }
 
     .row {
