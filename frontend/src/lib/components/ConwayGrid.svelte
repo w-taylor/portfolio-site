@@ -1,6 +1,4 @@
 <script>
-    import { run } from "svelte/legacy";
-
     let gridSize = 15;
 
     let modalDisplay = $state("none");

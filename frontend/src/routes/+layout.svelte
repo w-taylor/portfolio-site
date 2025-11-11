@@ -1,15 +1,43 @@
 <script>
   import '../lib/style/global.css';
+
+  let menuDisplay = $state("none");
+
+  function toggleMenu(){
+    if (menuDisplay === "none"){
+      menuDisplay = "flex";
+    } else {
+      menuDisplay = "none"
+    }
+  }
 </script>
 
 <div class="header-wrapper">
   <div class="header-left"><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
-  <div class="header-right"><nav>
-    <a href="https://github.com/w-taylor" class="github-link" target="_blank" rel="noopener noreferrer"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
-    <a href="/#projects-header">&lt;Projects&gt;</a> | 
-    <a href="/#site-info-header">&lt;Site Info&gt;</a> | 
-    <a href="/#contact-header">&lt;Contact&gt;</a>
-  </nav></div>
+  <div class="header-right">
+    <nav>
+      <a href="https://github.com/w-taylor" class="github-link" target="_blank" rel="noopener noreferrer"><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a> |
+      <a href="/#projects-header">&lt;Projects&gt;</a> | 
+      <a href="/#site-info-header">&lt;Site Info&gt;</a> | 
+      <a href="/#contact-header">&lt;Contact&gt;</a>
+    </nav>
+
+    <div class="mobile-only">
+      <label for="menu-toggle" class="hamburger" onclick={toggleMenu}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+      
+      <!-- Mobile menu -->
+      <div class="mobile-menu" style="display: {menuDisplay};">
+        <a href="https://github.com/w-taylor" class="github-link" target="_blank" rel="noopener noreferrer" onclick={toggleMenu}><img src="/images/github-mark.png" style="height: 1em; width: 1em;"></a>
+        <a href="/#projects-header" onclick={toggleMenu}>&lt;Projects&gt;</a> 
+        <a href="/#site-info-header" onclick={toggleMenu}>&lt;Site&nbsp;Info&gt;</a> 
+        <a href="/#contact-header" onclick={toggleMenu}>&lt;Contact&gt;</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="header-spacer"></div>
@@ -106,6 +134,70 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .mobile-only {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: auto 2em;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: black;
+    border-radius: 3px;
+  }
+
+  .mobile-menu {
+    position: absolute;
+    top: 5em;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    padding: 1em 0;
+  }
+
+  .mobile-menu a {
+    padding: 0.75em 2em;
+    text-decoration: none;
+    color: black;
+    font-size: 1.2em;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-menu a:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-menu a:hover {
+    background-color: #f9f9f9;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      display: none;
+    }
+
+    .mobile-only {
+      display: flex;
+    }
   }
 
 </style>
