@@ -5,11 +5,13 @@
 </script>
 
 <div class="project-container">
+    <div style="display:flex; justify-content:center;">
     {#if linkText !== "Live Project"}
     <a href={projLink} target="_blank" rel="noopener noreferrer"><img src={imgSrc} class="preview-img"></a>
     {:else}
     <a href={projLink}><img src={imgSrc} class="preview-img"></a>
     {/if}
+    </div>
     
     <div class="description-box">
         <div class="project-title"><b>{@html projTitle}</b></div>
@@ -40,12 +42,37 @@
     }
 
     .description-box {
-        width: calc(100% - 12em);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
         padding: 1em 3em;
+        width: 40vw;
     }
 
     .project-title {
         font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+
+    .description-text {
+        margin-bottom: 1em;
+    }
+
+    @media (max-width: 768px) {
+        .project-container  {
+            flex-direction: column;
+        }
+
+        .preview-img {
+            width: 150px;
+            height: 150px;
+            border: 2px solid white;
+            border-radius: 5px;
+        }
+
+        .description-box {
+            width: 80vw;
+        }
     }
 
 </style>

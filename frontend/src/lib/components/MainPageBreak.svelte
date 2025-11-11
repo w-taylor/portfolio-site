@@ -14,4 +14,10 @@
         line-height: .5em;
         margin: 2em 0;
     }
+
+    @media (max-width: 768px) {
+        .main-page-break  {
+            font-size: 8px;
+        }
+    }
 </style>

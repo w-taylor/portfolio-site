@@ -22,7 +22,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: auto auto auto auto;
-        width: 30vw;
+        max-width: 80vw;
     }
 
 </style>
