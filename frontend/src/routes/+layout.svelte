@@ -199,6 +199,10 @@
     .mobile-only {
       display: flex;
     }
+
+    .footer-left {
+      font-size: .65em;
+    }
   }
 
 </style>
