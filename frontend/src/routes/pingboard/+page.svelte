@@ -285,4 +285,16 @@
         }
     }
 
+    @media (max-width: 768px) {
+        .pingboard-content {
+            max-width: 95vw;
+        }
+    }
+
+    @media (max-width: 370px) {
+        .pulse-light {
+            display: none;
+        }
+    }
+
 </style>

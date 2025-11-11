@@ -170,6 +170,7 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     flex-direction: column;
     padding: 1em 0;
+    z-index: 1;
   }
 
   .mobile-menu a {

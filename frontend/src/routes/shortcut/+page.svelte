@@ -132,7 +132,7 @@
 <style>
     .shortcut-main-content {
         margin: 0 auto;
-        max-width: 50em;
+        max-width: 50vw;
         min-height: 50vh;
     }
     
@@ -176,6 +176,12 @@
         display: flex;
         justify-content: center;
         font-size: 2em;
+    }
+
+    @media (max-width: 768px) {
+        .shortcut-main-content {
+            max-width: 90vw;
+        }
     }
 
 </style>
