@@ -1,7 +1,10 @@
 export async function load({ fetch }) {
   try {
-    // Use Docker service name for internal communication during SSR
-    const response = await fetch('http://backend:3000/api/pingboard/services');
+    const baseUrl = import.meta.env.SSR 
+      ? 'http://backend:3000'  // Docker internal (server-side)
+      : '';                    // Same origin (client-side)
+
+    const response = await fetch(`${baseUrl}/api/pingboard/services`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
