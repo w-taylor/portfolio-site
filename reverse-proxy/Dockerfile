@@ -1,6 +1,12 @@
 FROM nginx:alpine AS production
-# Remove default nginx files first
-RUN rm -rf /usr/share/nginx/html/*
-# Then copy your built files
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom main config
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy server configurations
+COPY conf.d/ /etc/nginx/conf.d/
+
 CMD ["nginx", "-g", "daemon off;"]
