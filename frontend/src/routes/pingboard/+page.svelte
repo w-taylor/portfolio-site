@@ -1,5 +1,7 @@
 <script>
-    let baseURL = "http://localhost:8080/api/pingboard/";
+    import { page } from '$app/stores';
+    let baseURL = `${$page.url.origin}/api/pingboard/`;
+    
     let { data } = $props();
     let { loadedServices, loadError } = data;
     let services = $state(loadedServices);
