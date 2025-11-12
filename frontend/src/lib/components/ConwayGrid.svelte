@@ -179,17 +179,18 @@
     .conway-content {
         max-width: min(70ch, 100% - 4rem);
         margin-inline: auto;
+        min-height: calc(100vh - 28em);
     }
 
     .conway-title {
-        font-size: 3em;
+        font-size: 2.5em;
         display: flex;
         justify-content: center;
     }
 
     .conway-grid {
-        height: calc(1.81em*15);
-        width: calc(1.81em*15);
+        height: calc(1.82em*15);
+        width: calc(1.82em*15);
         margin: auto;
     }
 

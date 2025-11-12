@@ -133,7 +133,7 @@
     .shortcut-main-content {
         margin: 0 auto;
         max-width: 50vw;
-        min-height: 50vh;
+        min-height: calc(100vh - 28em);
     }
     
     .shortcut-title {
