@@ -40,4 +40,19 @@ button:hover {
   body {
     font-size: 10px;
   }
+  button{
+    all: unset;
+    cursor: pointer;
+    background: 
+      linear-gradient(to right, #ffffff 0%, #ffffff 100%) top left / 7px 1px,
+      linear-gradient(to right, #ffffff 0%, #ffffff 100%) top right / 7px 1px,
+      linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom left / 7px 1px,
+      linear-gradient(to right, #ffffff 0%, #ffffff 100%) bottom right / 7px 1px,
+      linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top left / 1px 7px,
+      linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) top right / 1px 7px,
+      linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom left / 1px 7px,
+      linear-gradient(to bottom, #ffffff 0%, #ffffff 100%) bottom right / 1px 7px;
+    background-repeat: no-repeat;
+    padding: .5em;
+  }
 }
