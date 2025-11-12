@@ -1,5 +1,19 @@
 <script>
   import '../lib/style/global.css';
+  import { page } from '$app/stores';
+
+  function getPageTitle(pathname) {
+    switch (pathname) {
+      case '/conway':
+        return 'Conway\'s Game of Life | wtaylor.xyz';
+      case '/pingboard':
+        return 'Pingboard | wtaylor.xyz';
+      case '/shortcut':
+        return 'ShortCut | wtaylor.xyz';
+      default:
+        return 'wtaylor.xyz';
+    }
+  }
 
   let menuDisplay = $state("none");
 
@@ -11,6 +25,10 @@
     }
   }
 </script>
+
+<svelte:head>
+  <title>{getPageTitle($page.url.pathname)}</title>
+</svelte:head>
 
 <div class="header-wrapper">
   <div class="header-left"><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
