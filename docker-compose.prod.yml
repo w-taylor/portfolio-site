@@ -10,8 +10,6 @@ services:
     volumes:
       - ./db/init-scripts:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
     networks:
       - backend-net
     healthcheck:
@@ -19,6 +17,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   backend:
     build: 
@@ -39,6 +38,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    restart: unless-stopped
 
   frontend:
     build: 
@@ -46,12 +46,12 @@ services:
       target: production
     environment:
       - PORT=8080
-    ports:
-      - "8080:8080"
+      - ORIGIN=https://wtaylor.xyz
     depends_on:
       - backend
     networks:
       - frontend-net 
+    restart: unless-stopped
   
   reverse-proxy:
     build: 
@@ -67,6 +67,7 @@ services:
       - frontend
     networks:
       - frontend-net
+    restart: unless-stopped
 
 volumes:
   postgres_data:
