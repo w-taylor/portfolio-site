@@ -27,6 +27,10 @@
   margin: 3em auto;
 }
 
+.panel-content button {
+  margin-left: 0.5em;
+}
+
 .shortcut-error-display {
   color: red;
   display: flex;

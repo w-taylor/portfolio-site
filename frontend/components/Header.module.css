@@ -6,8 +6,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 5em;
-  position: fixed;
-  top: 0;
   z-index: 10;
 }
 
