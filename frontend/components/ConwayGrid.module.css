@@ -1,0 +1,74 @@
+.conway-content {
+  max-width: min(70ch, 100% - 4rem);
+  margin-inline: auto;
+  min-height: calc(100vh - 28em);
+}
+
+.conway-title {
+  font-size: 2.5em;
+  display: flex;
+  justify-content: center;
+}
+
+.conway-grid {
+  height: calc(1.82em*15);
+  width: calc(1.82em*15);
+  margin: auto;
+}
+
+.grid-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.grid-buttons > button, .grid-buttons > div {
+  margin: 0 .5em;
+}
+
+.conway-counter {
+  padding: .5em;
+}
+
+.row {
+  height: 1.75em;
+}
+
+.alive-cell,
+.dead-cell {
+  height: 1.75em;
+  width: 1.75em;
+  border: .06em;
+  border-color: black;
+  border-style: solid;
+  display: inline-block;
+  margin-left: -1px;
+  background-color: white;
+}
+
+.alive-cell > .dot {
+  height: 1.5em;
+  width: 1.5em;
+  background-color: black;
+  border-radius: 50%;
+  margin: .125em;
+}
+
+.conway-modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  overflow: scroll;
+}
+
+.modal-content {
+  margin: 10% auto;
+  background-color: black;
+  padding: 2em;
+  border: 1px solid #888;
+  max-width: min(70ch, 100% - 4rem);
+}

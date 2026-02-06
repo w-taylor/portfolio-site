@@ -1,0 +1,35 @@
+.footer-wrapper {
+  background-color: white;
+  color: black;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 8em;
+}
+
+.footer-left {
+  margin: auto 0;
+  border-right: .05em solid black;
+  height: 6em;
+  text-align: right;
+}
+
+.footer-left-text {
+  display: block;
+  padding-right: 2.5em;
+}
+
+.footer-right {
+  margin: auto 0;
+}
+
+.footer-link {
+  display: block;
+  margin: .25em 0;
+  padding-left: 2.5em;
+}
+
+@media (max-width: 768px) {
+  .footer-left {
+    font-size: .65em;
+  }
+}

@@ -48,13 +48,15 @@ services:
       - /app/node_modules
 
   frontend:
-    build: 
+    build:
       context: ./frontend
       target: development
+    environment:
+      - WATCHPACK_POLLING=true
     volumes:
-      - ./frontend:/app                 
-      - /app/node_modules      
-      - /app/.svelte-kit
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
     depends_on:
       - backend
     networks:

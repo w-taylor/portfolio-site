@@ -1,0 +1,52 @@
+.main-page-content {
+  width: 70vw;
+  margin: auto;
+}
+
+.section-header {
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+  line-height: 1.2;
+  padding: 0.4em 0;
+  margin: 0.5em 0;
+  font-weight: normal;
+}
+
+.intro-box {
+  display: flex;
+}
+
+.intro-box > div {
+  flex: 1;
+}
+
+.intro-box-left {
+  font-size: 1.25em;
+  line-height: 1.5em;
+}
+
+.intro-box-right {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .main-page-content {
+    width: 95vw;
+    font-size: 10px;
+  }
+
+  .section-header {
+    font-size: 1em;
+  }
+
+  .intro-box {
+    flex-direction: column;
+  }
+
+  .text-blurb {
+    width: 80vw;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,53 @@
+.shortcut-main-content {
+  margin: 0 auto;
+  max-width: 50vw;
+  min-height: calc(100vh - 28em);
+}
+
+.shortcut-title {
+  justify-content: center;
+  display: flex;
+  font-size: 5em;
+  margin-bottom: 0.5em;
+}
+
+.shortcut-instructions {
+  font-size: 1.2em;
+}
+
+.shortcut-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.panel-content {
+  border: solid white .1em;
+  border-radius: .2em;
+  padding: 1.5em;
+  margin: 3em auto;
+}
+
+.shortcut-error-display {
+  color: red;
+  display: flex;
+  justify-content: center;
+}
+
+.link-item {
+  border-top: solid white .1em;
+  margin: .5em 0;
+  padding-top: .5em;
+  overflow-wrap: anywhere;
+}
+
+.recent-links-title {
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+}
+
+@media (max-width: 768px) {
+  .shortcut-main-content {
+    max-width: 90vw;
+  }
+}

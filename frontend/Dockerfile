@@ -1,19 +1,20 @@
 # frontend/Dockerfile
 FROM node:18-alpine AS base
 WORKDIR /app
-COPY package*.json ./
 
 FROM base AS development
+COPY package*.json ./
 RUN npm install
-COPY . .
 CMD ["npm", "run", "dev"]
 
 FROM base AS builder
+COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM base AS production  
-RUN npm ci --production
-COPY --from=builder /app/build ./build
-CMD ["node", "build/index.js"]
+FROM base AS production
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+CMD ["node", "server.js"]
