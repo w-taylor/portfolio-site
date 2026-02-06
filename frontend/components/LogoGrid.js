@@ -8,8 +8,8 @@ export default function LogoGrid() {
       <TechLogo imgName="CSS3.png" imgTxt="CSS" />
       <TechLogo imgName="JavaScript.png" imgTxt="JavaScript" />
       <TechLogo imgName="Python.png" imgTxt="Python" />
+      <TechLogo imgName="React.png" imgTxt="React" />
       <TechLogo imgName="Svelte.png" imgTxt="Svelte" />
-      <TechLogo imgName="Vue.js.png" imgTxt="Vue.js" />
       <TechLogo imgName="Node.js.png" imgTxt="Node.js" />
       <TechLogo imgName="Bash.png" imgTxt="Bash" />
       <TechLogo imgName="PostgresSQL.png" imgTxt="Postgres" />
