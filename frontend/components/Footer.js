@@ -6,7 +6,7 @@ export default function Footer() {
       <div className={styles['footer-left']}>
         <div className={styles['footer-left-text']}>
           <div style={{ fontSize: '3em' }}><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
-          <div>&copy; 2025 William Taylor</div>
+          <div>&copy; 2026 William Taylor</div>
         </div>
       </div>
       <div className={styles['footer-right']}>
