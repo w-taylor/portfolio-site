@@ -1,5 +1,7 @@
 import './globals.css';
 import Header from '@/components/Header';
+import HalftoneDivider from '@/components/HalftoneDivider';
+import HalftoneDividerBottom from '@/components/HalftoneDividerBottom';
 import Footer from '@/components/Footer';
 
 export const metadata = {
@@ -12,9 +14,11 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Header />
-        <div style={{ height: '7em' }}></div>
+        <HalftoneDivider />
+        <div style={{ height: '3em' }}></div>
         {children}
-        <div style={{ height: '8em' }}></div>
+        <div style={{ height: '3em' }}></div>
+        <HalftoneDividerBottom />
         <Footer />
       </body>
     </html>
