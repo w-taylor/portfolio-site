@@ -45,7 +45,7 @@ export default function Home() {
       <ProjectEntry
         imgSrc="/images/pingboard-preview.png"
         projTitle="Pingboard"
-        descText="Monitors performance of api endpoints by running scheduled requests and storing the results using React, Node.js, and Postgres"
+        descText="Monitors performance of api endpoints by running scheduled requests and storing the results using React, FastAPI, and Postgres"
         projLink="/pingboard"
         linkText="Live Project"
       />
@@ -53,7 +53,7 @@ export default function Home() {
       <ProjectEntry
         imgSrc="/images/shortcut-preview.png"
         projTitle="ShortCut"
-        descText="Creates shortened, usable redirect links to long URLs using React, Node.js, and Postgres"
+        descText="Creates shortened, usable redirect links to long URLs using React, FastAPI, and Postgres"
         projLink="/shortcut"
         linkText="Live Project"
       />
@@ -75,7 +75,7 @@ export default function Home() {
 |____/___|_|_| |_____| |___|_| \\_|_|   \\___/`}</pre></h2>
 
       <p className={styles['text-blurb']}>
-        This site uses a React/Next.js frontend, Node.js api server, Postgres database, Nginx reverse-proxy, and deployed in a Docker container. <br /><br />
+        This site uses a React/Next.js frontend, FastAPI api server, Postgres database, Nginx reverse-proxy, and deployed in a Docker container. <br /><br />
         A lot of what was used here is probably overkill for a simple site like this, it&apos;s mostly an excuse to play with these different technologies.<br /><br />
         HTTPS is set up for this site using <a href="https://certbot.eff.org/" target="_blank" rel="noopener noreferrer">&lt;Certbot&gt;</a>, huge thanks to <a href="https://www.eff.org/" target="_blank" rel="noopener noreferrer">&lt;EFF&gt;</a> for maintaining the utility and <a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">&lt;Let&apos;s Encrypt&gt;</a> for providing the certificates.<br /><br />
         You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site" target="_blank" rel="noopener noreferrer">&lt;here&gt;</a>

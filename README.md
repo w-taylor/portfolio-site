@@ -2,7 +2,7 @@ Portfolio site for displaying projects.
 
 Docker Services:
   - Frontend: React.js/Next.js
-  - Backend: API server using Node.js/Express.js for interacting with database
+  - Backend: API server using FastAPI (Python) for interacting with database
   - DB: Postgres Database
   - Reverse-Proxy: Nginx reverse-proxy for routing incoming requests to either frontend or backend services
 
