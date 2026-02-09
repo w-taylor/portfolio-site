@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   backend:
-    build: 
+    build:
       context: ./backend
       target: production
     env_file: ./.env

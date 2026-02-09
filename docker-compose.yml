@@ -21,11 +21,9 @@ services:
       retries: 5
 
   backend:
-    build: 
+    build:
       context: ./backend
       target: development
-      args:
-        DEV_MODE: "true"
     env_file: ./.env
     environment:
       DB_HOST: db
@@ -33,10 +31,8 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
       BACKEND_PORT: 3000
-      NODE_ENV: development
     expose:
       - "3000"
-    command: npm run dev
     networks:
       - frontend-net
       - backend-net
@@ -45,7 +41,6 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
-      - /app/node_modules
 
   frontend:
     build:

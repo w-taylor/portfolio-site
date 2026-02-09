@@ -1,19 +1,14 @@
-# Build stage (install everything)
-FROM node:18-alpine AS base
+FROM python:3.12-slim AS base
+ENV PYTHONUNBUFFERED=1
 WORKDIR /app
-COPY package*.json ./
-
-# Install ALL deps (including devDependencies) if `--build-arg DEV_MODE=true`
-ARG DEV_MODE=false
-RUN if [ "$DEV_MODE" = "true" ]; then npm ci; \
-    else npm ci --production; fi
-
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
-# Final stage (production)
+# Production
 FROM base AS production
-CMD ["npm", "start"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000}"]
 
-# Dev stage (extends base)
+# Development (hot reload)
 FROM base AS development
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000} --reload"]
