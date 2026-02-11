@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { GRID_SIZE, createEmptyGrid, checkCell, getNeighbors, computeNextGrid } from '@/components/conwayLogic';
+import { GRID_SIZE, createEmptyGrid, checkCell, getNeighbors, computeNextGrid } from '@/components/conway/conwayLogic';
 
 function gridWith(aliveCells) {
   const grid = createEmptyGrid();

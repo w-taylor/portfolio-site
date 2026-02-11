@@ -1,8 +1,8 @@
 import './globals.css';
-import Header from '@/components/Header';
-import HalftoneDivider from '@/components/HalftoneDivider';
-import HalftoneDividerBottom from '@/components/HalftoneDividerBottom';
-import Footer from '@/components/Footer';
+import Header from '@/components/layout/Header';
+import HalftoneDivider from '@/components/layout/HalftoneDivider';
+import HalftoneDividerBottom from '@/components/layout/HalftoneDividerBottom';
+import Footer from '@/components/layout/Footer';
 
 export const metadata = {
   title: 'wtaylor.xyz',

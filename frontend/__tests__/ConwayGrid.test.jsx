@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import ConwayGrid from '@/components/ConwayGrid';
+import ConwayGrid from '@/components/conway/ConwayGrid';
 
 beforeEach(() => {
   vi.useFakeTimers();

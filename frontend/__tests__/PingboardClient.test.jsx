@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
-import PingboardClient from '@/components/PingboardClient';
+import PingboardClient from '@/components/pingboard/PingboardClient';
 
 function makeService(id, overrides = {}) {
     return {

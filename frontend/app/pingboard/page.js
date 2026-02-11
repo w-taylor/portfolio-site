@@ -1,4 +1,4 @@
-import PingboardClient from '@/components/PingboardClient';
+import PingboardClient from '@/components/pingboard/PingboardClient';
 
 export const metadata = {
   title: 'Pingboard | wtaylor.xyz',

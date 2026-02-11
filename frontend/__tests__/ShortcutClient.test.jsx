@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ShortcutClient from '@/components/ShortcutClient';
+import ShortcutClient from '@/components/shortcut/ShortcutClient';
 
 // Mock localStorage
 const localStorageMock = (() => {

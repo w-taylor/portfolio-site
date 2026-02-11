@@ -1,4 +1,4 @@
-import ConwayGrid from '@/components/ConwayGrid';
+import ConwayGrid from '@/components/conway/ConwayGrid';
 
 export const metadata = {
   title: "Conway's Game of Life | wtaylor.xyz",

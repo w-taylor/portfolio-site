@@ -1,4 +1,4 @@
-import ShortcutClient from '@/components/ShortcutClient';
+import ShortcutClient from '@/components/shortcut/ShortcutClient';
 
 export const metadata = {
   title: 'ShortCut | wtaylor.xyz',

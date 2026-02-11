@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import LogoGrid from '@/components/LogoGrid';
-import MainPageBreak from '@/components/MainPageBreak';
-import ProjectEntry from '@/components/ProjectEntry';
+import LogoGrid from '@/components/home/LogoGrid';
+import MainPageBreak from '@/components/home/MainPageBreak';
+import ProjectEntry from '@/components/home/ProjectEntry';
 import styles from './page.module.css';
 
 export default function Home() {

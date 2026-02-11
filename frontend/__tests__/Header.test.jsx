@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
-import Header from '@/components/Header';
+import Header from '@/components/layout/Header';
 
 describe('Header', () => {
   it('toggles mobile menu on hamburger click', () => {
