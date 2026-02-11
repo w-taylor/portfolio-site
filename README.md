@@ -11,4 +11,8 @@ Projects:
   - ShortCut: Creates and saves redirect links from long URLs
   - Conway's Game of Life: Simple implementation of the classic cellular automata simulation
 
+Testing:
+  - For frontend, Vitest and React Testing Library (see frontend/__tests__/README.md)
+  - For backend, Pytest (see backend/tests/README.md)
+
 Check out the live version at https://wtaylor.xyz
