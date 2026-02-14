@@ -202,7 +202,7 @@
 .gameCodeValue {
   font-size: 1.8em;
   color: #00ff41;
-  letter-spacing: 0.3em;
+  margin: .75em 0;
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
 }
 

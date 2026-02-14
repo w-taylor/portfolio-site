@@ -325,8 +325,8 @@ export default function NodeSweepClient() {
             maxLength={5}
             autoFocus
           />
-          <button onClick={joinMultiplayer}>Connect</button>
-          <button onClick={() => { setPhase('menu'); setJoinCode(''); setStatus(''); }}>Back</button>
+          <button className={styles.menuButton} onClick={joinMultiplayer}>Connect</button>
+          <button className={styles.menuButton} onClick={() => { setPhase('menu'); setJoinCode(''); setStatus(''); }}>Back</button>
           {status && <div className={styles.statusBar}>{status}</div>}
         </div>
       </div>
@@ -341,6 +341,7 @@ export default function NodeSweepClient() {
         <div className={styles.gameCode}>
           <div>Share this code with your opponent:</div>
           <div className={styles.gameCodeValue}>{gameCode}</div>
+          <button className={styles.menuButton} onClick={() => { setPhase('menu'); setJoinCode(''); setStatus(''); }}>Back</button>
         </div>
         <div className={`${styles.statusBar} ${styles.statusWaiting}`}>{status}</div>
       </div>
