@@ -1,0 +1,257 @@
+.container {
+  max-width: min(80ch, 100% - 2rem);
+  margin-inline: auto;
+  min-height: calc(100vh - 20em);
+  padding: 1em 0;
+}
+
+.title {
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 0.5em;
+  color: #00ff41;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5em;
+  margin-top: 3em;
+}
+
+.menuSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.menuLabel {
+  font-size: 1.2em;
+  color: #00ff41;
+}
+
+.menuButton {
+  width: 7em;
+  text-align: center;
+}
+
+.codeInput {
+  background: transparent;
+  border: 1px solid #00ff41;
+  color: #00ff41;
+  font-family: monospace;
+  font-size: 1.2em;
+  padding: 0.4em 0.6em;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  width: 8em;
+}
+
+.codeInput::placeholder {
+  color: rgba(0, 255, 65, 0.4);
+}
+
+.codeInput:focus {
+  outline: 1px solid #00ff41;
+  outline-offset: 2px;
+}
+
+/* Grids */
+.gridsWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 3em;
+  flex-wrap: wrap;
+}
+
+.gridSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gridLabel {
+  font-size: 1.1em;
+  margin-bottom: 0.5em;
+  color: #00ff41;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 2.5em);
+  grid-template-rows: repeat(6, 2.5em);
+  gap: 1px;
+  border: 1px solid #00ff41;
+}
+
+.cell {
+  width: 2.5em;
+  height: 2.5em;
+  border: 1px solid #1a3a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  font-weight: bold;
+  cursor: default;
+  transition: background-color 0.15s;
+  background-color: #0a0a0a;
+  color: #ccc;
+}
+
+.cellClickable {
+  cursor: pointer;
+}
+
+.cellClickable:hover {
+  background-color: #1a2a1a;
+  border-color: #00ff41;
+}
+
+/* Your grid node states */
+.cellDecoy {
+  background-color: #1a1a00;
+  color: #ffaa00;
+  border-color: #554400;
+}
+
+.cellServer {
+  background-color: #1a0000;
+  color: #ff4444;
+  border-color: #550000;
+}
+
+.cellOpponentProbed {
+  box-shadow: inset 0 0 0 2px #ff4444;
+}
+
+/* Attack grid states */
+.cellMiss {
+  background-color: #0a1a0a;
+  color: #00ff41;
+}
+
+.cellInvalidated {
+  background-color: #0a0a0a;
+  color: #555;
+}
+
+.cellHitDecoy {
+  background-color: #2a1a00;
+  color: #ffaa00;
+  border-color: #ffaa00;
+}
+
+.cellHitServer {
+  background-color: #2a0000;
+  color: #ff4444;
+  border-color: #ff4444;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 4px #ff4444; }
+  50% { box-shadow: 0 0 12px #ff4444; }
+}
+
+/* Status bar */
+.statusBar {
+  text-align: center;
+  margin-top: 1.5em;
+  font-size: 1.1em;
+  color: #00ff41;
+  min-height: 1.5em;
+}
+
+.statusWaiting {
+  animation: blink 1.5s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Setup */
+.setupControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  margin-top: 1em;
+}
+
+.setupHint {
+  color: #888;
+  font-size: 0.9em;
+}
+
+/* Game code display */
+.gameCode {
+  text-align: center;
+  margin: 1em 0;
+}
+
+.gameCodeValue {
+  font-size: 1.8em;
+  color: #00ff41;
+  letter-spacing: 0.3em;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
+/* Finished overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  gap: 1.5em;
+}
+
+.overlayTitle {
+  font-size: 3em;
+  color: #00ff41;
+  text-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+}
+
+.overlayLoss {
+  color: #ff4444;
+  text-shadow: 0 0 20px rgba(255, 68, 68, 0.6);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.8em;
+  }
+
+  .gridsWrapper {
+    flex-direction: column-reverse;
+    gap: 1.5em;
+  }
+
+  .grid {
+    grid-template-columns: repeat(6, 2.2em);
+    grid-template-rows: repeat(6, 2.2em);
+  }
+
+  .cell {
+    width: 2.2em;
+    height: 2.2em;
+    font-size: 0.8em;
+  }
+}

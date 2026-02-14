@@ -49,7 +49,19 @@ SQL=$(cat <<-EOSQL
 
     CREATE INDEX idx_service_checks_service_id ON service_checks(service_id);
     CREATE INDEX idx_service_checks_checked_at ON service_checks(checked_at);
-    
+
+    CREATE TABLE node_sweep_games (
+        id SERIAL PRIMARY KEY,
+        game_id VARCHAR(36) UNIQUE NOT NULL,
+        mode VARCHAR(20) NOT NULL,
+        winner VARCHAR(10),
+        total_probes INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        finished_at TIMESTAMPTZ
+    );
+
+    CREATE INDEX idx_node_sweep_game_id ON node_sweep_games(game_id);
+
 EOSQL
 )
 
