@@ -245,7 +245,13 @@ async def node_sweep_ws(ws: WebSocket):
             state = games[game_id]
             if player and player in state.ws_connections:
                 del state.ws_connections[player]
-            if not state.ws_connections and state.phase == "finished":
+            # Notify remaining opponent of disconnection
+            if state.phase != "finished":
+                opponent = "p2" if player == "p1" else "p1"
+                if opponent in state.ws_connections:
+                    await send_json(state.ws_connections[opponent], {"type": "opponent_disconnected"})
+            # Clean up game if no connections remain, or if game is now unplayable
+            if not state.ws_connections or (state.mode == "multiplayer" and state.phase != "finished"):
                 games.pop(game_id, None)
                 if state.game_code:
                     game_codes.pop(state.game_code, None)

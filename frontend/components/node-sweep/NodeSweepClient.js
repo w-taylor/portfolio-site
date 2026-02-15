@@ -107,6 +107,9 @@ function gameReducer(state, action) {
     case 'GAME_OVER':
       return { ...state, phase: 'finished', winner: action.winner };
 
+    case 'OPPONENT_DISCONNECTED':
+      return { ...state, phase: 'disconnected', status: 'Opponent disconnected.' };
+
     case 'PLACE_NODE': {
       const newNodes = [...state.placedNodes, action.position];
       const newServerIndex = state.serverIndex === null ? newNodes.length - 1 : state.serverIndex;
@@ -170,6 +173,9 @@ function useNodeSweepGame() {
         break;
       case 'game_over':
         dispatch({ type: 'GAME_OVER', winner: data.winner });
+        break;
+      case 'opponent_disconnected':
+        dispatch({ type: 'OPPONENT_DISCONNECTED' });
         break;
       case 'error':
         dispatch({ type: 'SET_STATUS', status: `Error: ${data.message}` });
@@ -440,6 +446,15 @@ export default function NodeSweepClient() {
           onBack={actions.goToMenu}
           status={state.status}
         />
+      );
+
+    case 'disconnected':
+      return (
+        <div className={styles.container} style={{ textAlign: 'center' }}>
+          <h1 className={styles.title}>NODE SWEEP</h1>
+          <div className={styles.statusBar}>{state.status}</div>
+          <button className={styles.menuButton} onClick={actions.newGame}>Back to Menu</button>
+        </div>
       );
 
     default:
