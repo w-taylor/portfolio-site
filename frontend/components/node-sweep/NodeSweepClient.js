@@ -34,6 +34,9 @@ const initialState = {
   serverIndex: null,
   myGrid: createEmptyGrid(),
   attackGrid: createEmptyGrid(),
+  stats: null,
+  statsLoading: false,
+  statsError: null,
 };
 
 function gameReducer(state, action) {
@@ -109,6 +112,15 @@ function gameReducer(state, action) {
 
     case 'OPPONENT_DISCONNECTED':
       return { ...state, phase: 'disconnected', status: 'Opponent disconnected.' };
+
+    case 'GO_TO_STATS':
+      return { ...state, phase: 'stats', statsLoading: true, statsError: null, stats: null };
+
+    case 'STATS_LOADED':
+      return { ...state, statsLoading: false, stats: action.stats };
+
+    case 'STATS_ERROR':
+      return { ...state, statsLoading: false, statsError: action.error };
 
     case 'PLACE_NODE': {
       const newNodes = [...state.placedNodes, action.position];
@@ -251,6 +263,16 @@ function useNodeSweepGame() {
     setJoinCode: (val) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
     goToJoin: () => dispatch({ type: 'SET_PHASE', phase: 'joining' }),
     goToMenu: () => { dispatch({ type: 'SET_PHASE', phase: 'menu' }); dispatch({ type: 'SET_JOIN_CODE', joinCode: '' }); dispatch({ type: 'SET_STATUS', status: '' }); },
+    goToStats: () => {
+      dispatch({ type: 'GO_TO_STATS' });
+      fetch('/api/node-sweep/stats')
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to fetch stats');
+          return res.json();
+        })
+        .then(data => dispatch({ type: 'STATS_LOADED', stats: data }))
+        .catch(err => dispatch({ type: 'STATS_ERROR', error: err.message }));
+    },
     handleSetupClick,
     confirmPlacement,
     probe,
@@ -262,7 +284,7 @@ function useNodeSweepGame() {
 
 // --- Phase Sub-Components ---
 
-function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame }) {
+function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats }) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -274,6 +296,37 @@ function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame }) {
           <button className={styles.menuButton} onClick={onCreateMultiplayer}>Create Game</button>
           <button className={styles.menuButton} onClick={onJoinGame}>Join Game</button>
         </div>
+        <span className={styles.menuLabel}>Global Stats</span>
+        <button className={styles.menuButton} onClick={onStats}>View Stats</button>
+      </div>
+    </div>
+  );
+}
+
+function StatsPhase({ stats, loading, error, onBack }) {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>NODE SWEEP</h1>
+      <div className={styles.menu}>
+        <span className={styles.menuLabel}>Global Stats</span>
+        {loading && (
+          <div className={buildClassName(styles.statusBar, { [styles.statusWaiting]: true })}>Loading...</div>
+        )}
+        {error && (
+          <div className={styles.statusBar}>Error: {error}</div>
+        )}
+        {stats && (
+          stats.total_games === 0 ? (
+            <div className={styles.statusBar}>No games played yet.</div>
+          ) : (
+            <ul className={styles.statsList}>
+              <li>Total games played: <strong>{stats.total_games}</strong></li>
+              <li>Bot winrate: <strong>{stats.bot_winrate !== null ? `${Math.round(stats.bot_winrate * 100)}%` : 'N/A'}</strong></li>
+              <li>Avg probes to win: <strong>{stats.avg_probes_to_win ?? 'N/A'}</strong></li>
+            </ul>
+          )
+        )}
+        <button className={styles.menuButton} onClick={onBack}>Back</button>
       </div>
     </div>
   );
@@ -425,6 +478,17 @@ export default function NodeSweepClient() {
           onStartBot={actions.startBot}
           onCreateMultiplayer={actions.createMultiplayer}
           onJoinGame={actions.goToJoin}
+          onStats={actions.goToStats}
+        />
+      );
+
+    case 'stats':
+      return (
+        <StatsPhase
+          stats={state.stats}
+          loading={state.statsLoading}
+          error={state.statsError}
+          onBack={actions.goToMenu}
         />
       );
 

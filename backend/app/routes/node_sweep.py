@@ -12,6 +12,26 @@ from ..db import get_pool
 
 router = APIRouter()
 
+
+@router.get("/api/node-sweep/stats")
+async def get_stats():
+    pool = await get_pool()
+    row = await pool.fetchrow("""
+        SELECT
+            COUNT(*) AS total_games,
+            COUNT(*) FILTER (WHERE mode = 'bot' AND winner = 'opponent') AS bot_wins,
+            COUNT(*) FILTER (WHERE mode = 'bot') AS bot_games,
+            ROUND(AVG(total_probes) FILTER (WHERE winner IS NOT NULL))::int AS avg_probes
+        FROM node_sweep_games
+    """)
+    bot_winrate = round(row["bot_wins"] / row["bot_games"], 2) if row["bot_games"] else None
+    return {
+        "total_games": row["total_games"],
+        "bot_winrate": bot_winrate,
+        "avg_probes_to_win": row["avg_probes"],
+    }
+
+
 games: dict[str, GameState] = {}
 game_codes: dict[str, str] = {}
 
