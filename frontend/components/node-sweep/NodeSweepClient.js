@@ -1,27 +1,129 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useReducer, useRef, useEffect, useCallback } from 'react';
 import styles from './NodeSweepClient.module.css';
-import { createEmptyGrid, isValidPlacement } from './nodeSweepLogic';
+import {
+  createEmptyGrid,
+  isValidPlacement,
+  getMyGridCellState,
+  getAttackGridCellState,
+} from './nodeSweepLogic';
 
-export default function NodeSweepClient() {
-  const [phase, setPhase] = useState('menu'); // menu, joining, waiting, setup, playing, finished
-  const [mode, setMode] = useState(null);
-  const [gameCode, setGameCode] = useState('');
-  const [joinCode, setJoinCode] = useState('');
-  const [player, setPlayer] = useState(null);
-  const [myTurn, setMyTurn] = useState(false);
-  const [status, setStatus] = useState('');
-  const [winner, setWinner] = useState(null);
+// --- Helpers ---
 
-  // Setup state
-  const [placedNodes, setPlacedNodes] = useState([]);
-  const [serverIndex, setServerIndex] = useState(0);
+function buildClassName(base, modifierMap) {
+  let result = base;
+  for (const [cls, active] of Object.entries(modifierMap)) {
+    if (active) result += ` ${cls}`;
+  }
+  return result;
+}
 
-  // Grid state
-  const [myGrid, setMyGrid] = useState(createEmptyGrid);
-  const [attackGrid, setAttackGrid] = useState(createEmptyGrid);
+// --- Reducer ---
 
+const initialState = {
+  phase: 'menu',
+  mode: null,
+  gameCode: '',
+  joinCode: '',
+  player: null,
+  myTurn: false,
+  status: '',
+  winner: null,
+  placedNodes: [],
+  serverIndex: 0,
+  myGrid: createEmptyGrid(),
+  attackGrid: createEmptyGrid(),
+};
+
+function gameReducer(state, action) {
+  switch (action.type) {
+    case 'RESET':
+      return { ...initialState, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
+
+    case 'SET_PHASE':
+      return { ...state, phase: action.phase };
+
+    case 'SET_STATUS':
+      return { ...state, status: action.status };
+
+    case 'SET_JOIN_CODE':
+      return { ...state, joinCode: action.joinCode };
+
+    case 'SET_MODE':
+      return { ...state, mode: action.mode };
+
+    case 'GAME_CREATED':
+      if (action.gameCode) {
+        return { ...state, player: action.player, gameCode: action.gameCode, phase: 'waiting', status: 'Waiting for opponent...' };
+      }
+      return { ...state, player: action.player, phase: 'setup', status: 'Place 3 nodes on your grid. Click a node to mark it as server.' };
+
+    case 'GAME_JOINED':
+      return { ...state, player: action.player, phase: 'setup', status: 'Place 3 nodes on your grid. Click a node to mark it as server.' };
+
+    case 'OPPONENT_JOINED':
+      return { ...state, phase: 'setup', status: 'Opponent joined! Place 3 nodes on your grid.' };
+
+    case 'NODES_PLACED':
+      return { ...state, status: 'Waiting for game to start...' };
+
+    case 'TURN_START':
+      return {
+        ...state,
+        phase: 'playing',
+        myTurn: action.yourTurn,
+        status: action.yourTurn ? 'Your turn — probe the attack grid' : "Opponent's turn...",
+      };
+
+    case 'PROBE_RESULT': {
+      const nextAttack = state.attackGrid.map(r => [...r]);
+      nextAttack[action.row][action.col] = {
+        hit: action.hit,
+        isServer: action.isServer || false,
+        distance: action.distance,
+      };
+      if (action.invalidated) {
+        for (const [r, c] of action.invalidated) {
+          if (nextAttack[r][c] && !nextAttack[r][c].hit) {
+            nextAttack[r][c] = { ...nextAttack[r][c], invalidated: true };
+          }
+        }
+      }
+      return { ...state, attackGrid: nextAttack };
+    }
+
+    case 'OPPONENT_PROBED': {
+      const nextMy = state.myGrid.map(r => [...r]);
+      const existing = nextMy[action.row][action.col];
+      nextMy[action.row][action.col] = {
+        ...(existing && typeof existing === 'object' ? existing : {}),
+        probed: true,
+        hit: action.hit,
+      };
+      return { ...state, myGrid: nextMy };
+    }
+
+    case 'GAME_OVER':
+      return { ...state, phase: 'finished', winner: action.winner };
+
+    case 'PLACE_NODE': {
+      const newNodes = [...state.placedNodes, action.position];
+      return { ...state, placedNodes: newNodes };
+    }
+
+    case 'SET_SERVER_INDEX':
+      return { ...state, serverIndex: action.index };
+
+    default:
+      return state;
+  }
+}
+
+// --- Custom Hook ---
+
+function useNodeSweepGame() {
+  const [state, dispatch] = useReducer(gameReducer, initialState);
   const wsRef = useRef(null);
 
   const handleMessage = useCallback((event) => {
@@ -29,88 +131,46 @@ export default function NodeSweepClient() {
 
     switch (data.type) {
       case 'game_created':
-        setPlayer(data.player);
-        if (data.game_code) {
-          setGameCode(data.game_code);
-          setPhase('waiting');
-          setStatus('Waiting for opponent...');
-        } else {
-          setPhase('setup');
-          setStatus('Place 3 nodes on your grid. Click a node to mark it as server.');
-        }
+        dispatch({ type: 'GAME_CREATED', player: data.player, gameCode: data.game_code });
         break;
-
       case 'game_joined':
-        setPlayer(data.player);
-        setPhase('setup');
-        setStatus('Place 3 nodes on your grid. Click a node to mark it as server.');
+        dispatch({ type: 'GAME_JOINED', player: data.player });
         break;
-
       case 'opponent_joined':
-        setPhase('setup');
-        setStatus('Opponent joined! Place 3 nodes on your grid.');
+        dispatch({ type: 'OPPONENT_JOINED' });
         break;
-
       case 'nodes_placed':
-        setStatus('Waiting for game to start...');
+        dispatch({ type: 'NODES_PLACED' });
         break;
-
       case 'turn_start':
-        setPhase('playing');
-        setMyTurn(data.your_turn);
-        setStatus(data.your_turn ? 'Your turn — probe the attack grid' : "Opponent's turn...");
+        dispatch({ type: 'TURN_START', yourTurn: data.your_turn });
         break;
-
-      case 'probe_result': {
-        setAttackGrid(prev => {
-          const next = prev.map(r => [...r]);
-          next[data.row][data.col] = {
-            hit: data.hit,
-            isServer: data.is_server || false,
-            distance: data.distance,
-          };
-          if (data.invalidated) {
-            for (const [r, c] of data.invalidated) {
-              if (next[r][c] && !next[r][c].hit) {
-                next[r][c] = { ...next[r][c], invalidated: true };
-              }
-            }
-          }
-          return next;
+      case 'probe_result':
+        dispatch({
+          type: 'PROBE_RESULT',
+          row: data.row,
+          col: data.col,
+          hit: data.hit,
+          isServer: data.is_server,
+          distance: data.distance,
+          invalidated: data.invalidated,
         });
         break;
-      }
-
-      case 'opponent_probed': {
-        setMyGrid(prev => {
-          const next = prev.map(r => [...r]);
-          const existing = next[data.row][data.col];
-          next[data.row][data.col] = {
-            ...(existing && typeof existing === 'object' ? existing : {}),
-            probed: true,
-            hit: data.hit,
-          };
-          return next;
-        });
+      case 'opponent_probed':
+        dispatch({ type: 'OPPONENT_PROBED', row: data.row, col: data.col, hit: data.hit });
         break;
-      }
-
       case 'game_over':
-        setPhase('finished');
-        setWinner(data.winner);
+        dispatch({ type: 'GAME_OVER', winner: data.winner });
         break;
-
       case 'error':
-        setStatus(`Error: ${data.message}`);
+        dispatch({ type: 'SET_STATUS', status: `Error: ${data.message}` });
         break;
     }
   }, []);
 
   useEffect(() => {
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      if (wsRef.current) wsRef.current.close();
     };
   }, []);
 
@@ -118,162 +178,171 @@ export default function NodeSweepClient() {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const ws = new WebSocket(`${protocol}//${window.location.host}/ws/node-sweep`);
     ws.onmessage = handleMessage;
-    ws.onerror = () => setStatus('Connection error');
-    ws.onclose = () => {
-      if (phase !== 'finished' && phase !== 'menu') {
-        setStatus('Connection lost');
-      }
-    };
+    ws.onerror = () => dispatch({ type: 'SET_STATUS', status: 'Connection error' });
+    ws.onclose = () => dispatch({ type: 'SET_STATUS', status: 'Connection lost' });
     wsRef.current = ws;
     return ws;
   }
 
-  function startBot() {
-    setMode('bot');
+  function startGame(mode, joinCodeValue) {
+    dispatch({ type: 'SET_MODE', mode: mode === 'join' ? 'multiplayer' : mode });
     const ws = connectWs();
-    ws.onopen = () => ws.send(JSON.stringify({ type: 'create_game', mode: 'bot' }));
-  }
-
-  function createMultiplayer() {
-    setMode('multiplayer');
-    const ws = connectWs();
-    ws.onopen = () => ws.send(JSON.stringify({ type: 'create_game', mode: 'multiplayer' }));
-  }
-
-  function joinMultiplayer() {
-    if (!joinCode.trim()) return;
-    setMode('multiplayer');
-    const ws = connectWs();
-    ws.onopen = () => ws.send(JSON.stringify({ type: 'join_game', game_code: joinCode.trim() }));
+    if (mode === 'bot') {
+      ws.onopen = () => ws.send(JSON.stringify({ type: 'create_game', mode: 'bot' }));
+    } else if (mode === 'multiplayer') {
+      ws.onopen = () => ws.send(JSON.stringify({ type: 'create_game', mode: 'multiplayer' }));
+    } else if (mode === 'join') {
+      ws.onopen = () => ws.send(JSON.stringify({ type: 'join_game', game_code: joinCodeValue }));
+    }
   }
 
   function handleSetupClick(row, col) {
-    const existingIdx = placedNodes.findIndex(([r, c]) => r === row && c === col);
-
+    const existingIdx = state.placedNodes.findIndex(([r, c]) => r === row && c === col);
     if (existingIdx !== -1) {
-      // Clicking existing node: cycle server designation
-      setServerIndex(existingIdx);
+      dispatch({ type: 'SET_SERVER_INDEX', index: existingIdx });
       return;
     }
-
-    if (placedNodes.length >= 3) return;
-
-    const newNodes = [...placedNodes, [row, col]];
+    if (state.placedNodes.length >= 3) return;
+    const newNodes = [...state.placedNodes, [row, col]];
     if (isValidPlacement(newNodes)) {
-      setPlacedNodes(newNodes);
+      dispatch({ type: 'PLACE_NODE', position: [row, col] });
     }
   }
 
   function confirmPlacement() {
-    if (placedNodes.length !== 3) return;
+    if (state.placedNodes.length !== 3) return;
     wsRef.current.send(JSON.stringify({
       type: 'place_nodes',
-      positions: placedNodes,
-      server_index: serverIndex,
+      positions: state.placedNodes,
+      server_index: state.serverIndex,
     }));
   }
 
-  function handleProbe(row, col) {
-    if (!myTurn || phase !== 'playing') return;
-    if (attackGrid[row][col] !== null) return;
+  function probe(row, col) {
+    if (!state.myTurn || state.phase !== 'playing') return;
+    if (state.attackGrid[row][col] !== null) return;
     wsRef.current.send(JSON.stringify({ type: 'probe', row, col }));
   }
 
   function newGame() {
     if (wsRef.current) wsRef.current.close();
-    setPhase('menu');
-    setMode(null);
-    setGameCode('');
-    setJoinCode('');
-    setPlayer(null);
-    setMyTurn(false);
-    setStatus('');
-    setWinner(null);
-    setPlacedNodes([]);
-    setServerIndex(0);
-    setMyGrid(createEmptyGrid());
-    setAttackGrid(createEmptyGrid());
+    dispatch({ type: 'RESET' });
   }
 
+  const actions = {
+    startBot: () => startGame('bot'),
+    createMultiplayer: () => startGame('multiplayer'),
+    joinMultiplayer: (code) => { if (code.trim()) startGame('join', code.trim()); },
+    setJoinCode: (val) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
+    goToJoin: () => dispatch({ type: 'SET_PHASE', phase: 'joining' }),
+    goToMenu: () => { dispatch({ type: 'SET_PHASE', phase: 'menu' }); dispatch({ type: 'SET_JOIN_CODE', joinCode: '' }); dispatch({ type: 'SET_STATUS', status: '' }); },
+    handleSetupClick,
+    confirmPlacement,
+    probe,
+    newGame,
+  };
+
+  return { state, actions };
+}
+
+// --- Phase Sub-Components ---
+
+function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame }) {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>NODE SWEEP</h1>
+      <div className={styles.menu}>
+        <span className={styles.menuLabel}>Play vs Bot</span>
+        <button className={styles.menuButton} onClick={onStartBot}>Start Game</button>
+        <div className={styles.menuSection}>
+          <span className={styles.menuLabel}>Multiplayer</span>
+          <button className={styles.menuButton} onClick={onCreateMultiplayer}>Create Game</button>
+          <button className={styles.menuButton} onClick={onJoinGame}>Join Game</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }) {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>NODE SWEEP</h1>
+      <div className={styles.menu}>
+        <span className={styles.menuLabel}>Enter game code</span>
+        <input
+          className={styles.codeInput}
+          placeholder="CODE"
+          value={joinCode}
+          onChange={e => onJoinCodeChange(e.target.value.toUpperCase())}
+          onKeyDown={e => e.key === 'Enter' && onJoin()}
+          maxLength={5}
+          autoFocus
+        />
+        <button className={styles.menuButton} onClick={onJoin}>Connect</button>
+        <button className={styles.menuButton} onClick={onBack}>Back</button>
+        {status && <div className={styles.statusBar}>{status}</div>}
+      </div>
+    </div>
+  );
+}
+
+function WaitingPhase({ gameCode, onBack, status }) {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>NODE SWEEP</h1>
+      <div className={styles.gameCode}>
+        <div>Share this code with your opponent:</div>
+        <div className={styles.gameCodeValue}>{gameCode}</div>
+        <button className={styles.menuButton} onClick={onBack}>Back</button>
+      </div>
+      <div className={buildClassName(styles.statusBar, { [styles.statusWaiting]: true })}>{status}</div>
+    </div>
+  );
+}
+
+function GamePhase({ state, actions }) {
+  const { phase, myGrid, attackGrid, placedNodes, serverIndex, myTurn, status, winner } = state;
+
   function renderMyCell(row, col) {
-    const cellData = myGrid[row][col];
-    const isPlaced = placedNodes.findIndex(([r, c]) => r === row && c === col);
-    const isSetup = phase === 'setup';
+    const cell = getMyGridCellState(row, col, myGrid, placedNodes, serverIndex, phase);
 
-    let className = styles.cell;
-    let content = '';
-
-    if (isSetup && isPlaced !== -1) {
-      if (isPlaced === serverIndex) {
-        className += ` ${styles.cellServer}`;
-        content = 'S';
-      } else {
-        className += ` ${styles.cellDecoy}`;
-        content = 'D';
-      }
-      if (isSetup) className += ` ${styles.cellClickable}`;
-    } else if (phase === 'playing' || phase === 'finished') {
-      if (isPlaced !== -1) {
-        if (isPlaced === serverIndex) {
-          className += ` ${styles.cellServer}`;
-          content = 'S';
-        } else {
-          className += ` ${styles.cellDecoy}`;
-          content = 'D';
-        }
-      }
-      if (cellData && typeof cellData === 'object' && cellData.probed) {
-        className += ` ${styles.cellOpponentProbed}`;
-      }
-    }
-
-    if (isSetup && isPlaced === -1) {
-      className += ` ${styles.cellClickable}`;
-    }
+    const className = buildClassName(styles.cell, {
+      [styles.cellServer]: cell.isServer,
+      [styles.cellDecoy]: cell.isDecoy,
+      [styles.cellClickable]: cell.isClickable,
+      [styles.cellOpponentProbed]: cell.isProbed,
+    });
 
     return (
       <div
         key={`my-${row}-${col}`}
         className={className}
-        onClick={isSetup ? () => handleSetupClick(row, col) : undefined}
+        onClick={phase === 'setup' ? () => actions.handleSetupClick(row, col) : undefined}
       >
-        {content}
+        {cell.content}
       </div>
     );
   }
 
   function renderAttackCell(row, col) {
-    const cellData = attackGrid[row][col];
-    let className = styles.cell;
-    let content = '';
+    const cell = getAttackGridCellState(row, col, attackGrid, myTurn, phase);
 
-    if (cellData !== null && typeof cellData === 'object') {
-      if (cellData.hit) {
-        if (cellData.isServer) {
-          className += ` ${styles.cellHitServer}`;
-          content = 'S';
-        } else {
-          className += ` ${styles.cellHitDecoy}`;
-          content = 'D';
-        }
-      } else if (cellData.invalidated) {
-        className += ` ${styles.cellInvalidated}`;
-        content = 'X';
-      } else {
-        className += ` ${styles.cellMiss}`;
-        content = cellData.distance;
-      }
-    } else if (phase === 'playing' && myTurn) {
-      className += ` ${styles.cellClickable}`;
-    }
+    const className = buildClassName(styles.cell, {
+      [styles.cellHitServer]: cell.isServer,
+      [styles.cellHitDecoy]: cell.isHit && !cell.isServer,
+      [styles.cellInvalidated]: cell.isInvalidated,
+      [styles.cellMiss]: cell.isMiss,
+      [styles.cellClickable]: cell.isClickable,
+    });
 
     return (
       <div
         key={`atk-${row}-${col}`}
         className={className}
-        onClick={cellData === null && myTurn && phase === 'playing' ? () => handleProbe(row, col) : undefined}
+        onClick={cell.isClickable ? () => actions.probe(row, col) : undefined}
       >
-        {content}
+        {cell.content}
       </div>
     );
   }
@@ -291,64 +360,6 @@ export default function NodeSweepClient() {
     );
   }
 
-  // Menu phase
-  if (phase === 'menu') {
-    return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>NODE SWEEP</h1>
-        <div className={styles.menu}>
-          <span className={styles.menuLabel}>Play vs Bot</span>
-          <button className={styles.menuButton} onClick={startBot}>Start Game</button>
-          <div className={styles.menuSection}>
-            <span className={styles.menuLabel}>Multiplayer</span>
-            <button className={styles.menuButton} onClick={createMultiplayer}>Create Game</button>
-            <button className={styles.menuButton} onClick={() => setPhase('joining')}>Join Game</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Join game code entry
-  if (phase === 'joining') {
-    return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>NODE SWEEP</h1>
-        <div className={styles.menu}>
-          <span className={styles.menuLabel}>Enter game code</span>
-          <input
-            className={styles.codeInput}
-            placeholder="CODE"
-            value={joinCode}
-            onChange={e => setJoinCode(e.target.value.toUpperCase())}
-            onKeyDown={e => e.key === 'Enter' && joinMultiplayer()}
-            maxLength={5}
-            autoFocus
-          />
-          <button className={styles.menuButton} onClick={joinMultiplayer}>Connect</button>
-          <button className={styles.menuButton} onClick={() => { setPhase('menu'); setJoinCode(''); setStatus(''); }}>Back</button>
-          {status && <div className={styles.statusBar}>{status}</div>}
-        </div>
-      </div>
-    );
-  }
-
-  // Waiting for opponent (multiplayer)
-  if (phase === 'waiting') {
-    return (
-      <div className={styles.container}>
-        <h1 className={styles.title}>NODE SWEEP</h1>
-        <div className={styles.gameCode}>
-          <div>Share this code with your opponent:</div>
-          <div className={styles.gameCodeValue}>{gameCode}</div>
-          <button className={styles.menuButton} onClick={() => { setPhase('menu'); setJoinCode(''); setStatus(''); }}>Back</button>
-        </div>
-        <div className={`${styles.statusBar} ${styles.statusWaiting}`}>{status}</div>
-      </div>
-    );
-  }
-
-  // Setup + Playing + Finished
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -366,23 +377,63 @@ export default function NodeSweepClient() {
               : 'Click a node to set it as the server (S). Then confirm.'}
           </div>
           {placedNodes.length === 3 && (
-            <button onClick={confirmPlacement}>Confirm Placement</button>
+            <button onClick={actions.confirmPlacement}>Confirm Placement</button>
           )}
         </div>
       )}
 
-      <div className={`${styles.statusBar} ${!myTurn && phase === 'playing' ? styles.statusWaiting : ''}`}>
+      <div className={buildClassName(styles.statusBar, { [styles.statusWaiting]: !myTurn && phase === 'playing' })}>
         {status}
       </div>
 
       {phase === 'finished' && (
         <div className={styles.overlay}>
-          <div className={`${styles.overlayTitle} ${winner !== 'you' ? styles.overlayLoss : ''}`}>
+          <div className={buildClassName(styles.overlayTitle, { [styles.overlayLoss]: winner !== 'you' })}>
             {winner === 'you' ? 'ACCESS GRANTED' : 'CONNECTION TERMINATED'}
           </div>
-          <button onClick={newGame}>New Game</button>
+          <button onClick={actions.newGame}>New Game</button>
         </div>
       )}
     </div>
   );
+}
+
+// --- Main Component ---
+
+export default function NodeSweepClient() {
+  const { state, actions } = useNodeSweepGame();
+
+  switch (state.phase) {
+    case 'menu':
+      return (
+        <MenuPhase
+          onStartBot={actions.startBot}
+          onCreateMultiplayer={actions.createMultiplayer}
+          onJoinGame={actions.goToJoin}
+        />
+      );
+
+    case 'joining':
+      return (
+        <JoiningPhase
+          joinCode={state.joinCode}
+          onJoinCodeChange={actions.setJoinCode}
+          onJoin={() => actions.joinMultiplayer(state.joinCode)}
+          onBack={actions.goToMenu}
+          status={state.status}
+        />
+      );
+
+    case 'waiting':
+      return (
+        <WaitingPhase
+          gameCode={state.gameCode}
+          onBack={actions.goToMenu}
+          status={state.status}
+        />
+      );
+
+    default:
+      return <GamePhase state={state} actions={actions} />;
+  }
 }
