@@ -31,7 +31,7 @@ const initialState = {
   status: '',
   winner: null,
   placedNodes: [],
-  serverIndex: 0,
+  serverIndex: null,
   myGrid: createEmptyGrid(),
   attackGrid: createEmptyGrid(),
 };
@@ -39,7 +39,7 @@ const initialState = {
 function gameReducer(state, action) {
   switch (action.type) {
     case 'RESET':
-      return { ...initialState, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
+      return { ...initialState, serverIndex: null, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
 
     case 'SET_PHASE':
       return { ...state, phase: action.phase };
@@ -57,10 +57,10 @@ function gameReducer(state, action) {
       if (action.gameCode) {
         return { ...state, player: action.player, gameCode: action.gameCode, phase: 'waiting', status: 'Waiting for opponent...' };
       }
-      return { ...state, player: action.player, phase: 'setup', status: 'Place 3 nodes on your grid. Click a node to mark it as server.' };
+      return { ...state, player: action.player, phase: 'setup', status: 'Place a server node (S) and two decoy nodes (D) on your grid.' };
 
     case 'GAME_JOINED':
-      return { ...state, player: action.player, phase: 'setup', status: 'Place 3 nodes on your grid. Click a node to mark it as server.' };
+      return { ...state, player: action.player, phase: 'setup', status: 'Place a server node (S) and two decoy nodes (D) on your grid.' };
 
     case 'OPPONENT_JOINED':
       return { ...state, phase: 'setup', status: 'Opponent joined! Place 3 nodes on your grid.' };
@@ -109,11 +109,20 @@ function gameReducer(state, action) {
 
     case 'PLACE_NODE': {
       const newNodes = [...state.placedNodes, action.position];
-      return { ...state, placedNodes: newNodes };
+      const newServerIndex = state.serverIndex === null ? newNodes.length - 1 : state.serverIndex;
+      return { ...state, placedNodes: newNodes, serverIndex: newServerIndex };
     }
 
-    case 'SET_SERVER_INDEX':
-      return { ...state, serverIndex: action.index };
+    case 'REMOVE_NODE': {
+      const newNodes = state.placedNodes.filter((_, i) => i !== action.index);
+      let newServerIndex = state.serverIndex;
+      if (action.index === state.serverIndex) {
+        newServerIndex = null;
+      } else if (state.serverIndex !== null && action.index < state.serverIndex) {
+        newServerIndex = state.serverIndex - 1;
+      }
+      return { ...state, placedNodes: newNodes, serverIndex: newServerIndex };
+    }
 
     default:
       return state;
@@ -199,7 +208,7 @@ function useNodeSweepGame() {
   function handleSetupClick(row, col) {
     const existingIdx = state.placedNodes.findIndex(([r, c]) => r === row && c === col);
     if (existingIdx !== -1) {
-      dispatch({ type: 'SET_SERVER_INDEX', index: existingIdx });
+      dispatch({ type: 'REMOVE_NODE', index: existingIdx });
       return;
     }
     if (state.placedNodes.length >= 3) return;
@@ -210,7 +219,7 @@ function useNodeSweepGame() {
   }
 
   function confirmPlacement() {
-    if (state.placedNodes.length !== 3) return;
+    if (state.placedNodes.length !== 3 || state.serverIndex === null) return;
     wsRef.current.send(JSON.stringify({
       type: 'place_nodes',
       positions: state.placedNodes,
@@ -374,7 +383,7 @@ function GamePhase({ state, actions }) {
           <div className={styles.setupHint}>
             {placedNodes.length < 3
               ? `Place ${3 - placedNodes.length} more node${3 - placedNodes.length !== 1 ? 's' : ''}`
-              : 'Click a node to set it as the server (S). Then confirm.'}
+              : 'Click a node to remove it.'}
           </div>
           {placedNodes.length === 3 && (
             <button onClick={actions.confirmPlacement}>Confirm Placement</button>
