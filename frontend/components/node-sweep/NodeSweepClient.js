@@ -206,12 +206,15 @@ function useNodeSweepGame() {
     const ws = new WebSocket(`${protocol}//${window.location.host}/ws/node-sweep`);
     ws.onmessage = handleMessage;
     ws.onerror = () => dispatch({ type: 'SET_STATUS', status: 'Connection error' });
-    ws.onclose = () => dispatch({ type: 'SET_STATUS', status: 'Connection lost' });
+    ws.onclose = (e) => {
+      if (e.code !== 1000) dispatch({ type: 'SET_STATUS', status: 'Connection lost' });
+    };
     wsRef.current = ws;
     return ws;
   }
 
   function startGame(mode, joinCodeValue) {
+    dispatch({ type: 'SET_STATUS', status: '' });
     dispatch({ type: 'SET_MODE', mode: mode === 'join' ? 'multiplayer' : mode });
     const ws = connectWs();
     if (mode === 'bot') {
@@ -284,7 +287,7 @@ function useNodeSweepGame() {
 
 // --- Phase Sub-Components ---
 
-function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats }) {
+function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, status }) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -299,6 +302,7 @@ function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats }) {
         <span className={styles.menuLabel}>Global Stats</span>
         <button className={styles.menuButton} onClick={onStats}>View Stats</button>
       </div>
+      {status && <div className={styles.statusBar}>{status}</div>}
     </div>
   );
 }
@@ -479,6 +483,7 @@ export default function NodeSweepClient() {
           onCreateMultiplayer={actions.createMultiplayer}
           onJoinGame={actions.goToJoin}
           onStats={actions.goToStats}
+          status={state.status}
         />
       );
 

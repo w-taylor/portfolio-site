@@ -32,6 +32,7 @@ async def get_stats():
     }
 
 
+MAX_GAMES = 20
 games: dict[str, GameState] = {}
 game_codes: dict[str, str] = {}
 
@@ -201,6 +202,10 @@ async def node_sweep_ws(ws: WebSocket):
             msg_type = data.get("type")
 
             if msg_type == "create_game":
+                if len(games) >= MAX_GAMES:
+                    await send_json(ws, {"type": "error", "message": "Server is full, try again later"})
+                    await ws.close()
+                    return
                 mode = data.get("mode", "bot")
                 game_id = str(uuid.uuid4())
                 state = GameState(game_id=game_id, mode=mode)
