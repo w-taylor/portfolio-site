@@ -77,6 +77,32 @@
   color: #00ff41;
 }
 
+/* How to Play */
+.howToPlay {
+  border: 1px solid #00ff41;
+  background-color: #0a0a0a;
+  padding: 1.5em;
+  max-width: 40em;
+  margin-inline: auto;
+  text-align: left;
+  color: #ccc;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+.howToPlay p {
+  margin: 0 0 1em;
+}
+
+.howToPlay p:last-child {
+  margin-bottom: 0;
+}
+
+.howToPlayHeader {
+  color: #00ff41;
+  font-weight: bold;
+}
+
 /* Grids */
 .gridsWrapper {
   display: flex;
@@ -267,5 +293,10 @@
 
   .cell {
     font-size: 0.8em;
+  }
+
+  .howToPlay {
+    font-size: 0.85em;
+    padding: 1em;
   }
 }

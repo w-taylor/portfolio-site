@@ -274,6 +274,7 @@ function useNodeSweepGame() {
     setJoinCode: (val) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
     goToJoin: () => dispatch({ type: 'SET_PHASE', phase: 'joining' }),
     goToMenu: () => { dispatch({ type: 'SET_PHASE', phase: 'menu' }); dispatch({ type: 'SET_JOIN_CODE', joinCode: '' }); dispatch({ type: 'SET_STATUS', status: '' }); },
+    goToHelp: () => dispatch({ type: 'SET_PHASE', phase: 'help' }),
     goToStats: () => {
       dispatch({ type: 'GO_TO_STATS' });
       fetch('/api/node-sweep/stats')
@@ -295,11 +296,12 @@ function useNodeSweepGame() {
 
 // --- Phase Sub-Components ---
 
-function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, status }) {
+function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, onHelp, status }) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
       <div className={styles.menu}>
+        <button className={styles.menuButton} onClick={onHelp}>How to Play</button>
         <span className={styles.menuLabel}>Play vs Bot</span>
         <button className={styles.menuButton} onClick={onStartBot}>Start Game</button>
         <div className={styles.menuSection}>
@@ -311,6 +313,30 @@ function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, statu
         <button className={styles.menuButton} onClick={onStats}>View Stats</button>
       </div>
       {status && <div className={styles.statusBar}>{status}</div>}
+    </div>
+  );
+}
+
+function HelpPhase({ onBack }) {
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>NODE SWEEP</h1>
+      <div className={styles.howToPlay}>
+        <p><span className={styles.howToPlayHeader}>&gt; OBJECTIVE</span><br />
+          Locate and probe the opponent&#39;s Server node (S) before they find yours.</p>
+        <p><span className={styles.howToPlayHeader}>&gt; SETUP</span><br />
+          Place 3 nodes on your grid: 1 Server (S) and 2 Decoys (D).<br />
+          Click a node to select it as the Server. Click again to remove.</p>
+        <p><span className={styles.howToPlayHeader}>&gt; GAMEPLAY</span><br />
+          Take turns probing cells on the attack grid.<br />
+          - Hit a Decoy: cell shows &#34;D&#34;<br />
+          - Miss: cell shows the Manhattan distance to the nearest surviving node<br />
+          - When a Decoy is hit, prior miss distances pointing to it are invalidated (shown as &#34;X&#34;)<br />
+          - Find the Server to win</p>
+      </div>
+      <div className={styles.menu}>
+        <button className={styles.menuButton} onClick={onBack}>Back</button>
+      </div>
     </div>
   );
 }
@@ -493,8 +519,14 @@ export default function NodeSweepClient() {
           onCreateMultiplayer={actions.createMultiplayer}
           onJoinGame={actions.goToJoin}
           onStats={actions.goToStats}
+          onHelp={actions.goToHelp}
           status={state.status}
         />
+      );
+
+    case 'help':
+      return (
+        <HelpPhase onBack={actions.goToMenu} />
       );
 
     case 'stats':
