@@ -1,16 +1,18 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './ProjectEntry.module.css';
 
 export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, linkText }) {
   const isExternal = linkText !== 'Live Project';
   const linkProps = isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+  const LinkTag = isExternal ? 'a' : Link;
 
   return (
     <div className={styles['project-container']}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <a href={projLink} {...linkProps}>
+        <LinkTag href={projLink} {...linkProps}>
           <Image src={imgSrc} className={styles['preview-img']} alt={projTitle} width={192} height={192} />
-        </a>
+        </LinkTag>
       </div>
 
       <div className={styles['description-box']}>
@@ -21,7 +23,7 @@ export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, li
         <div className={styles['description-text']} dangerouslySetInnerHTML={{ __html: descText }} />
         <br />
         <div className={styles['project-link']}>
-          <a href={projLink} {...linkProps}>&lt;{linkText}&gt;</a>
+          <LinkTag href={projLink} {...linkProps}>&lt;{linkText}&gt;</LinkTag>
         </div>
       </div>
     </div>

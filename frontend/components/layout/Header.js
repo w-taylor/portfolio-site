@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -13,15 +14,15 @@ export default function Header() {
 
   return (
     <div className={styles['header-wrapper']}>
-      <div className={styles['header-left']}><a href="/"><strong>&lt;wtaylor.xyz&gt;</strong></a></div>
+      <div className={styles['header-left']}><Link href="/"><strong>&lt;wtaylor.xyz&gt;</strong></Link></div>
       <div className={styles['header-right']}>
         <nav className={styles.nav}>
           <a href="https://github.com/w-taylor" className={styles['github-link']} target="_blank" rel="noopener noreferrer">
             <Image src="/images/github-mark.png" width={16} height={16} style={{ height: '1em', width: '1em' }} alt="GitHub" />
           </a> |
-          <a href="/#projects-header">&lt;Projects&gt;</a> |
-          <a href="/#site-info-header">&lt;Site Info&gt;</a> |
-          <a href="/#contact-header">&lt;Contact&gt;</a>
+          <Link href="/#projects-header">&lt;Projects&gt;</Link> |
+          <Link href="/#site-info-header">&lt;Site Info&gt;</Link> |
+          <Link href="/#contact-header">&lt;Contact&gt;</Link>
         </nav>
 
         <div className={styles['mobile-only']}>
@@ -35,9 +36,9 @@ export default function Header() {
             <a href="https://github.com/w-taylor" className={styles['github-link']} target="_blank" rel="noopener noreferrer" onClick={toggleMenu}>
               <Image src="/images/github-mark.png" width={16} height={16} style={{ height: '1em', width: '1em' }} alt="GitHub" />
             </a>
-            <a href="/#projects-header" onClick={toggleMenu}>&lt;Projects&gt;</a>
-            <a href="/#site-info-header" onClick={toggleMenu}>&lt;Site&nbsp;Info&gt;</a>
-            <a href="/#contact-header" onClick={toggleMenu}>&lt;Contact&gt;</a>
+            <Link href="/#projects-header" onClick={toggleMenu}>&lt;Projects&gt;</Link>
+            <Link href="/#site-info-header" onClick={toggleMenu}>&lt;Site&nbsp;Info&gt;</Link>
+            <Link href="/#contact-header" onClick={toggleMenu}>&lt;Contact&gt;</Link>
           </div>
         </div>
       </div>
