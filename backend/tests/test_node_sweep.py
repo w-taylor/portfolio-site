@@ -1,9 +1,12 @@
+import time
 import pytest
-from unittest.mock import AsyncMock, patch
 
+from unittest.mock import AsyncMock, patch
 from app.game.models import Grid, GameState
 from app.game.logic import manhattan_distance, nearest_unrevealed_distance, process_probe, validate_placement, get_invalidated_cells
 from app.game.bot import NodeSweepBot
+from app.main import app
+from tests.conftest import noop_lifespan
 
 
 # --- Pure logic tests ---
@@ -149,44 +152,24 @@ def mock_pool_ws():
         yield pool
 
 
+@pytest.fixture
+def ws_client(mock_pool_ws):
+    from starlette.testclient import TestClient
+    app.router.lifespan_context = noop_lifespan
+    yield TestClient(app)
+
+
 class TestWebSocket:
-    @pytest.mark.anyio
-    async def test_create_bot_game(self, mock_pool_ws):
-        from contextlib import asynccontextmanager
-        from httpx import ASGITransport, AsyncClient
-        from app.main import app
-
-        @asynccontextmanager
-        async def noop_lifespan(app):
-            yield
-
-        app.router.lifespan_context = noop_lifespan
-
-        from starlette.testclient import TestClient
-        client = TestClient(app)
-
-        with client.websocket_connect("/ws/node-sweep") as ws:
+    def test_create_bot_game(self, ws_client):
+        with ws_client.websocket_connect("/ws/node-sweep") as ws:
             ws.send_json({"type": "create_game", "mode": "bot"})
             data = ws.receive_json()
             assert data["type"] == "game_created"
             assert data["player"] == "p1"
             assert data["game_code"] is None
 
-    @pytest.mark.anyio
-    async def test_bot_game_full_flow(self, mock_pool_ws):
-        from contextlib import asynccontextmanager
-        from app.main import app
-
-        @asynccontextmanager
-        async def noop_lifespan(app):
-            yield
-
-        app.router.lifespan_context = noop_lifespan
-
-        from starlette.testclient import TestClient
-        client = TestClient(app)
-
-        with client.websocket_connect("/ws/node-sweep") as ws:
+    def test_bot_game_full_flow(self, ws_client):
+        with ws_client.websocket_connect("/ws/node-sweep") as ws:
             # Create game
             ws.send_json({"type": "create_game", "mode": "bot"})
             data = ws.receive_json()
@@ -206,21 +189,8 @@ class TestWebSocket:
             assert data["type"] == "turn_start"
             assert data["your_turn"] is True
 
-    @pytest.mark.anyio
-    async def test_probe_invalid_before_playing(self, mock_pool_ws):
-        from contextlib import asynccontextmanager
-        from app.main import app
-
-        @asynccontextmanager
-        async def noop_lifespan(app):
-            yield
-
-        app.router.lifespan_context = noop_lifespan
-
-        from starlette.testclient import TestClient
-        client = TestClient(app)
-
-        with client.websocket_connect("/ws/node-sweep") as ws:
+    def test_probe_invalid_before_playing(self, ws_client):
+        with ws_client.websocket_connect("/ws/node-sweep") as ws:
             ws.send_json({"type": "create_game", "mode": "bot"})
             ws.receive_json()  # game_created
 
@@ -228,3 +198,163 @@ class TestWebSocket:
             ws.send_json({"type": "probe", "row": 0, "col": 0})
             data = ws.receive_json()
             assert data["type"] == "error"
+
+    def test_create_game_server_full(self, ws_client):
+        from app.routes.node_sweep import games, MAX_GAMES
+
+        # Pre-fill games dict with MAX_GAMES dummy entries
+        dummy_ids = []
+        for i in range(MAX_GAMES):
+            gid = f"dummy-{i}"
+            games[gid] = GameState(game_id=gid, mode="bot")
+            dummy_ids.append(gid)
+
+        try:
+            with ws_client.websocket_connect("/ws/node-sweep") as ws:
+                ws.send_json({"type": "create_game", "mode": "bot"})
+                data = ws.receive_json()
+                assert data["type"] == "error"
+                assert "Server is full" in data["message"]
+
+                # Connection should be closed by server
+                with pytest.raises(Exception):
+                    ws.receive_json()
+        finally:
+            for gid in dummy_ids:
+                games.pop(gid, None)
+
+    def test_join_rate_limit(self, ws_client):
+        from app.routes.node_sweep import join_failures, MAX_JOIN_FAILURES
+
+        test_hash = "test-rate-limit-hash"
+        now = time.time()
+        join_failures[test_hash] = [now - i for i in range(MAX_JOIN_FAILURES)]
+
+        try:
+            with patch("app.routes.node_sweep.hash_ip", return_value=test_hash):
+                with ws_client.websocket_connect("/ws/node-sweep") as ws:
+                    ws.send_json({
+                        "type": "join_game",
+                        "game_code": "BADCODE",
+                    })
+                    data = ws.receive_json()
+                    assert data["type"] == "error"
+                    assert "Too many failed attempts" in data["message"]
+
+                    # Connection should be closed by server
+                    with pytest.raises(Exception):
+                        ws.receive_json()
+        finally:
+            join_failures.pop(test_hash, None)
+
+    def test_bot_game_to_completion(self, ws_client, mock_pool_ws):
+        with ws_client.websocket_connect("/ws/node-sweep") as ws:
+            # Create bot game
+            ws.send_json({"type": "create_game", "mode": "bot"})
+            data = ws.receive_json()
+            assert data["type"] == "game_created"
+
+            # Place nodes
+            ws.send_json({
+                "type": "place_nodes",
+                "positions": [[0, 0], [1, 1], [2, 2]],
+                "server_index": 0,
+            })
+            data = ws.receive_json()
+            assert data["type"] == "nodes_placed"
+
+            data = ws.receive_json()
+            assert data["type"] == "turn_start"
+            assert data["your_turn"] is True
+
+            # Probe every cell until game ends
+            game_over = False
+            for row in range(6):
+                if game_over:
+                    break
+                for col in range(6):
+                    if game_over:
+                        break
+
+                    ws.send_json({"type": "probe", "row": row, "col": col})
+                    data = ws.receive_json()
+
+                    # Could be probe_result or error (already probed by overlap)
+                    if data["type"] == "error":
+                        continue
+
+                    assert data["type"] == "probe_result"
+
+                    # Check if we won
+                    if data.get("hit") and data.get("is_server"):
+                        data = ws.receive_json()
+                        assert data["type"] == "game_over"
+                        assert data["winner"] == "you"
+                        game_over = True
+                        continue
+
+                    # Bot's turn — read opponent_probed then turn_start (or game_over)
+                    data = ws.receive_json()
+                    assert data["type"] == "opponent_probed"
+
+                    if data.get("hit") and data.get("is_server"):
+                        data = ws.receive_json()
+                        assert data["type"] == "game_over"
+                        assert data["winner"] == "opponent"
+                        game_over = True
+                        continue
+
+                    data = ws.receive_json()
+                    assert data["type"] == "turn_start"
+                    assert data["your_turn"] is True
+
+            assert game_over, "Game should have ended within 36 probes"
+            mock_pool_ws.execute.assert_called_once()
+
+    def test_multiplayer_join_flow(self, ws_client):
+        with ws_client.websocket_connect("/ws/node-sweep") as ws1:
+            # Player 1 creates multiplayer game
+            ws1.send_json({"type": "create_game", "mode": "multiplayer"})
+            data = ws1.receive_json()
+            assert data["type"] == "game_created"
+            assert data["player"] == "p1"
+            game_code = data["game_code"]
+            assert game_code is not None
+
+            # Player 2 joins with the game code
+            with ws_client.websocket_connect("/ws/node-sweep") as ws2:
+                ws2.send_json({"type": "join_game", "game_code": game_code})
+
+                # P2 gets game_joined
+                data = ws2.receive_json()
+                assert data["type"] == "game_joined"
+                assert data["player"] == "p2"
+
+                # P1 gets opponent_joined
+                data = ws1.receive_json()
+                assert data["type"] == "opponent_joined"
+
+                # Both place nodes
+                ws1.send_json({
+                    "type": "place_nodes",
+                    "positions": [[0, 0], [1, 1], [2, 2]],
+                    "server_index": 0,
+                })
+                data = ws1.receive_json()
+                assert data["type"] == "nodes_placed"
+
+                ws2.send_json({
+                    "type": "place_nodes",
+                    "positions": [[3, 3], [4, 4], [5, 5]],
+                    "server_index": 0,
+                })
+                data = ws2.receive_json()
+                assert data["type"] == "nodes_placed"
+
+                # Both should receive turn_start after both placed
+                data = ws2.receive_json()
+                assert data["type"] == "turn_start"
+
+                data = ws1.receive_json()
+                assert data["type"] == "turn_start"
+                assert data["your_turn"] is True
