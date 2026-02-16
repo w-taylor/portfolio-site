@@ -35,11 +35,11 @@ export default function Home() {
 |_|   |_| \\_\\\\___/ \\___/|_____\\____| |_| |____/`}</pre></h2>
 
       <ProjectEntry
-        imgSrc="/images/port-site-preview.png"
-        projTitle="Portable Site Template"
-        descText="Template for quickly getting started with a simple SPA site. Dockerized with a Svelte frontend, Node.js API server, Postgres database, and Nginx reverse proxy. Includes a basic To-Do app as an example but intended to be used as a jumping off point."
-        projLink="https://github.com/w-taylor/portable-template"
-        linkText="Github Repo"
+        imgSrc="/images/node-sweep-preview.png"
+        projTitle="Node Sweep"
+        descText="Two-player game with real-time WebSocket communication, option for multiplayer or bot opponents, and persistent game records using React, FastAPI, and Postgres"
+        projLink="/node-sweep"
+        linkText="Live Project"
       />
 
       <ProjectEntry
@@ -64,6 +64,14 @@ export default function Home() {
         descText="An implentation of Conway's <i>Game of Life</i> cellular automata simulation using React"
         projLink="/conway"
         linkText="Live Project"
+      />
+
+      <ProjectEntry
+        imgSrc="/images/port-site-preview.png"
+        projTitle="Portable Site Template"
+        descText="Template for quickly getting started with a simple SPA site. Dockerized with a Svelte frontend, Node.js API server, Postgres database, and Nginx reverse proxy. Includes a basic To-Do app as an example but intended to be used as a jumping off point."
+        projLink="https://github.com/w-taylor/portable-template"
+        linkText="Github Repo"
       />
 
       <MainPageBreak />
