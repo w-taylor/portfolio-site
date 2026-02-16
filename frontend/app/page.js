@@ -74,12 +74,37 @@ export default function Home() {
  ___) | |  | | | |___   | || |\\  |  _|| |_| |
 |____/___|_|_| |_____| |___|_| \\_|_|   \\___/`}</pre></h2>
 
-      <p className={styles['text-blurb']}>
-        This site uses a React/Next.js frontend, FastAPI api server, Postgres database, Nginx reverse-proxy, and deployed in a Docker container. <br /><br />
-        A lot of what was used here is probably overkill for a simple site like this, it&apos;s mostly an excuse to play with these different technologies.<br /><br />
-        HTTPS is set up for this site using <a href="https://certbot.eff.org/" target="_blank" rel="noopener noreferrer">&lt;Certbot&gt;</a>, huge thanks to <a href="https://www.eff.org/" target="_blank" rel="noopener noreferrer">&lt;EFF&gt;</a> for maintaining the utility and <a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">&lt;Let&apos;s Encrypt&gt;</a> for providing the certificates.<br /><br />
-        You can find the code for this site <a href="https://github.com/w-taylor/portfolio-site" target="_blank" rel="noopener noreferrer">&lt;here&gt;</a>
+      <p className={styles['site-info-blurb']}>
+        This site is built as a full production stack to demonstrate end-to-end architecture. Source on <a href="https://github.com/w-taylor/portfolio-site" target="_blank" rel="noopener noreferrer">&lt;GitHub&gt;</a>.
       </p>
+
+      <div className={styles['arch-grid']}>
+        <div className={styles['arch-layer']}>
+          <span className={styles['arch-label']}>Reverse Proxy</span>
+          <a className={styles['arch-tech']} href="https://nginx.org/" target="_blank" rel="noopener noreferrer">Nginx</a>
+        </div>
+        <div className={styles['arch-row']}>
+          <div className={styles['arch-layer']}>
+            <span className={styles['arch-label']}>Frontend</span>
+            <a className={styles['arch-tech']} href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">Next.js / React</a>
+          </div>
+          <div className={styles['arch-layer']}>
+            <span className={styles['arch-label']}>Backend API</span>
+            <a className={styles['arch-tech']} href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener noreferrer">FastAPI</a>
+          </div>
+        </div>
+        <div className={styles['arch-layer']}>
+          <span className={styles['arch-label']}>Database</span>
+          <a className={styles['arch-tech']} href="https://www.postgresql.org/" target="_blank" rel="noopener noreferrer">PostgreSQL</a>
+        </div>
+
+        <div className={styles['arch-layer']}>
+          <span className={styles['arch-label']}>Deployment</span>
+          <a className={styles['arch-tech']} href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer">Docker Compose</a>
+        </div>
+      </div>
+
+      <p className={styles['arch-footnote']}>TLS certificates by <a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">Let&apos;s Encrypt</a> / <a href="https://certbot.eff.org/" target="_blank" rel="noopener noreferrer">Certbot</a></p>
 
       <MainPageBreak />
 
