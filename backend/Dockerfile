@@ -7,8 +7,8 @@ COPY . .
 
 # Production
 FROM base AS production
-CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000}"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000} --ws-ping-interval 30 --ws-ping-timeout 30"]
 
 # Development (hot reload)
 FROM base AS development
-CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000} --reload"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-3000} --reload --ws-ping-interval 30 --ws-ping-timeout 30"]
