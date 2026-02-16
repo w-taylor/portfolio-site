@@ -52,13 +52,17 @@ def process_probe(grid: Grid, row: int, col: int) -> Probe:
 def validate_placement(positions: list[list[int]], server_index: int, grid_size: int = 6) -> str | None:
     if len(positions) != 3:
         return "Must place exactly 3 nodes"
+    if not isinstance(server_index, int):
+        return "server_index must be an integer"
     if server_index < 0 or server_index > 2:
         return "server_index must be 0, 1, or 2"
     seen = set()
     for pos in positions:
-        if len(pos) != 2:
+        if not isinstance(pos, (list, tuple)) or len(pos) != 2:
             return "Each position must be [row, col]"
         r, c = pos
+        if not isinstance(r, int) or not isinstance(c, int):
+            return "Row and col must be integers"
         if not (0 <= r < grid_size and 0 <= c < grid_size):
             return f"Position ({r}, {c}) is out of bounds"
         if (r, c) in seen:

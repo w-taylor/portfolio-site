@@ -354,7 +354,7 @@ function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }) {
           value={joinCode}
           onChange={e => onJoinCodeChange(e.target.value.toUpperCase())}
           onKeyDown={e => e.key === 'Enter' && onJoin()}
-          maxLength={5}
+          maxLength={6}
           autoFocus
         />
         <button className={styles.menuButton} onClick={onJoin}>Connect</button>

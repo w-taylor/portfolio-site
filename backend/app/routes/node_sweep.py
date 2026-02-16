@@ -2,6 +2,7 @@ import uuid
 import random
 import string
 import asyncio
+import hashlib
 import time
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
@@ -12,6 +13,17 @@ from ..game.bot import NodeSweepBot
 from ..db import get_pool
 
 router = APIRouter()
+
+MAX_GAMES = 30
+games: dict[str, GameState] = {}
+game_codes: dict[str, str] = {}
+
+MAX_JOIN_FAILURES = 10
+JOIN_WINDOW_SECONDS = 60
+join_failures: dict[str, list[float]] = {}  # hashed IP -> list of failure timestamps
+
+WAITING_TTL = 5 * 60       # 5 minutes for games waiting for an opponent
+ACTIVE_TTL = 30 * 60       # 30 minutes for setup/playing games
 
 
 @router.get("/api/node-sweep/stats")
@@ -33,12 +45,25 @@ async def get_stats():
     }
 
 
-MAX_GAMES = 20
-games: dict[str, GameState] = {}
-game_codes: dict[str, str] = {}
+def hash_ip(ip: str) -> str:
+    return hashlib.sha256(ip.encode()).hexdigest()
 
 
-def generate_code(length: int = 5) -> str:
+def check_join_rate_limit(ip_hash: str) -> bool:
+    """Return True if the IP is rate-limited."""
+    now = time.time()
+    timestamps = join_failures.get(ip_hash, [])
+    # Prune old entries outside the window
+    timestamps = [t for t in timestamps if now - t < JOIN_WINDOW_SECONDS]
+    join_failures[ip_hash] = timestamps
+    return len(timestamps) >= MAX_JOIN_FAILURES
+
+
+def record_join_failure(ip_hash: str) -> None:
+    join_failures.setdefault(ip_hash, []).append(time.time())
+
+
+def generate_code(length: int = 6) -> str:
     return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
@@ -146,6 +171,9 @@ async def handle_message(ws: WebSocket, player: str, data: dict, state: GameStat
         if row is None or col is None:
             await send_json(ws, {"type": "error", "message": "Missing row or col"})
             return
+        if not isinstance(row, int) or not isinstance(col, int):
+            await send_json(ws, {"type": "error", "message": "Row and col must be integers"})
+            return
         if not (0 <= row < 6 and 0 <= col < 6):
             await send_json(ws, {"type": "error", "message": "Out of bounds"})
             return
@@ -194,8 +222,12 @@ async def handle_message(ws: WebSocket, player: str, data: dict, state: GameStat
 @router.websocket("/ws/node-sweep")
 async def node_sweep_ws(ws: WebSocket):
     await ws.accept()
+    if not ws.client:
+        await ws.close()
+        return
     game_id = None
     player = None
+    ip_hash = hash_ip(ws.client.host)
 
     try:
         while True:
@@ -203,6 +235,9 @@ async def node_sweep_ws(ws: WebSocket):
             msg_type = data.get("type")
 
             if msg_type == "create_game":
+                if game_id and game_id in games:
+                    await send_json(ws, {"type": "error", "message": "You already have an active game"})
+                    continue
                 if len(games) >= MAX_GAMES:
                     await send_json(ws, {"type": "error", "message": "Server is full, try again later"})
                     await ws.close()
@@ -238,8 +273,13 @@ async def node_sweep_ws(ws: WebSocket):
                     })
 
             elif msg_type == "join_game":
+                if check_join_rate_limit(ip_hash):
+                    await send_json(ws, {"type": "error", "message": "Too many failed attempts, try again later"})
+                    await ws.close()
+                    return
                 code = data.get("game_code", "").strip().upper()
                 if code not in game_codes:
+                    record_join_failure(ip_hash)
                     await send_json(ws, {"type": "error", "message": "Invalid game code"})
                     continue
 
@@ -283,10 +323,6 @@ async def node_sweep_ws(ws: WebSocket):
                     game_codes.pop(state.game_code, None)
 
 
-WAITING_TTL = 5 * 60       # 5 minutes for games waiting for an opponent
-ACTIVE_TTL = 30 * 60       # 30 minutes for setup/playing games
-
-
 async def reap_stale_games() -> None:
     now = time.time()
     stale_ids = []
@@ -311,3 +347,9 @@ async def reap_stale_games() -> None:
             except Exception:
                 pass
         print(f"Reaped stale game {gid} (phase={state.phase})")
+
+    # Prune expired join failure records
+    for ip_hash in list(join_failures):
+        join_failures[ip_hash] = [t for t in join_failures[ip_hash] if now - t < JOIN_WINDOW_SECONDS]
+        if not join_failures[ip_hash]:
+            del join_failures[ip_hash]
