@@ -15,7 +15,7 @@ export default function Home() {
 
       <div className={styles['intro-box']}>
         <div className={`${styles['intro-box-left']} ${styles['text-blurb']}`}>
-          <p>Hi, I&apos;m William, a full-stack developer based in Austin.<br /><br />I build dynamic user interfaces, robust backend systems, and efficient databases. I strive to create applications that are as intuitive for the user as they are technically sound under the hood. You can find a selection of some of my recent projects below.</p>
+          <p>Hi, I&apos;m William, a full-stack developer based in Austin.<br /><br />I like building things end-to-end, from the user interface down to the database and deployment. You can find a selection of some of my recent projects below.</p>
 
           <div style={{ display: 'flex' }}>Here&apos;s a link to my <a href="https://github.com/w-taylor" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} target="_blank" rel="noopener noreferrer">&nbsp;&lt;<Image src="/images/github-mark-white.png" width={16} height={16} style={{ height: '1em', width: '1em', verticalAlign: 'middle' }} alt="GitHub" />&thinsp;Github&gt;</a></div>
           <br />
