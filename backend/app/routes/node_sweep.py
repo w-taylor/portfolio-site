@@ -2,6 +2,7 @@ import uuid
 import random
 import string
 import asyncio
+import time
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
@@ -280,3 +281,33 @@ async def node_sweep_ws(ws: WebSocket):
                 games.pop(game_id, None)
                 if state.game_code:
                     game_codes.pop(state.game_code, None)
+
+
+WAITING_TTL = 5 * 60       # 5 minutes for games waiting for an opponent
+ACTIVE_TTL = 30 * 60       # 30 minutes for setup/playing games
+
+
+async def reap_stale_games() -> None:
+    now = time.time()
+    stale_ids = []
+
+    for gid, state in list(games.items()):
+        age = now - state.created_at
+        if state.phase == "waiting" and age > WAITING_TTL:
+            stale_ids.append(gid)
+        elif state.phase in ("setup", "playing") and age > ACTIVE_TTL:
+            stale_ids.append(gid)
+
+    for gid in stale_ids:
+        state = games.pop(gid, None)
+        if state is None:
+            continue
+        if state.game_code:
+            game_codes.pop(state.game_code, None)
+        for ws in list(state.ws_connections.values()):
+            try:
+                await send_json(ws, {"type": "game_expired"})
+                await ws.close(code=1000)
+            except Exception:
+                pass
+        print(f"Reaped stale game {gid} (phase={state.phase})")

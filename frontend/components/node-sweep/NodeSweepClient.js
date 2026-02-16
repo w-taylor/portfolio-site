@@ -113,6 +113,9 @@ function gameReducer(state, action) {
     case 'OPPONENT_DISCONNECTED':
       return { ...state, phase: 'disconnected', status: 'Opponent disconnected.' };
 
+    case 'GAME_EXPIRED':
+      return { ...state, phase: 'disconnected', status: 'Game expired due to inactivity.' };
+
     case 'GO_TO_STATS':
       return { ...state, phase: 'stats', statsLoading: true, statsError: null, stats: null };
 
@@ -188,6 +191,9 @@ function useNodeSweepGame() {
         break;
       case 'opponent_disconnected':
         dispatch({ type: 'OPPONENT_DISCONNECTED' });
+        break;
+      case 'game_expired':
+        dispatch({ type: 'GAME_EXPIRED' });
         break;
       case 'error':
         dispatch({ type: 'SET_STATUS', status: `Error: ${data.message}` });

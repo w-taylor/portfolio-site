@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass, field
 
 
@@ -46,3 +47,4 @@ class GameState:
     total_probes: int = 0
     ws_connections: dict = field(default_factory=dict)
     bot: object | None = None
+    created_at: float = field(default_factory=time.time)

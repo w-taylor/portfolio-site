@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 from .routes import pingboard, link, shorten, node_sweep
 from .routes.pingboard import run_all_checks
+from .routes.node_sweep import reap_stale_games
 from .db import get_pool, close_pool
 from contextlib import asynccontextmanager
 
@@ -12,6 +14,7 @@ scheduler = AsyncIOScheduler()
 async def lifespan(app: FastAPI):
     await get_pool()
     scheduler.add_job(run_all_checks, CronTrigger(minute=5))
+    scheduler.add_job(reap_stale_games, IntervalTrigger(minutes=5))
     scheduler.start()
     yield
     scheduler.shutdown()
