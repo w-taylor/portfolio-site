@@ -101,16 +101,17 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(6, 2.5em);
-  grid-template-rows: repeat(6, 2.5em);
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  width: calc(6 * 2.5em + 7 * 1px);
+  height: calc(6 * 2.5em + 7 * 1px);
   gap: 1px;
+  padding: 1px;
+  background-color: #1a3a1a;
   border: 1px solid #00ff41;
 }
 
 .cell {
-  width: 2.5em;
-  height: 2.5em;
-  border: 1px solid #1a3a1a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,20 +129,19 @@
 
 .cellClickable:hover {
   background-color: #1a2a1a;
-  border-color: #00ff41;
+  outline: 1px solid #00ff41;
+  outline-offset: -1px;
 }
 
 /* Your grid node states */
 .cellDecoy {
   background-color: #1a1a00;
   color: #ffaa00;
-  border-color: #554400;
 }
 
 .cellServer {
   background-color: #1a0000;
   color: #ff4444;
-  border-color: #550000;
 }
 
 .cellOpponentProbed {
@@ -162,13 +162,11 @@
 .cellHitDecoy {
   background-color: #2a1a00;
   color: #ffaa00;
-  border-color: #ffaa00;
 }
 
 .cellHitServer {
   background-color: #2a0000;
   color: #ff4444;
-  border-color: #ff4444;
   animation: pulse 1s ease-in-out infinite;
 }
 
@@ -261,13 +259,13 @@
   }
 
   .grid {
-    grid-template-columns: repeat(6, 2.2em);
-    grid-template-rows: repeat(6, 2.2em);
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    width: calc(6 * 2.2em + 7 * 1px);
+    height: calc(6 * 2.2em + 7 * 1px);
   }
 
   .cell {
-    width: 2.2em;
-    height: 2.2em;
     font-size: 0.8em;
   }
 }
