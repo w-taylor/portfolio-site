@@ -197,7 +197,7 @@ function useNodeSweepGame() {
 
   useEffect(() => {
     return () => {
-      if (wsRef.current) wsRef.current.close();
+      if (wsRef.current) wsRef.current.close(1000);
     };
   }, []);
 
@@ -255,7 +255,7 @@ function useNodeSweepGame() {
   }
 
   function newGame() {
-    if (wsRef.current) wsRef.current.close();
+    if (wsRef.current) wsRef.current.close(1000);
     dispatch({ type: 'RESET' });
   }
 
