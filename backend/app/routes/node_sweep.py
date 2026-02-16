@@ -122,101 +122,178 @@ async def handle_bot_turn(state: GameState, player_ws: WebSocket) -> None:
     await send_json(player_ws, {"type": "turn_start", "your_turn": True})
 
 
+async def handle_create_game(ws: WebSocket, data: dict, current_game_id: str | None) -> tuple[str, str] | str | None:
+    """Returns (game_id, player) on success, "close" to close connection, None to continue."""
+    if current_game_id and current_game_id in games:
+        await send_json(ws, {"type": "error", "message": "You already have an active game"})
+        return None
+    if len(games) >= MAX_GAMES:
+        await send_json(ws, {"type": "error", "message": "Server is full, try again later"})
+        return "close"
+
+    mode = data.get("mode", "bot")
+    game_id = str(uuid.uuid4())
+    state = GameState(game_id=game_id, mode=mode)
+    state.ws_connections["p1"] = ws
+    state.placed = {"p1": False, "p2": False}
+
+    if mode == "bot":
+        state.bot = NodeSweepBot()
+        state.phase = "setup"
+        games[game_id] = state
+        await send_json(ws, {
+            "type": "game_created",
+            "game_id": game_id,
+            "game_code": None,
+            "player": "p1",
+        })
+    else:
+        code = generate_code()
+        state.game_code = code
+        state.phase = "waiting"
+        games[game_id] = state
+        game_codes[code] = game_id
+        await send_json(ws, {
+            "type": "game_created",
+            "game_id": game_id,
+            "game_code": code,
+            "player": "p1",
+        })
+
+    return game_id, "p1"
+
+
+async def handle_join_game(ws: WebSocket, data: dict, ip_hash: str) -> tuple[str, str] | str | None:
+    """Returns (game_id, player) on success, "close" to close connection, None to continue."""
+    if check_join_rate_limit(ip_hash):
+        await send_json(ws, {"type": "error", "message": "Too many failed attempts, try again later"})
+        return "close"
+
+    code = data.get("game_code", "").strip().upper()
+    if code not in game_codes:
+        record_join_failure(ip_hash)
+        await send_json(ws, {"type": "error", "message": "Invalid game code"})
+        return None
+
+    game_id = game_codes[code]
+    state = games.get(game_id)
+    if not state or state.phase != "waiting":
+        await send_json(ws, {"type": "error", "message": "Game not available"})
+        return None
+
+    state.ws_connections["p2"] = ws
+    state.phase = "setup"
+    await send_json(ws, {
+        "type": "game_joined",
+        "game_id": game_id,
+        "player": "p2",
+    })
+    await send_json(state.ws_connections["p1"], {"type": "opponent_joined"})
+
+    return game_id, "p2"
+
+
+async def handle_place_nodes(ws: WebSocket, player: str, data: dict, state: GameState) -> None:
+    positions = data.get("positions", [])
+    server_index = data.get("server_index", 0)
+
+    error = validate_placement(positions, server_index)
+    if error:
+        await send_json(ws, {"type": "error", "message": error})
+        return
+
+    grid = Grid(
+        nodes=[(r, c) for r, c in positions],
+        server_index=server_index,
+    )
+    state.grids[player] = grid
+    state.placed[player] = True
+    await send_json(ws, {"type": "nodes_placed"})
+
+    if state.mode == "bot" and player == "p1":
+        bot = state.bot
+        bot_positions, bot_server = bot.place_nodes()
+        state.grids["p2"] = Grid(
+            nodes=[(r, c) for r, c in bot_positions],
+            server_index=bot_server,
+        )
+        state.placed["p2"] = True
+
+    if state.placed.get("p1") and state.placed.get("p2"):
+        state.phase = "playing"
+        state.current_turn = "p1"
+        await send_json(state.ws_connections["p1"], {"type": "turn_start", "your_turn": True})
+        if "p2" in state.ws_connections:
+            await send_json(state.ws_connections["p2"], {"type": "turn_start", "your_turn": False})
+
+
+async def handle_probe(ws: WebSocket, player: str, data: dict, state: GameState) -> None:
+    if state.phase != "playing":
+        await send_json(ws, {"type": "error", "message": "Game is not in playing phase"})
+        return
+    if state.current_turn != player:
+        await send_json(ws, {"type": "error", "message": "Not your turn"})
+        return
+
+    row = data.get("row")
+    col = data.get("col")
+    if row is None or col is None:
+        await send_json(ws, {"type": "error", "message": "Missing row or col"})
+        return
+    if not isinstance(row, int) or not isinstance(col, int):
+        await send_json(ws, {"type": "error", "message": "Row and col must be integers"})
+        return
+    if not (0 <= row < 6 and 0 <= col < 6):
+        await send_json(ws, {"type": "error", "message": "Out of bounds"})
+        return
+
+    opponent = "p2" if player == "p1" else "p1"
+    opponent_grid = state.grids.get(opponent)
+    if not opponent_grid:
+        await send_json(ws, {"type": "error", "message": "Opponent grid not ready"})
+        return
+
+    if (row, col) in opponent_grid.probed:
+        await send_json(ws, {"type": "error", "message": "Cell already probed"})
+        return
+
+    probe = process_probe(opponent_grid, row, col)
+    state.total_probes += 1
+    result = probe_to_dict(probe)
+
+    if probe.hit and not probe.is_server:
+        result["invalidated"] = get_invalidated_cells(opponent_grid, row, col)
+
+    await send_json(ws, {"type": "probe_result", **result})
+
+    if opponent in state.ws_connections:
+        await send_json(state.ws_connections[opponent], {"type": "opponent_probed", **result})
+
+    if probe.hit and probe.is_server:
+        state.winner = "you" if player == "p1" else "opponent"
+        state.phase = "finished"
+        await send_json(ws, {"type": "game_over", "winner": "you"})
+        if opponent in state.ws_connections:
+            opponent_winner = "opponent"
+            await send_json(state.ws_connections[opponent], {"type": "game_over", "winner": opponent_winner})
+        await save_finished_game(state)
+        return
+
+    if state.mode == "bot" and player == "p1":
+        await handle_bot_turn(state, ws)
+    else:
+        state.current_turn = opponent
+        await send_json(ws, {"type": "turn_start", "your_turn": False})
+        if opponent in state.ws_connections:
+            await send_json(state.ws_connections[opponent], {"type": "turn_start", "your_turn": True})
+
+
 async def handle_message(ws: WebSocket, player: str, data: dict, state: GameState) -> None:
     msg_type = data.get("type")
-
     if msg_type == "place_nodes":
-        positions = data.get("positions", [])
-        server_index = data.get("server_index", 0)
-
-        error = validate_placement(positions, server_index)
-        if error:
-            await send_json(ws, {"type": "error", "message": error})
-            return
-
-        grid = Grid(
-            nodes=[(r, c) for r, c in positions],
-            server_index=server_index,
-        )
-        state.grids[player] = grid
-        state.placed[player] = True
-        await send_json(ws, {"type": "nodes_placed"})
-
-        if state.mode == "bot" and player == "p1":
-            bot = state.bot
-            bot_positions, bot_server = bot.place_nodes()
-            state.grids["p2"] = Grid(
-                nodes=[(r, c) for r, c in bot_positions],
-                server_index=bot_server,
-            )
-            state.placed["p2"] = True
-
-        if state.placed.get("p1") and state.placed.get("p2"):
-            state.phase = "playing"
-            state.current_turn = "p1"
-            await send_json(state.ws_connections["p1"], {"type": "turn_start", "your_turn": True})
-            if "p2" in state.ws_connections:
-                await send_json(state.ws_connections["p2"], {"type": "turn_start", "your_turn": False})
-
+        await handle_place_nodes(ws, player, data, state)
     elif msg_type == "probe":
-        if state.phase != "playing":
-            await send_json(ws, {"type": "error", "message": "Game is not in playing phase"})
-            return
-        if state.current_turn != player:
-            await send_json(ws, {"type": "error", "message": "Not your turn"})
-            return
-
-        row = data.get("row")
-        col = data.get("col")
-        if row is None or col is None:
-            await send_json(ws, {"type": "error", "message": "Missing row or col"})
-            return
-        if not isinstance(row, int) or not isinstance(col, int):
-            await send_json(ws, {"type": "error", "message": "Row and col must be integers"})
-            return
-        if not (0 <= row < 6 and 0 <= col < 6):
-            await send_json(ws, {"type": "error", "message": "Out of bounds"})
-            return
-
-        opponent = "p2" if player == "p1" else "p1"
-        opponent_grid = state.grids.get(opponent)
-        if not opponent_grid:
-            await send_json(ws, {"type": "error", "message": "Opponent grid not ready"})
-            return
-
-        if (row, col) in opponent_grid.probed:
-            await send_json(ws, {"type": "error", "message": "Cell already probed"})
-            return
-
-        probe = process_probe(opponent_grid, row, col)
-        state.total_probes += 1
-        result = probe_to_dict(probe)
-
-        if probe.hit and not probe.is_server:
-            result["invalidated"] = get_invalidated_cells(opponent_grid, row, col)
-
-        await send_json(ws, {"type": "probe_result", **result})
-
-        if opponent in state.ws_connections:
-            await send_json(state.ws_connections[opponent], {"type": "opponent_probed", **result})
-
-        if probe.hit and probe.is_server:
-            state.winner = "you" if player == "p1" else "opponent"
-            state.phase = "finished"
-            await send_json(ws, {"type": "game_over", "winner": "you"})
-            if opponent in state.ws_connections:
-                opponent_winner = "opponent"
-                await send_json(state.ws_connections[opponent], {"type": "game_over", "winner": opponent_winner})
-            await save_finished_game(state)
-            return
-
-        if state.mode == "bot" and player == "p1":
-            await handle_bot_turn(state, ws)
-        else:
-            state.current_turn = opponent
-            await send_json(ws, {"type": "turn_start", "your_turn": False})
-            if opponent in state.ws_connections:
-                await send_json(state.ws_connections[opponent], {"type": "turn_start", "your_turn": True})
+        await handle_probe(ws, player, data, state)
 
 
 @router.websocket("/ws/node-sweep")
@@ -235,69 +312,20 @@ async def node_sweep_ws(ws: WebSocket):
             msg_type = data.get("type")
 
             if msg_type == "create_game":
-                if game_id and game_id in games:
-                    await send_json(ws, {"type": "error", "message": "You already have an active game"})
-                    continue
-                if len(games) >= MAX_GAMES:
-                    await send_json(ws, {"type": "error", "message": "Server is full, try again later"})
+                result = await handle_create_game(ws, data, game_id)
+                if result == "close":
                     await ws.close()
                     return
-                mode = data.get("mode", "bot")
-                game_id = str(uuid.uuid4())
-                state = GameState(game_id=game_id, mode=mode)
-                player = "p1"
-                state.ws_connections["p1"] = ws
-                state.placed = {"p1": False, "p2": False}
-
-                if mode == "bot":
-                    state.bot = NodeSweepBot()
-                    state.phase = "setup"
-                    games[game_id] = state
-                    await send_json(ws, {
-                        "type": "game_created",
-                        "game_id": game_id,
-                        "game_code": None,
-                        "player": "p1",
-                    })
-                else:
-                    code = generate_code()
-                    state.game_code = code
-                    state.phase = "waiting"
-                    games[game_id] = state
-                    game_codes[code] = game_id
-                    await send_json(ws, {
-                        "type": "game_created",
-                        "game_id": game_id,
-                        "game_code": code,
-                        "player": "p1",
-                    })
+                if result is not None:
+                    game_id, player = result
 
             elif msg_type == "join_game":
-                if check_join_rate_limit(ip_hash):
-                    await send_json(ws, {"type": "error", "message": "Too many failed attempts, try again later"})
+                result = await handle_join_game(ws, data, ip_hash)
+                if result == "close":
                     await ws.close()
                     return
-                code = data.get("game_code", "").strip().upper()
-                if code not in game_codes:
-                    record_join_failure(ip_hash)
-                    await send_json(ws, {"type": "error", "message": "Invalid game code"})
-                    continue
-
-                game_id = game_codes[code]
-                state = games.get(game_id)
-                if not state or state.phase != "waiting":
-                    await send_json(ws, {"type": "error", "message": "Game not available"})
-                    continue
-
-                player = "p2"
-                state.ws_connections["p2"] = ws
-                state.phase = "setup"
-                await send_json(ws, {
-                    "type": "game_joined",
-                    "game_id": game_id,
-                    "player": "p2",
-                })
-                await send_json(state.ws_connections["p1"], {"type": "opponent_joined"})
+                if result is not None:
+                    game_id, player = result
 
             elif game_id and game_id in games:
                 await handle_message(ws, player, data, games[game_id])
