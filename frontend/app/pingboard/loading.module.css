@@ -1,0 +1,36 @@
+.skeleton-panel {
+  margin: 1.25em 0;
+  border: solid #333 2px;
+  padding: 1em;
+  border-radius: 0.5em;
+}
+
+.skeleton-line {
+  height: 1em;
+  background: #222;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-title {
+  height: 2em;
+  width: 40%;
+  margin: 0 auto 1em;
+  background: #222;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-btn {
+  height: 2em;
+  width: 10em;
+  margin: 0 auto;
+  background: #222;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
