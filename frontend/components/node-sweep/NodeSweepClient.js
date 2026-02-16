@@ -478,6 +478,8 @@ function GamePhase({ state, actions }) {
 
 // --- Main Component ---
 
+export { gameReducer, initialState };
+
 export default function NodeSweepClient() {
   const { state, actions } = useNodeSweepGame();
 
