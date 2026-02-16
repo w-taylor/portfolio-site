@@ -9,13 +9,14 @@ function freshState(overrides = {}) {
 describe('gameReducer', () => {
   describe('simple setters', () => {
     it('RESET returns to initial state', () => {
-      const dirty = freshState({ phase: 'playing', myTurn: true, winner: 'you', placedNodes: [[0, 0]] });
+      const dirty = freshState({ phase: 'playing', myTurn: true, winner: 'you', placedNodes: [[0, 0]], nodesConfirmed: true });
       const result = gameReducer(dirty, { type: 'RESET' });
       expect(result.phase).toBe('menu');
       expect(result.myTurn).toBe(false);
       expect(result.winner).toBeNull();
       expect(result.placedNodes).toEqual([]);
       expect(result.serverIndex).toBeNull();
+      expect(result.nodesConfirmed).toBe(false);
       expect(result.myGrid.every(r => r.every(c => c === null))).toBe(true);
       expect(result.attackGrid.every(r => r.every(c => c === null))).toBe(true);
     });
@@ -75,10 +76,11 @@ describe('gameReducer', () => {
       expect(result.status).toContain('Opponent joined');
     });
 
-    it('NODES_PLACED updates status to waiting message', () => {
+    it('NODES_PLACED updates status to waiting message and sets nodesConfirmed', () => {
       const state = freshState({ phase: 'setup' });
       const result = gameReducer(state, { type: 'NODES_PLACED' });
       expect(result.status).toBe('Waiting for game to start...');
+      expect(result.nodesConfirmed).toBe(true);
     });
 
     it('TURN_START yourTurn=true sets myTurn and correct status', () => {

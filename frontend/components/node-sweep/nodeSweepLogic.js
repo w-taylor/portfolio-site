@@ -20,7 +20,7 @@ export function isValidPlacement(positions, gridSize = 6) {
   return true;
 }
 
-export function getMyGridCellState(row, col, grid, placedNodes, serverIndex, phase) {
+export function getMyGridCellState(row, col, grid, placedNodes, serverIndex, phase, nodesConfirmed = false) {
   const cellData = grid[row][col];
   const placedIdx = placedNodes.findIndex(([r, c]) => r === row && c === col);
   const isSetup = phase === 'setup';
@@ -29,7 +29,7 @@ export function getMyGridCellState(row, col, grid, placedNodes, serverIndex, pha
   const isServer = placedIdx !== -1 && placedIdx === serverIndex;
   const isDecoy = placedIdx !== -1 && placedIdx !== serverIndex;
   const isProbed = isActive && cellData && typeof cellData === 'object' && cellData.probed;
-  const isClickable = isSetup;
+  const isClickable = isSetup && !nodesConfirmed;
 
   let content = '';
   if (placedIdx !== -1) {

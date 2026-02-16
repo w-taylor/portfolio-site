@@ -2,13 +2,19 @@
 
 Uses [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
 
+## Setup
+```bash
+cd /frontend
+npm install
+```
+
 ## Running Tests
 
 ```bash
 # From frontend/
 npm test          # Watch mode (re-runs on file changes)
 npm run test:run  # Single run (CI-friendly)
-npx vitest run __tests__/Header.test.jsx  # Run a single test file
+npx vitest run __tests__/<file>.test.jsx  # Run a single test file
 ```
 
 ## Writing Tests

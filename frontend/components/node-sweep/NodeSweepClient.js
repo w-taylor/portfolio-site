@@ -37,12 +37,13 @@ const initialState = {
   stats: null,
   statsLoading: false,
   statsError: null,
+  nodesConfirmed: false,
 };
 
 function gameReducer(state, action) {
   switch (action.type) {
     case 'RESET':
-      return { ...initialState, serverIndex: null, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
+      return { ...initialState, serverIndex: null, nodesConfirmed: false, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
 
     case 'SET_PHASE':
       return { ...state, phase: action.phase };
@@ -69,7 +70,7 @@ function gameReducer(state, action) {
       return { ...state, phase: 'setup', status: 'Opponent joined! Place 3 nodes on your grid.' };
 
     case 'NODES_PLACED':
-      return { ...state, status: 'Waiting for game to start...' };
+      return { ...state, nodesConfirmed: true, status: 'Waiting for game to start...' };
 
     case 'TURN_START':
       return {
@@ -233,6 +234,7 @@ function useNodeSweepGame() {
   }
 
   function handleSetupClick(row, col) {
+    if (state.nodesConfirmed) return;
     const existingIdx = state.placedNodes.findIndex(([r, c]) => r === row && c === col);
     if (existingIdx !== -1) {
       dispatch({ type: 'REMOVE_NODE', index: existingIdx });
@@ -383,7 +385,7 @@ function GamePhase({ state, actions }) {
   const { phase, myGrid, attackGrid, placedNodes, serverIndex, myTurn, status, winner } = state;
 
   function renderMyCell(row, col) {
-    const cell = getMyGridCellState(row, col, myGrid, placedNodes, serverIndex, phase);
+    const cell = getMyGridCellState(row, col, myGrid, placedNodes, serverIndex, phase, state.nodesConfirmed);
 
     const className = buildClassName(styles.cell, {
       [styles.cellServer]: cell.isServer,
@@ -447,7 +449,7 @@ function GamePhase({ state, actions }) {
         {(phase === 'playing' || phase === 'finished') && renderGrid(renderAttackCell, 'Attack Grid')}
       </div>
 
-      {phase === 'setup' && (
+      {phase === 'setup' && !state.nodesConfirmed && (
         <div className={styles.setupControls}>
           <div className={styles.setupHint}>
             {placedNodes.length < 3
