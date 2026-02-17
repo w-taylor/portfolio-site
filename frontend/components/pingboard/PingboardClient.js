@@ -11,16 +11,10 @@ const colorMap = {
 };
 
 function formatTimestamp(utcTimestamp) {
-  try {
-    const date = new Date(utcTimestamp);
-    if (isNaN(date.getTime())) {
-      throw new Error('Invalid date string');
-    }
-    return date.toISOString().replace('T', ' ').slice(0, 16);
-  } catch (error) {
-    console.error('Error formatting timestamp:', error);
-    return "-";
-  }
+  if (!utcTimestamp) return "-";
+  const date = new Date(utcTimestamp);
+  if (isNaN(date.getTime())) return "-";
+  return date.toISOString().replace('T', ' ').slice(0, 16);
 }
 
 function relativeTime(utcTimestamp) {
