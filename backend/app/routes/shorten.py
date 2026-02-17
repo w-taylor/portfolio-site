@@ -1,5 +1,6 @@
 import random
 import string
+from typing import List
 
 from fastapi import APIRouter, Body, HTTPException
 from urllib.parse import urlparse
@@ -48,6 +49,19 @@ async def shorten_link(url: str = Body(embed=True)) -> dict[str, str]:
     
     except Exception:
         raise HTTPException(status_code=400, detail="Failed to shorten link!")
+
+@router.post("/stats")
+async def get_stats(codes: List[str] = Body(embed=True)) -> dict[str, dict]:
+    if not codes or len(codes) > 10:
+        raise HTTPException(status_code=400, detail="Provide 1-10 short codes")
+
+    pool = await get_pool()
+    rows = await pool.fetch(
+        "SELECT short_code, clicks FROM short_urls WHERE short_code = ANY($1::varchar[])",
+        codes,
+    )
+    return {row["short_code"]: {"clicks": row["clicks"]} for row in rows}
+
 
 def generate_shortcode() -> str:
     return "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
