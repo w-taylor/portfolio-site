@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import LogoGrid from '@/components/home/LogoGrid';
+import AsciiW from '@/components/home/AsciiW';
 import MainPageBreak from '@/components/home/MainPageBreak';
 import ProjectEntry from '@/components/home/ProjectEntry';
 import styles from './page.module.css';
@@ -22,7 +22,7 @@ export default function Home() {
         </div>
 
         <div className={styles['intro-box-right']}>
-          <LogoGrid />
+          <AsciiW />
         </div>
       </div>
 

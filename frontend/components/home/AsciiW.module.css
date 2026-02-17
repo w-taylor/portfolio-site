@@ -1,0 +1,14 @@
+.ascii {
+  font-family: 'Geist Mono', monospace;
+  line-height: 1;
+  color: white;
+  margin: 0;
+  user-select: none;
+  font-size: 0.45em;
+}
+
+@media (max-width: 768px) {
+  .ascii {
+    font-size: 0.25em;
+  }
+}
