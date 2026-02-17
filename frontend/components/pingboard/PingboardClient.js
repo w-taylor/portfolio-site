@@ -79,7 +79,7 @@ export default function PingboardClient({ loadedServices, loadError }) {
 
           {showAppInfo ? (
             <>
-              <br /><div className={`${styles['info-modal-title']} ${styles['flex-center']}`}>Pingboard Info</div><br />
+              <div className={`${styles['info-modal-title']} ${styles['flex-center']}`}>Pingboard Info</div>
               <div>
                 Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
                 <br /><br />
@@ -91,12 +91,29 @@ export default function PingboardClient({ loadedServices, loadError }) {
               <div className={`${styles['modal-name']} ${styles['flex-center']}`}>
                 <span className={`${styles['status-dot']} ${styles[statusColor(modalService.latest_status)]}`}></span>
                 {modalService.name}
-              </div><br />
-              <div>Uptime Percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
-              <div>Total Checks Logged: {modalService.total_checks}</div>
-              <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
-              <div>First Check (UTC): {formatTimestamp(modalService.first_check)}</div>
-              <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div>
+              </div>
+              <div className={styles['modal-metrics']}>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Uptime</span>
+                  <span className={styles['metric-value']}>{Number(modalService.uptime_percentage).toFixed(3)}%</span>
+                </div>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Total Checks</span>
+                  <span className={styles['metric-value']}>{modalService.total_checks}</span>
+                </div>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Avg Response Time</span>
+                  <span className={styles['metric-value']}>{Number(modalService.avg_response_time).toFixed(0)} ms</span>
+                </div>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>First Check (UTC)</span>
+                  <span className={styles['metric-value']}>{formatTimestamp(modalService.first_check)}</span>
+                </div>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Last Check (UTC)</span>
+                  <span className={styles['metric-value']}>{formatTimestamp(modalService.last_check)}</span>
+                </div>
+              </div>
               {modalChecks.length > 0 && (
                 <div className={styles['sparkline-container-large']}>
                   <div className={styles['sparkline-label']}>Response Times (last {modalChecks.length} checks)</div>
@@ -109,7 +126,6 @@ export default function PingboardClient({ loadedServices, loadError }) {
                   />
                 </div>
               )}
-              <br />
 
               <table className={styles['checks-table']}>
                 <thead>
@@ -141,32 +157,45 @@ export default function PingboardClient({ loadedServices, loadError }) {
         Pingboard
         <div className={`${styles['pulse-light']} ${styles.red}`}></div>
       </div>
-      <br />
-      <div className={styles['flex-center']}><button onClick={toggleAppInfoModal}>See Pingboard Info</button></div>
+      <div className={`${styles['flex-center']} ${styles['info-button']}`}>
+        <button onClick={toggleAppInfoModal}>See Pingboard Info</button>
+      </div>
 
       {loadError ? (
-        <div className={styles['load-error']} style={{ color: 'red' }}>Error getting data from server, please try again.</div>
+        <div className={styles['load-error']}>Error getting data from server, please try again.</div>
       ) : loadedServices ? (
         loadedServices.map((service) => (
           <div className={styles['pingboard-panel']} key={service.id}>
             <div className={`${styles['panel-name']} ${styles['flex-center']}`}>
               <span className={`${styles['status-dot']} ${styles[statusColor(service.latest_status)]}`}></span>
               &lt;<a href={service.base_url} rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;
-            </div><br />
-            <div className={styles['panel-desc']}>{service.description}</div><br />
-            <div>Uptime Percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
-            <div>Average Response Time: {Number(service.avg_response_time).toFixed(0)} ms</div>
-            <div>Total Checks Logged: {service.total_checks}</div>
+            </div>
+            <div className={styles['panel-desc']}>{service.description}</div>
+            <div className={styles['panel-metrics']}>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Uptime</span>
+                <span className={styles['metric-value']}>{Number(service.uptime_percentage).toFixed(3)}%</span>
+              </div>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Avg Response Time</span>
+                <span className={styles['metric-value']}>{Number(service.avg_response_time).toFixed(0)} ms</span>
+              </div>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Total Checks</span>
+                <span className={styles['metric-value']}>{service.total_checks}</span>
+              </div>
+            </div>
             {service.recent_response_times && service.recent_response_times.length > 0 && (
               <div className={styles['sparkline-container']}>
                 <div className={styles['sparkline-label']}>Response Times (last {service.recent_response_times.length} checks)</div>
                 <Sparkline data={service.recent_response_times} width={280} height={50} color="#00b300" />
               </div>
             )}
-            <br />
-            <div className={styles['flex-center']}><button onClick={() => getDetailInfo(service)}>Detail View</button></div>
+            <div className={`${styles['flex-center']} ${styles['panel-actions']}`}>
+              <button onClick={() => getDetailInfo(service)}>Detail View</button>
+            </div>
             {detailErrors[service.id] && (
-              <div style={{ color: 'red' }}>Failed to get Detail View, please try again.</div>
+              <div className={styles['detail-error']}>Failed to get Detail View, please try again.</div>
             )}
           </div>
         ))

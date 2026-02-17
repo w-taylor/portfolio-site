@@ -22,20 +22,20 @@ describe('PingboardClient', () => {
 
     it('renders pingboard service panels', () => {
         render(<PingboardClient 
-            loadedServices={[makeService(1), makeService(2, {uptime_percentage: 100, avg_response_time: 1234.9, total_checks: 30})]} 
+            loadedServices={[makeService(1), makeService(2, {uptime_percentage: 100, avg_response_time: 1234.9, total_checks: 33})]} 
             loadError={null}
         />);
 
         const panel_one = screen.getByText('Test service number 1').closest('[class*="pingboard-panel"]');
-        expect(within(panel_one).getByText('Uptime Percentage: 99.123%')).toBeInTheDocument();
-        expect(within(panel_one).getByText('Average Response Time: 200 ms')).toBeInTheDocument();
-        expect(within(panel_one).getByText('Total Checks Logged: 20')).toBeInTheDocument();
+        expect(within(panel_one).getByText('99.123%')).toBeInTheDocument();
+        expect(within(panel_one).getByText('200 ms')).toBeInTheDocument();
+        expect(within(panel_one).getByText('20')).toBeInTheDocument();
         expect(within(panel_one).getByRole('button', { name: 'Detail View' })).toBeInTheDocument()
 
         const panel_two = screen.getByText('Test service number 2').closest('[class*="pingboard-panel"]');
-        expect(within(panel_two).getByText('Uptime Percentage: 100.000%')).toBeInTheDocument();
-        expect(within(panel_two).getByText('Average Response Time: 1235 ms')).toBeInTheDocument();
-        expect(within(panel_two).getByText('Total Checks Logged: 30')).toBeInTheDocument();
+        expect(within(panel_two).getByText('100.000%')).toBeInTheDocument();
+        expect(within(panel_two).getByText('1235 ms')).toBeInTheDocument();
+        expect(within(panel_two).getByText('33')).toBeInTheDocument();
         expect(within(panel_two).getByRole('button', { name: 'Detail View' })).toBeInTheDocument()
     })
 
@@ -73,22 +73,24 @@ describe('PingboardClient', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Detail View' }));
 
         await waitFor(() => {
-            expect(screen.getByText('2025-11-13 03:00')).toBeInTheDocument();
+            expect(screen.getByText('2025-11-13 04:00')).toBeInTheDocument();
         });
 
-        const up_row = screen.getByText('2025-11-13 03:00').closest('tr');
+        const detailTable = screen.getByRole('table');
+
+        const up_row = within(detailTable).getByText('2025-11-13 03:00').closest('tr');
         expect(up_row).toHaveStyle({ color: 'rgb(0, 128, 0)' }); // Check row is green
         expect(within(up_row).getByText('up')).toBeInTheDocument();
         expect(within(up_row).getByText('200')).toBeInTheDocument();
         expect(within(up_row).getByText('150')).toBeInTheDocument();
 
-        const slow_row = screen.getByText('2025-11-13 04:00').closest('tr');
+        const slow_row = within(detailTable).getByText('2025-11-13 04:00').closest('tr');
         expect(slow_row).toHaveStyle({ color: 'rgb(255, 165, 0)' }); // Check row is orange
         expect(within(slow_row).getByText('slow')).toBeInTheDocument();
         expect(within(slow_row).getByText('200')).toBeInTheDocument();
         expect(within(slow_row).getByText('5000')).toBeInTheDocument();
 
-        const down_row = screen.getByText('2025-11-13 05:00').closest('tr');
+        const down_row = within(detailTable).getByText('2025-11-13 05:00').closest('tr');
         expect(down_row).toHaveStyle({ color: 'rgb(255, 0, 0)' }); // Check row is red
         expect(within(down_row).getByText('down')).toBeInTheDocument();
         expect(within(down_row).getByText('-')).toBeInTheDocument();
