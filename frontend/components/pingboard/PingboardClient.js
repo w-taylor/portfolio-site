@@ -23,6 +23,27 @@ function formatTimestamp(utcTimestamp) {
   }
 }
 
+function relativeTime(utcTimestamp) {
+  try {
+    const date = new Date(utcTimestamp);
+    if (isNaN(date.getTime())) return "";
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+    if (seconds < 60) return "just now";
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days}d ago`;
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months}mo ago`;
+    const years = Math.floor(months / 12);
+    return `${years}y ago`;
+  } catch {
+    return "";
+  }
+}
+
 function statusColor(checkStatus) {
   if (checkStatus in colorMap) {
     return colorMap[checkStatus];
@@ -107,11 +128,17 @@ export default function PingboardClient({ loadedServices, loadError }) {
                 </div>
                 <div className={styles.metric}>
                   <span className={styles['metric-label']}>First Check (UTC)</span>
-                  <span className={styles['metric-value']}>{formatTimestamp(modalService.first_check)}</span>
+                  <span className={styles['metric-value']}>
+                    {formatTimestamp(modalService.first_check)}
+                    <span className={styles['relative-time']}>({relativeTime(modalService.first_check)})</span>
+                  </span>
                 </div>
                 <div className={styles.metric}>
                   <span className={styles['metric-label']}>Last Check (UTC)</span>
-                  <span className={styles['metric-value']}>{formatTimestamp(modalService.last_check)}</span>
+                  <span className={styles['metric-value']}>
+                    {formatTimestamp(modalService.last_check)}
+                    <span className={styles['relative-time']}>({relativeTime(modalService.last_check)})</span>
+                  </span>
                 </div>
               </div>
               {modalChecks.length > 0 && (
@@ -183,6 +210,12 @@ export default function PingboardClient({ loadedServices, loadError }) {
               <div className={styles.metric}>
                 <span className={styles['metric-label']}>Total Checks</span>
                 <span className={styles['metric-value']}>{service.total_checks}</span>
+              </div>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Last Check</span>
+                <span className={styles['metric-value']}>
+                  {relativeTime(service.last_check)}
+                </span>
               </div>
             </div>
             {service.recent_response_times && service.recent_response_times.length > 0 && (
