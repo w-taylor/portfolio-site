@@ -153,7 +153,7 @@ export default function ShortcutClient() {
               const count = clickCounts[code]?.clicks;
               return (
                 <div className={styles['link-card']} key={link.shortUrl}>
-                  <div className={styles['link-card-header']}>
+                  <div className={styles['link-card-left']}>
                     <a
                       href={link.shortUrl}
                       target="_blank"
@@ -162,24 +162,26 @@ export default function ShortcutClient() {
                     >
                       /link/{code}
                     </a>
+                    <div className={styles['original-url']} title={link.originalUrl}>
+                      {link.originalUrl}
+                    </div>
+                    <span className={styles['link-meta']}>
+                      {new Date(link.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className={styles['link-card-right']}>
                     {count != null && (
                       <span className={styles['click-badge']}>
                         {count} {count === 1 ? 'click' : 'clicks'}
                       </span>
                     )}
+                    <button
+                      className={`${styles['copy-btn']} ${copiedUrl === link.shortUrl ? styles['copy-btn-copied'] : ''}`}
+                      onClick={() => copyToClipboard(link.shortUrl)}
+                    >
+                      {copiedUrl === link.shortUrl ? 'Copied!' : 'Copy'}
+                    </button>
                   </div>
-                  <div className={styles['original-url']} title={link.originalUrl}>
-                    {link.originalUrl}
-                  </div>
-                  <div className={styles['link-meta']}>
-                    {new Date(link.createdAt).toLocaleDateString()}
-                  </div>
-                  <button
-                    className={`${styles['copy-btn']} ${copiedUrl === link.shortUrl ? styles['copy-btn-copied'] : ''}`}
-                    onClick={() => copyToClipboard(link.shortUrl)}
-                  >
-                    {copiedUrl === link.shortUrl ? 'Copied!' : 'Copy'}
-                  </button>
                 </div>
               );
             })}
