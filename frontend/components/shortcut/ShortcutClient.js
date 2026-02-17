@@ -12,6 +12,13 @@ export default function ShortcutClient() {
   const [recentLinks, setRecentLinks] = useState([]);
   const [clickCounts, setClickCounts] = useState({});
   const [baseUrl, setBaseUrl] = useState("");
+  const [copiedUrl, setCopiedUrl] = useState("");
+
+  function copyToClipboard(url) {
+    navigator.clipboard.writeText(url);
+    setCopiedUrl(url);
+    setTimeout(() => setCopiedUrl(prev => prev === url ? "" : prev), 1500);
+  }
 
   useEffect(() => {
     setBaseUrl(`${window.location.origin}/link/`);
@@ -127,6 +134,12 @@ export default function ShortcutClient() {
               >
                 {shortUrl}
               </a>
+              <button
+                className={`${styles['copy-btn']} ${copiedUrl === shortUrl ? styles['copy-btn-copied'] : ''}`}
+                onClick={() => copyToClipboard(shortUrl)}
+              >
+                {copiedUrl === shortUrl ? 'Copied!' : 'Copy'}
+              </button>
             </div>
           )}
         </div>
@@ -161,6 +174,12 @@ export default function ShortcutClient() {
                   <div className={styles['link-meta']}>
                     {new Date(link.createdAt).toLocaleDateString()}
                   </div>
+                  <button
+                    className={`${styles['copy-btn']} ${copiedUrl === link.shortUrl ? styles['copy-btn-copied'] : ''}`}
+                    onClick={() => copyToClipboard(link.shortUrl)}
+                  >
+                    {copiedUrl === link.shortUrl ? 'Copied!' : 'Copy'}
+                  </button>
                 </div>
               );
             })}
