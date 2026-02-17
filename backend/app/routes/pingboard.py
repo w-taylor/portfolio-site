@@ -19,7 +19,15 @@ async def get_services() -> list[dict]:
                 AVG(CASE WHEN NOT sc.status = 'down' THEN 1 ELSE 0 END) * 100 as uptime_percentage,
                 AVG(sc.response_time) as avg_response_time,
                 MIN(sc.checked_at) as first_check,
-                MAX(sc.checked_at) as last_check
+                MAX(sc.checked_at) as last_check,
+                (SELECT status FROM service_checks
+                 WHERE service_id = ms.id
+                 ORDER BY checked_at DESC LIMIT 1) as latest_status,
+                (SELECT array_agg(rt ORDER BY ca)
+                 FROM (SELECT response_time as rt, checked_at as ca
+                       FROM service_checks
+                       WHERE service_id = ms.id AND status != 'down'
+                       ORDER BY checked_at DESC LIMIT 24) sub) as recent_response_times
             FROM monitored_services ms
             LEFT JOIN service_checks sc ON ms.id = sc.service_id
             WHERE ms.is_active = true

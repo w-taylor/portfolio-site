@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import styles from './PingboardClient.module.css';
+import Sparkline from './Sparkline';
 
 const colorMap = {
   "up": "green",
@@ -87,12 +88,28 @@ export default function PingboardClient({ loadedServices, loadError }) {
             </>
           ) : (
             <>
-              <div className={`${styles['modal-name']} ${styles['flex-center']}`}>{modalService.name}</div><br />
+              <div className={`${styles['modal-name']} ${styles['flex-center']}`}>
+                <span className={`${styles['status-dot']} ${styles[statusColor(modalService.latest_status)]}`}></span>
+                {modalService.name}
+              </div><br />
               <div>Uptime Percentage: {Number(modalService.uptime_percentage).toFixed(3)}%</div>
               <div>Total Checks Logged: {modalService.total_checks}</div>
               <div>Average Response Time: {Number(modalService.avg_response_time).toFixed(0)} ms</div>
               <div>First Check (UTC): {formatTimestamp(modalService.first_check)}</div>
-              <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div><br />
+              <div>Last Check (UTC): {formatTimestamp(modalService.last_check)}</div>
+              {modalChecks.length > 0 && (
+                <div className={styles['sparkline-container-large']}>
+                  <div className={styles['sparkline-label']}>Response Times (last {modalChecks.length} checks)</div>
+                  <Sparkline
+                    data={[...modalChecks].reverse().map(c => c.response_time)}
+                    width={500}
+                    height={80}
+                    color="#00b300"
+                    showAxes
+                  />
+                </div>
+              )}
+              <br />
 
               <table className={styles['checks-table']}>
                 <thead>
@@ -132,11 +149,21 @@ export default function PingboardClient({ loadedServices, loadError }) {
       ) : loadedServices ? (
         loadedServices.map((service) => (
           <div className={styles['pingboard-panel']} key={service.id}>
-            <div className={`${styles['panel-name']} ${styles['flex-center']}`}>&lt;<a href={service.base_url} rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;</div><br />
+            <div className={`${styles['panel-name']} ${styles['flex-center']}`}>
+              <span className={`${styles['status-dot']} ${styles[statusColor(service.latest_status)]}`}></span>
+              &lt;<a href={service.base_url} rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;
+            </div><br />
             <div className={styles['panel-desc']}>{service.description}</div><br />
             <div>Uptime Percentage: {Number(service.uptime_percentage).toFixed(3)}%</div>
             <div>Average Response Time: {Number(service.avg_response_time).toFixed(0)} ms</div>
-            <div>Total Checks Logged: {service.total_checks}</div><br />
+            <div>Total Checks Logged: {service.total_checks}</div>
+            {service.recent_response_times && service.recent_response_times.length > 0 && (
+              <div className={styles['sparkline-container']}>
+                <div className={styles['sparkline-label']}>Response Times (last {service.recent_response_times.length} checks)</div>
+                <Sparkline data={service.recent_response_times} width={280} height={50} color="#00b300" />
+              </div>
+            )}
+            <br />
             <div className={styles['flex-center']}><button onClick={() => getDetailInfo(service)}>Detail View</button></div>
             {detailErrors[service.id] && (
               <div style={{ color: 'red' }}>Failed to get Detail View, please try again.</div>

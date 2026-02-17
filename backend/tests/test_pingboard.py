@@ -15,6 +15,8 @@ async def test_get_services(client, mock_pool):
             "avg_response_time": 150.0,
             "first_check": "2025-01-01T00:00:00",
             "last_check": "2025-01-02T00:00:00",
+            "latest_status": "up",
+            "recent_response_times": [120, 130, 150, 140, 160],
         }
     ]
 
@@ -23,6 +25,8 @@ async def test_get_services(client, mock_pool):
     data = response.json()
     assert len(data) == 1
     assert data[0]["name"] == "Test Service"
+    assert data[0]["latest_status"] == "up"
+    assert data[0]["recent_response_times"] == [120, 130, 150, 140, 160]
 
 
 async def test_get_service_checks(client, mock_pool):
