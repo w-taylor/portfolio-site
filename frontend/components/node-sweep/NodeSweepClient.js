@@ -273,7 +273,10 @@ function useNodeSweepGame() {
     joinMultiplayer: (code) => { if (code.trim()) startGame('join', code.trim()); },
     setJoinCode: (val) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
     goToJoin: () => dispatch({ type: 'SET_PHASE', phase: 'joining' }),
-    goToMenu: () => { dispatch({ type: 'SET_PHASE', phase: 'menu' }); dispatch({ type: 'SET_JOIN_CODE', joinCode: '' }); dispatch({ type: 'SET_STATUS', status: '' }); },
+    goToMenu: () => {
+      if (wsRef.current) { wsRef.current.close(1000); wsRef.current = null; }
+      dispatch({ type: 'SET_PHASE', phase: 'menu' }); dispatch({ type: 'SET_JOIN_CODE', joinCode: '' }); dispatch({ type: 'SET_STATUS', status: '' });
+    },
     goToHelp: () => dispatch({ type: 'SET_PHASE', phase: 'help' }),
     goToStats: () => {
       dispatch({ type: 'GO_TO_STATS' });
