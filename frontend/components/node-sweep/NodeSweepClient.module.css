@@ -242,8 +242,26 @@
 .gameCodeValue {
   font-size: 1.8em;
   color: #00ff41;
-  margin: .75em 0;
+  margin: .75em 0 0.5em;
   text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
+.copyButton {
+  display: block;
+  margin: 0 auto 0.75em;
+  background: transparent;
+  border: 1px solid #00ff41;
+  color: #00ff41;
+  padding: 0.3em 0.6em;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.copyButton:hover {
+  background: #00ff41;
+  color: #0a0a0a;
 }
 
 /* Finished overlay */

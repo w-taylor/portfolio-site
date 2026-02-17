@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer, useRef, useEffect, useCallback } from 'react';
+import { useState, useReducer, useRef, useEffect, useCallback } from 'react';
 import styles from './NodeSweepClient.module.css';
 import {
   createEmptyGrid,
@@ -394,12 +394,24 @@ function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }) {
 }
 
 function WaitingPhase({ gameCode, onBack, status }) {
+  const [copied, setCopied] = useState(false);
+
+  function copyCode() {
+    navigator.clipboard.writeText(gameCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
       <div className={styles.gameCode}>
         <div>Share this code with your opponent:</div>
         <div className={styles.gameCodeValue}>{gameCode}</div>
+        <button className={styles.copyButton} onClick={copyCode} title="Copy to clipboard">
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
         <button className={styles.menuButton} onClick={onBack}>Back</button>
       </div>
       <div className={buildClassName(styles.statusBar, { [styles.statusWaiting]: true })}>{status}</div>
