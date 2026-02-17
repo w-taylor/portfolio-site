@@ -84,6 +84,13 @@
   font-size: 1em;
 }
 
+.contact-fallback {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85em;
+  margin-top: 1.5em;
+}
+
 @media (max-width: 768px) {
   .main-page-content {
     width: 95vw;

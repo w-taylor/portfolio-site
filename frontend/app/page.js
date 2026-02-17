@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import AsciiW from '@/components/home/AsciiW';
+import ContactForm from '@/components/home/ContactForm';
 import MainPageBreak from '@/components/home/MainPageBreak';
 import ProjectEntry from '@/components/home/ProjectEntry';
 import styles from './page.module.css';
@@ -122,7 +123,9 @@ export default function Home() {
 | |__| |_| | |\\  | | |/ ___ \\ |___  | |
  \\____\\___/|_| \\_| |_/_/   \\_\\____| |_|`}</pre></h2>
 
-      <div style={{ display: 'flex', justifyContent: 'center' }}><p className={styles['text-blurb']}>If you&apos;d like to get in touch or want to recieve a resume, you can email me at&nbsp;<a href="mailto:william@wtaylor.xyz">&lt;william@wtaylor.xyz&gt;</a></p></div>
+      <ContactForm />
+
+      <p className={styles['contact-fallback']}>Or email me directly at <a href="mailto:william@wtaylor.xyz">&lt;william@wtaylor.xyz&gt;</a></p>
 
     </div>
   );
