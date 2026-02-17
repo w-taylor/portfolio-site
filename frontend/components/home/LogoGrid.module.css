@@ -1,6 +1,0 @@
-.logo-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto auto auto;
-  max-width: 80vw;
-}
