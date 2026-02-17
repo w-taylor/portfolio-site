@@ -24,17 +24,37 @@ async def test_shorten_adds_https_when_missing(client, mock_pool):
     assert stored_url == "https://example.com"
 
 
-async def test_shorten_empty_url(client, mock_pool):
+async def test_shorten_empty_url(client):
     response = await client.post("/api/shorten", json={"url": ""})
     assert response.status_code == 400
 
 
-async def test_shorten_url_too_long(client, mock_pool):
+async def test_shorten_url_too_long(client):
     long_url = "https://example.com/" + "a" * 2000
     response = await client.post("/api/shorten", json={"url": long_url})
     assert response.status_code == 400
 
 
-async def test_shorten_invalid_url_no_tld(client, mock_pool):
+async def test_shorten_invalid_url_no_tld(client):
     response = await client.post("/api/shorten", json={"url": "notaurl"})
     assert response.status_code == 400
+
+
+async def test_stats_valid(client, mock_pool):
+    mocked_data = {'code1': 0, 'code2': 5}
+    mocked_input = [{"short_code":k, "clicks": v} for k,v in mocked_data.items()]
+    mock_pool.fetch.return_value = mocked_input
+    response = await client.post("/api/shorten/stats", json={"codes":[entry["short_code"] for entry in mocked_input]})
+    assert response.status_code == 200
+    data = response.json()
+    print(data)
+    for code in data:
+        assert code in mocked_data
+        assert data[code]['clicks'] == mocked_data[code]
+
+
+async def test_stats_too_many_codes(client):
+    twenty_codes = [f"code{i}" for i in range(20)]
+    response = await client.post("/api/shorten/stats", json={"codes": twenty_codes})
+    assert response.status_code == 400
+
