@@ -52,7 +52,7 @@ describe('ShortcutClient', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     await waitFor(() => {
-      expect(screen.getByText('Try it out!')).toBeInTheDocument();
+      expect(screen.getByText('Your link:')).toBeInTheDocument();
     });
 
     expect(global.fetch).toHaveBeenCalledWith('/api/shorten', {
