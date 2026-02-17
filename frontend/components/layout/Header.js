@@ -13,7 +13,7 @@ export default function Header() {
   }
 
   return (
-    <div className={styles['header-wrapper']}>
+    <header className={styles['header-wrapper']}>
       <div className={styles['header-left']}><Link href="/"><strong>&lt;wtaylor.xyz&gt;</strong></Link></div>
       <div className={styles['header-right']}>
         <nav className={styles.nav}>
@@ -42,6 +42,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
