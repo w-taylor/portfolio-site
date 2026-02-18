@@ -23,6 +23,9 @@ async def get_services() -> list[dict]:
                 (SELECT status FROM service_checks
                  WHERE service_id = ms.id
                  ORDER BY checked_at DESC LIMIT 1) as latest_status,
+                (SELECT checked_at FROM service_checks
+                 WHERE service_id = ms.id AND status = 'down'
+                 ORDER BY checked_at DESC LIMIT 1) as last_outage,
                 (SELECT array_agg(rt ORDER BY ca)
                  FROM (SELECT response_time as rt, checked_at as ca
                        FROM service_checks

@@ -134,6 +134,14 @@ export default function PingboardClient({ loadedServices, loadError }) {
                     <span className={styles['relative-time']}>({relativeTime(modalService.last_check)})</span>
                   </span>
                 </div>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Last Outage (UTC)</span>
+                  <span className={styles['metric-value']}>
+                    {modalService.last_outage
+                      ? <>{formatTimestamp(modalService.last_outage)}<span className={styles['relative-time']}>({relativeTime(modalService.last_outage)})</span></>
+                      : 'None detected'}
+                  </span>
+                </div>
               </div>
               {modalChecks.length > 0 && (
                 <div className={styles['sparkline-container-large']}>
@@ -209,6 +217,12 @@ export default function PingboardClient({ loadedServices, loadError }) {
                 <span className={styles['metric-label']}>Last Check</span>
                 <span className={styles['metric-value']}>
                   {relativeTime(service.last_check)}
+                </span>
+              </div>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Last Outage</span>
+                <span className={styles['metric-value']}>
+                  {service.last_outage ? relativeTime(service.last_outage) : 'None detected'}
                 </span>
               </div>
             </div>
