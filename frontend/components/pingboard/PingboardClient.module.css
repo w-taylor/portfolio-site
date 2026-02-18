@@ -225,6 +225,12 @@
   align-items: center;
 }
 
+.sparkline-container svg {
+  width: 100%;
+  max-width: 372px;
+  height: auto;
+}
+
 .sparkline-container-large svg {
   width: 100%;
   max-width: 500px;

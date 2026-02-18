@@ -214,8 +214,8 @@ export default function PingboardClient({ loadedServices, loadError }) {
             </div>
             {service.recent_response_times && service.recent_response_times.length > 0 && (
               <div className={styles['sparkline-container']}>
-                <div className={styles['sparkline-label']}>Response Times (last {service.recent_response_times.length} checks)</div>
-                <Sparkline data={service.recent_response_times} width={280} height={50} color="#00b300" />
+                <div className={styles['sparkline-label']}>Response Times (last 24 hours)</div>
+                <Sparkline data={service.recent_response_times} width={320} height={80} color="#00b300" showAxes />
               </div>
             )}
             <div className={`${styles['flex-center']} ${styles['panel-actions']}`}>

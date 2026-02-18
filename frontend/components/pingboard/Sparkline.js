@@ -12,7 +12,7 @@ export default function Sparkline({ data = [], width = 200, height = 40, color =
   const range = max - min || 1;
 
   // When showing axes, reserve space on the left for labels
-  const labelWidth = showAxes ? 45 : 0;
+  const labelWidth = showAxes ? 52 : 0;
   const totalWidth = width + labelWidth;
   const padding = 4;
   const chartHeight = height - padding * 2;
@@ -22,7 +22,7 @@ export default function Sparkline({ data = [], width = 200, height = 40, color =
       <svg width={totalWidth} height={height} viewBox={`0 0 ${totalWidth} ${height}`}>
         <circle cx={labelWidth + width / 2} cy={height / 2} r={3} fill={color} />
         {showAxes && (
-          <text x={labelWidth - 4} y={height / 2 + 4} textAnchor="end" fill="#888" fontSize={10}>
+          <text x={labelWidth - 4} y={height / 2 + 4} textAnchor="end" fill="#888" fontSize={12}>
             {Math.round(filtered[0])}ms
           </text>
         )}
@@ -59,15 +59,15 @@ export default function Sparkline({ data = [], width = 200, height = 40, color =
             strokeDasharray="4 3"
           />
           {/* Max label */}
-          <text x={labelWidth - 4} y={padding + 4} textAnchor="end" fill="#888" fontSize={10}>
+          <text x={labelWidth - 4} y={padding + 5} textAnchor="end" fill="#888" fontSize={12}>
             {Math.round(max)}ms
           </text>
           {/* Avg label */}
-          <text x={labelWidth - 4} y={avgY + 3} textAnchor="end" fill="#aaa" fontSize={9}>
+          <text x={labelWidth - 4} y={avgY + 4} textAnchor="end" fill="#aaa" fontSize={11}>
             avg
           </text>
           {/* Min label */}
-          <text x={labelWidth - 4} y={height - padding + 1} textAnchor="end" fill="#888" fontSize={10}>
+          <text x={labelWidth - 4} y={height - padding + 1} textAnchor="end" fill="#888" fontSize={12}>
             {Math.round(min)}ms
           </text>
         </>
