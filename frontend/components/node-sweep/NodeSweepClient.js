@@ -512,6 +512,7 @@ function GamePhase({ state, actions }) {
           <div className={buildClassName(styles.overlayTitle, { [styles.overlayLoss]: winner !== 'you' })}>
             {winner === 'you' ? 'ACCESS GRANTED' : 'CONNECTION TERMINATED'}
           </div>
+          <div>{winner === 'you' ? 'You Won!' : 'You Lost!'}</div>
           <button onClick={actions.newGame}>New Game</button>
         </div>
       )}
