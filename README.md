@@ -10,7 +10,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?logo=nginx&logoColor=white)
 
-![Logo Gif](images/w_logo.gif)
+![Logo Gif](docs/images/w_logo.gif)
 
 Personal portfolio site and project playground. Built as a full-stack monorepo and self-hosted on a VPS behind Nginx.
 
@@ -20,25 +20,25 @@ Personal portfolio site and project playground. Built as a full-stack monorepo a
 
 ### Node Sweep
 
-![Node Sweep](images/node-sweep.gif)
+![Node Sweep](docs/images/node-sweep.gif)
 
 Multiplayer Battleship-style game playable in real time over WebSockets. Supports a solo mode with bot opponents that play autonomously using game logic implemented in pure Python.
 
 ### Pingboard
 
-![Pingboard](images/pingboard.png)
+![Pingboard](docs/images/pingboard.png)
 
 Monitors a set of public API endpoints for uptime and response time. Runs scheduled health checks (APScheduler), stores results in PostgreSQL, and displays historical data with sparkline graphs.
 
 ### ShortCut
 
-![Shortcut](images/shortcut.png)
+![Shortcut](docs/images/shortcut.png)
 
 URL shortener. Submit a long URL, get a short redirect link backed by the FastAPI backend and PostgreSQL.
 
 ### Conway's Game of Life
 
-![Conway](images/conway.gif)
+![Conway](docs/images/conway.gif)
 
 Interactive cellular automaton simulation. Start, pause, step through generations, and adjust speed — all rendered on an HTML canvas with React.
 
