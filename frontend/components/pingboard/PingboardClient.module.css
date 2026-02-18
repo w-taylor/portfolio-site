@@ -183,32 +183,38 @@
   }
 }
 
-.status-dot {
+.status-badge {
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
+  padding: 0.15em 0.55em;
+  border-radius: 0.25em;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.status-dot.green {
-  background: #00b300;
-  box-shadow: 0 0 6px #27e727;
+.status-badge.green {
+  color: #27e727;
+  background: rgba(0, 179, 0, 0.15);
+  border: 1px solid rgba(0, 179, 0, 0.35);
 }
 
-.status-dot.orange {
-  background: #e68a00;
-  box-shadow: 0 0 6px #ffaa00;
+.status-badge.orange {
+  color: #ffaa00;
+  background: rgba(230, 138, 0, 0.15);
+  border: 1px solid rgba(230, 138, 0, 0.35);
 }
 
-.status-dot.red {
-  background: #d00303;
-  box-shadow: 0 0 6px #ff3737;
+.status-badge.red {
+  color: #ff3737;
+  background: rgba(208, 3, 3, 0.15);
+  border: 1px solid rgba(208, 3, 3, 0.35);
 }
 
-.status-dot.white {
-  background: #888;
+.status-badge.white {
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .sparkline-container {
@@ -241,6 +247,37 @@
   font-size: 0.8em;
   color: #888;
   margin-bottom: 0.25em;
+}
+
+.info-intro {
+  color: #ccc;
+  margin-bottom: 1.25em;
+}
+
+.info-section-title {
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 0.4em;
+  margin-top: 1.25em;
+}
+
+.info-list {
+  margin: 0 0 0 1.25em;
+  padding: 0;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.info-status-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  color: #ccc;
 }
 
 .info-button {

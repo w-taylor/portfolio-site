@@ -95,19 +95,45 @@ export default function PingboardClient({ loadedServices, loadError }) {
           {showAppInfo ? (
             <>
               <div className={`${styles['info-modal-title']} ${styles['flex-center']}`}>Pingboard Info</div>
-              <div>
-                Pingboard is an application that tracks the perfomance and uptime of services over time. Once per hour, the server sends a request to each service and logs in the database the response time and whether the request was successful. If a request takes longer than 2 seconds, that request is additionally noted as being slow.
-                <br /><br />
-                Below you can find a panel for each service tracked that includes a description, uptime percentage, average response time, and the total number of checks that have been logged for the service. Click the &quot;Detail View&quot; button next to any service to bring up a window that will show a table with information from the last 50 individual checks that were performed on that service.
+              <p className={styles['info-intro']}>
+                Pingboard tracks the uptime and response times of services over time.
+              </p>
+
+              <div className={styles['info-section-title']}>How it works</div>
+              <p>
+                Once per hour, the server sends a request to each monitored service and records the result.
+                Any response taking longer than 2 seconds is flagged as slow. All results are stored in the database and used to calculate uptime and response time statistics.
+              </p>
+
+              <div className={styles['info-section-title']}>What each panel shows</div>
+              <ul className={styles['info-list']}>
+                <li><strong>Last Known Status</strong> — result of the most recent check</li>
+                <li><strong>Uptime</strong> — percentage of non-down checks across all recorded history</li>
+                <li><strong>Avg Response Time</strong> — average across all successful checks</li>
+                <li><strong>Response time graph</strong> — sparkline of the last 24 hours of successful checks, with min, max, and average markers</li>
+                <li><strong>Last Outage</strong> — when the most recent down check was recorded, if any</li>
+                <li><strong>Detail View</strong> — opens a window with the last 50 individual check records and a full response time graph</li>
+              </ul>
+
+              <div className={styles['info-section-title']}>Status types</div>
+              <div className={styles['info-status-legend']}>
+                <div><span className={`${styles['status-badge']} ${styles.green}`}>up</span> — response received within 2 seconds</div>
+                <div><span className={`${styles['status-badge']} ${styles.orange}`}>slow</span> — response received, but took over 2 seconds</div>
+                <div><span className={`${styles['status-badge']} ${styles.red}`}>down</span> — request failed or timed out</div>
               </div>
             </>
           ) : (
             <>
               <div className={`${styles['modal-name']} ${styles['flex-center']}`}>
-                <span className={`${styles['status-dot']} ${styles[statusColor(modalService.latest_status)]}`}></span>
                 {modalService.name}
               </div>
               <div className={styles['modal-metrics']}>
+                <div className={styles.metric}>
+                  <span className={styles['metric-label']}>Last Known Status</span>
+                  <span className={`${styles['status-badge']} ${styles[statusColor(modalService.latest_status)]}`}>
+                    {modalService.latest_status || 'unknown'}
+                  </span>
+                </div>
                 <div className={styles.metric}>
                   <span className={styles['metric-label']}>Uptime</span>
                   <span className={styles['metric-value']}>{Number(modalService.uptime_percentage).toFixed(3)}%</span>
@@ -196,11 +222,16 @@ export default function PingboardClient({ loadedServices, loadError }) {
         loadedServices.map((service) => (
           <div className={styles['pingboard-panel']} key={service.id}>
             <div className={`${styles['panel-name']} ${styles['flex-center']}`}>
-              <span className={`${styles['status-dot']} ${styles[statusColor(service.latest_status)]}`}></span>
               &lt;<a href={service.base_url} rel="noopener noreferrer" target="_blank">{service.name}</a>&gt;
             </div>
             <div className={styles['panel-desc']}>{service.description}</div>
             <div className={styles['panel-metrics']}>
+              <div className={styles.metric}>
+                <span className={styles['metric-label']}>Last Known Status</span>
+                <span className={`${styles['status-badge']} ${styles[statusColor(service.latest_status)]}`}>
+                  {service.latest_status || 'unknown'}
+                </span>
+              </div>
               <div className={styles.metric}>
                 <span className={styles['metric-label']}>Uptime</span>
                 <span className={styles['metric-value']}>{Number(service.uptime_percentage).toFixed(3)}%</span>
