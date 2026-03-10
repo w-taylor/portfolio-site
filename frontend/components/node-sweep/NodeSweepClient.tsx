@@ -8,10 +8,11 @@ import {
   getMyGridCellState,
   getAttackGridCellState,
 } from './nodeSweepLogic';
+import type { NodeSweepGrid, Position } from './nodeSweepLogic';
 
 // --- Helpers ---
 
-function buildClassName(base, modifierMap) {
+function buildClassName(base: string, modifierMap: Record<string, boolean>) {
   let result = base;
   for (const [cls, active] of Object.entries(modifierMap)) {
     if (active) result += ` ${cls}`;
@@ -21,7 +22,54 @@ function buildClassName(base, modifierMap) {
 
 // --- Reducer ---
 
-const initialState = {
+interface GameStats {
+  total_games: number;
+  bot_winrate: number | null;
+  avg_probes_to_win: number | null;
+}
+
+interface GameState {
+  phase: string;
+  mode: string | null;
+  gameCode: string;
+  joinCode: string;
+  player: string | null;
+  myTurn: boolean;
+  status: string;
+  winner: string | null;
+  placedNodes: Position[];
+  serverIndex: number | null;
+  myGrid: NodeSweepGrid;
+  attackGrid: NodeSweepGrid;
+  stats: GameStats | null;
+  statsLoading: boolean;
+  statsError: string | null;
+  nodesConfirmed: boolean;
+}
+
+type GameAction =
+  | { type: 'RESET' }
+  | { type: 'SET_PHASE'; phase: string }
+  | { type: 'SET_STATUS'; status: string }
+  | { type: 'SET_JOIN_CODE'; joinCode: string }
+  | { type: 'SET_MODE'; mode: string }
+  | { type: 'GAME_CREATED'; player: string; gameCode?: string }
+  | { type: 'GAME_JOINED'; player: string }
+  | { type: 'OPPONENT_JOINED' }
+  | { type: 'NODES_PLACED' }
+  | { type: 'TURN_START'; yourTurn: boolean }
+  | { type: 'PROBE_RESULT'; row: number; col: number; hit: boolean; isServer?: boolean; distance?: number; invalidated?: [number, number][] }
+  | { type: 'OPPONENT_PROBED'; row: number; col: number; hit: boolean }
+  | { type: 'GAME_OVER'; winner: string }
+  | { type: 'OPPONENT_DISCONNECTED' }
+  | { type: 'GAME_EXPIRED' }
+  | { type: 'GO_TO_STATS' }
+  | { type: 'STATS_LOADED'; stats: GameStats }
+  | { type: 'STATS_ERROR'; error: string }
+  | { type: 'PLACE_NODE'; position: Position }
+  | { type: 'REMOVE_NODE'; index: number };
+
+const initialState: GameState = {
   phase: 'menu',
   mode: null,
   gameCode: '',
@@ -40,7 +88,7 @@ const initialState = {
   nodesConfirmed: false,
 };
 
-function gameReducer(state, action) {
+function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'RESET':
       return { ...initialState, serverIndex: null, nodesConfirmed: false, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid() };
@@ -89,7 +137,7 @@ function gameReducer(state, action) {
       };
       if (action.invalidated) {
         for (const [r, c] of action.invalidated) {
-          if (nextAttack[r][c] && !nextAttack[r][c].hit) {
+          if (nextAttack[r][c] && !nextAttack[r][c]!.hit) {
             nextAttack[r][c] = { ...nextAttack[r][c], invalidated: true };
           }
         }
@@ -127,7 +175,7 @@ function gameReducer(state, action) {
       return { ...state, statsLoading: false, statsError: action.error };
 
     case 'PLACE_NODE': {
-      const newNodes = [...state.placedNodes, action.position];
+      const newNodes: Position[] = [...state.placedNodes, action.position];
       const newServerIndex = state.serverIndex === null ? newNodes.length - 1 : state.serverIndex;
       return { ...state, placedNodes: newNodes, serverIndex: newServerIndex };
     }
@@ -150,11 +198,26 @@ function gameReducer(state, action) {
 
 // --- Custom Hook ---
 
-function useNodeSweepGame() {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
-  const wsRef = useRef(null);
+interface GameActions {
+  startBot: () => void;
+  createMultiplayer: () => void;
+  joinMultiplayer: (code: string) => void;
+  setJoinCode: (val: string) => void;
+  goToJoin: () => void;
+  goToMenu: () => void;
+  goToHelp: () => void;
+  goToStats: () => void;
+  handleSetupClick: (row: number, col: number) => void;
+  confirmPlacement: () => void;
+  probe: (row: number, col: number) => void;
+  newGame: () => void;
+}
 
-  const handleMessage = useCallback((event) => {
+function useNodeSweepGame(): { state: GameState; actions: GameActions } {
+  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  const handleMessage = useCallback((event: MessageEvent) => {
     const data = JSON.parse(event.data);
 
     switch (data.type) {
@@ -220,7 +283,7 @@ function useNodeSweepGame() {
     return ws;
   }
 
-  function startGame(mode, joinCodeValue) {
+  function startGame(mode: string, joinCodeValue?: string) {
     dispatch({ type: 'SET_STATUS', status: '' });
     dispatch({ type: 'SET_MODE', mode: mode === 'join' ? 'multiplayer' : mode });
     const ws = connectWs();
@@ -233,7 +296,7 @@ function useNodeSweepGame() {
     }
   }
 
-  function handleSetupClick(row, col) {
+  function handleSetupClick(row: number, col: number) {
     if (state.nodesConfirmed) return;
     const existingIdx = state.placedNodes.findIndex(([r, c]) => r === row && c === col);
     if (existingIdx !== -1) {
@@ -241,7 +304,7 @@ function useNodeSweepGame() {
       return;
     }
     if (state.placedNodes.length >= 3) return;
-    const newNodes = [...state.placedNodes, [row, col]];
+    const newNodes: Position[] = [...state.placedNodes, [row, col]];
     if (isValidPlacement(newNodes)) {
       dispatch({ type: 'PLACE_NODE', position: [row, col] });
     }
@@ -249,17 +312,17 @@ function useNodeSweepGame() {
 
   function confirmPlacement() {
     if (state.placedNodes.length !== 3 || state.serverIndex === null) return;
-    wsRef.current.send(JSON.stringify({
+    wsRef.current!.send(JSON.stringify({
       type: 'place_nodes',
       positions: state.placedNodes,
       server_index: state.serverIndex,
     }));
   }
 
-  function probe(row, col) {
+  function probe(row: number, col: number) {
     if (!state.myTurn || state.phase !== 'playing') return;
     if (state.attackGrid[row][col] !== null) return;
-    wsRef.current.send(JSON.stringify({ type: 'probe', row, col }));
+    wsRef.current!.send(JSON.stringify({ type: 'probe', row, col }));
   }
 
   function newGame() {
@@ -267,11 +330,11 @@ function useNodeSweepGame() {
     dispatch({ type: 'RESET' });
   }
 
-  const actions = {
+  const actions: GameActions = {
     startBot: () => startGame('bot'),
     createMultiplayer: () => startGame('multiplayer'),
-    joinMultiplayer: (code) => { if (code.trim()) startGame('join', code.trim()); },
-    setJoinCode: (val) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
+    joinMultiplayer: (code: string) => { if (code.trim()) startGame('join', code.trim()); },
+    setJoinCode: (val: string) => dispatch({ type: 'SET_JOIN_CODE', joinCode: val }),
     goToJoin: () => dispatch({ type: 'SET_PHASE', phase: 'joining' }),
     goToMenu: () => {
       if (wsRef.current) { wsRef.current.close(1000); wsRef.current = null; }
@@ -299,7 +362,16 @@ function useNodeSweepGame() {
 
 // --- Phase Sub-Components ---
 
-function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, onHelp, status }) {
+interface MenuPhaseProps {
+  onStartBot: () => void;
+  onCreateMultiplayer: () => void;
+  onJoinGame: () => void;
+  onStats: () => void;
+  onHelp: () => void;
+  status: string;
+}
+
+function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, onHelp, status }: MenuPhaseProps) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -320,7 +392,7 @@ function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, onHel
   );
 }
 
-function HelpPhase({ onBack }) {
+function HelpPhase({ onBack }: { onBack: () => void }) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -344,7 +416,14 @@ function HelpPhase({ onBack }) {
   );
 }
 
-function StatsPhase({ stats, loading, error, onBack }) {
+interface StatsPhaseProps {
+  stats: GameStats | null;
+  loading: boolean;
+  error: string | null;
+  onBack: () => void;
+}
+
+function StatsPhase({ stats, loading, error, onBack }: StatsPhaseProps) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -373,7 +452,15 @@ function StatsPhase({ stats, loading, error, onBack }) {
   );
 }
 
-function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }) {
+interface JoiningPhaseProps {
+  joinCode: string;
+  onJoinCodeChange: (val: string) => void;
+  onJoin: () => void;
+  onBack: () => void;
+  status: string;
+}
+
+function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }: JoiningPhaseProps) {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
@@ -396,7 +483,13 @@ function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }) {
   );
 }
 
-function WaitingPhase({ gameCode, onBack, status }) {
+interface WaitingPhaseProps {
+  gameCode: string;
+  onBack: () => void;
+  status: string;
+}
+
+function WaitingPhase({ gameCode, onBack, status }: WaitingPhaseProps) {
   const [copied, setCopied] = useState(false);
 
   function copyCode() {
@@ -422,10 +515,10 @@ function WaitingPhase({ gameCode, onBack, status }) {
   );
 }
 
-function GamePhase({ state, actions }) {
+function GamePhase({ state, actions }: { state: GameState; actions: GameActions }) {
   const { phase, myGrid, attackGrid, placedNodes, serverIndex, myTurn, status, winner } = state;
 
-  function renderMyCell(row, col) {
+  function renderMyCell(row: number, col: number) {
     const cell = getMyGridCellState(row, col, myGrid, placedNodes, serverIndex, phase, state.nodesConfirmed);
 
     const className = buildClassName(styles.cell, {
@@ -446,7 +539,7 @@ function GamePhase({ state, actions }) {
     );
   }
 
-  function renderAttackCell(row, col) {
+  function renderAttackCell(row: number, col: number) {
     const cell = getAttackGridCellState(row, col, attackGrid, myTurn, phase);
 
     const className = buildClassName(styles.cell, {
@@ -468,7 +561,7 @@ function GamePhase({ state, actions }) {
     );
   }
 
-  function renderGrid(renderCell, label) {
+  function renderGrid(renderCell: (row: number, col: number) => React.JSX.Element, label: string) {
     return (
       <div className={styles.gridSection}>
         <div className={styles.gridLabel}>{label}</div>
@@ -523,6 +616,7 @@ function GamePhase({ state, actions }) {
 // --- Main Component ---
 
 export { gameReducer, initialState };
+export type { GameState, GameAction };
 
 export default function NodeSweepClient() {
   const { state, actions } = useNodeSweepGame();

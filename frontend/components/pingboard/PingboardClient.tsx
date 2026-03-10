@@ -4,21 +4,51 @@ import { useState, useRef } from 'react';
 import styles from './PingboardClient.module.css';
 import Sparkline from './Sparkline';
 
-const colorMap = {
+interface Service {
+  id: number;
+  name: string;
+  url: string;
+  base_url: string;
+  description: string;
+  latest_status: string | null;
+  uptime_percentage: number;
+  avg_response_time: number;
+  total_checks: number;
+  first_check: string;
+  last_check: string;
+  last_outage: string | null;
+  recent_response_times: number[];
+}
+
+interface Check {
+  id: number;
+  checked_at: string;
+  status_code: number | null;
+  response_time: number;
+  status: string;
+}
+
+interface PingboardClientProps {
+  loadedServices: Service[] | null;
+  loadError: string | null;
+}
+
+const colorMap: Record<string, string> = {
   "up": "green",
   "down": "red",
   "slow": "orange"
 };
 
-function formatTimestamp(utcTimestamp) {
+function formatTimestamp(utcTimestamp: string | null): string {
   if (!utcTimestamp) return "-";
   const date = new Date(utcTimestamp);
   if (isNaN(date.getTime())) return "-";
   return date.toISOString().replace('T', ' ').slice(0, 16);
 }
 
-function relativeTime(utcTimestamp) {
+function relativeTime(utcTimestamp: string | null): string {
   try {
+    if (!utcTimestamp) return "";
     const date = new Date(utcTimestamp);
     if (isNaN(date.getTime())) return "";
     const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
@@ -38,20 +68,20 @@ function relativeTime(utcTimestamp) {
   }
 }
 
-function statusColor(checkStatus) {
-  if (checkStatus in colorMap) {
+function statusColor(checkStatus: string | null): string {
+  if (checkStatus && checkStatus in colorMap) {
     return colorMap[checkStatus];
   }
   return "white";
 }
 
-export default function PingboardClient({ loadedServices, loadError }) {
-  const [modalDisplay, setModalDisplay] = useState("none");
-  const [modalChecks, setModalChecks] = useState([]);
-  const [modalService, setModalService] = useState({});
+export default function PingboardClient({ loadedServices, loadError }: PingboardClientProps) {
+  const [modalDisplay, setModalDisplay] = useState<'none' | 'block'>('none');
+  const [modalChecks, setModalChecks] = useState<Check[]>([]);
+  const [modalService, setModalService] = useState<Service | null>(null);
   const [showAppInfo, setShowAppInfo] = useState(false);
-  const [detailErrors, setDetailErrors] = useState({});
-  const savedChecksRef = useRef({});
+  const [detailErrors, setDetailErrors] = useState<Record<number, boolean>>({});
+  const savedChecksRef = useRef<Record<number, Check[]>>({});
 
   function toggleModal() {
     if (modalDisplay === "none") {
@@ -62,7 +92,7 @@ export default function PingboardClient({ loadedServices, loadError }) {
     }
   }
 
-  async function getDetailInfo(service) {
+  async function getDetailInfo(service: Service) {
     const sid = service.id;
     setDetailErrors(prev => ({ ...prev, [sid]: false }));
 
@@ -122,7 +152,7 @@ export default function PingboardClient({ loadedServices, loadError }) {
                 <div><span className={`${styles['status-badge']} ${styles.red}`}>down</span> — request failed or timed out</div>
               </div>
             </>
-          ) : (
+          ) : modalService && (
             <>
               <div className={`${styles['modal-name']} ${styles['flex-center']}`}>
                 {modalService.name}

@@ -5,32 +5,38 @@ import styles from './ShortcutClient.module.css';
 
 const MAX_URL_LEN = 2000;
 
-export default function ShortcutClient() {
-  const [shortUrl, setShortUrl] = useState("");
-  const [longUrl, setLongUrl] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [recentLinks, setRecentLinks] = useState([]);
-  const [clickCounts, setClickCounts] = useState({});
-  const [baseUrl, setBaseUrl] = useState("");
-  const [copiedUrl, setCopiedUrl] = useState("");
+interface RecentLink {
+  shortUrl: string;
+  originalUrl: string;
+  createdAt: string;
+}
 
-  function copyToClipboard(url) {
+export default function ShortcutClient() {
+  const [shortUrl, setShortUrl] = useState('');
+  const [longUrl, setLongUrl] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [recentLinks, setRecentLinks] = useState<RecentLink[]>([]);
+  const [clickCounts, setClickCounts] = useState<Record<string, { clicks: number }>>({});
+  const [baseUrl, setBaseUrl] = useState('');
+  const [copiedUrl, setCopiedUrl] = useState('');
+
+  function copyToClipboard(url: string) {
     navigator.clipboard.writeText(url);
     setCopiedUrl(url);
-    setTimeout(() => setCopiedUrl(prev => prev === url ? "" : prev), 1500);
+    setTimeout(() => setCopiedUrl(prev => prev === url ? '' : prev), 1500);
   }
 
   useEffect(() => {
     setBaseUrl(`${window.location.origin}/link/`);
     const saved = localStorage.getItem('recentLinks');
     if (saved) {
-      const links = JSON.parse(saved);
+      const links: RecentLink[] = JSON.parse(saved);
       setRecentLinks(links);
       fetchClickCounts(links);
     }
   }, []);
 
-  async function fetchClickCounts(links) {
+  async function fetchClickCounts(links: RecentLink[]) {
     if (!links.length) return;
     const codes = links.map(l => l.shortUrl.split('/link/')[1]).filter(Boolean);
     if (!codes.length) return;
@@ -48,9 +54,9 @@ export default function ShortcutClient() {
     }
   }
 
-  async function getCode(event) {
+  async function getCode(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setErrorMsg("");
+    setErrorMsg('');
 
     if (longUrl.trim().length >= MAX_URL_LEN) {
       setErrorMsg('URL must be under 2000 characters!');
@@ -71,7 +77,7 @@ export default function ShortcutClient() {
         const newShortUrl = baseUrl + data.shortUrl;
         setShortUrl(newShortUrl);
 
-        const newLinks = [
+        const newLinks: RecentLink[] = [
           {
             shortUrl: newShortUrl,
             originalUrl: longUrl,

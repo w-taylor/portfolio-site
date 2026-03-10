@@ -18,8 +18,11 @@ const LIGHT = (() => {
   return l.map(v => v / len);
 })();
 
+type Vec3 = [number, number, number];
+type Vec2 = [number, number];
+
 function buildGeometry() {
-  const strokes = [
+  const strokes: Vec2[][] = [
     [[-15, -11], [-31, 1]],
     [[-31, -1], [-15, 11]],
     [[-12, -11], [-7, 11]],
@@ -30,8 +33,8 @@ function buildGeometry() {
     [[31, -1], [15, 11]],
   ];
 
-  const vertices = [];
-  const faces = [];
+  const vertices: Vec3[] = [];
+  const faces: number[][] = [];
 
   for (const [[x0, y0], [x1, y1]] of strokes) {
     const dx = x1 - x0;
@@ -65,7 +68,7 @@ function buildGeometry() {
   return { vertices, faces };
 }
 
-function rotateY(verts, angle) {
+function rotateY(verts: Vec3[], angle: number): Vec3[] {
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);
   return verts.map(([x, y, z]) => [
@@ -75,13 +78,13 @@ function rotateY(verts, angle) {
   ]);
 }
 
-function cross(v0, v1, v2) {
+function cross(v0: Vec3, v1: Vec3, v2: Vec3): Vec3 {
   const ax = v1[0] - v0[0], ay = v1[1] - v0[1], az = v1[2] - v0[2];
   const bx = v2[0] - v0[0], by = v2[1] - v0[1], bz = v2[2] - v0[2];
   return [ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx];
 }
 
-function fillConvexPoly(grid, pts, ch, w, h) {
+function fillConvexPoly(grid: string[][], pts: number[][], ch: string, w: number, h: number) {
   const ys = pts.map(p => p[1]);
   const minY = Math.max(0, Math.floor(Math.min(...ys)));
   const maxY = Math.min(h - 1, Math.ceil(Math.max(...ys)));
@@ -110,7 +113,7 @@ function fillConvexPoly(grid, pts, ch, w, h) {
   }
 }
 
-function rasterize(rotated, faceIndices, w, h, time) {
+function rasterize(rotated: Vec3[], faceIndices: number[][], w: number, h: number, time: number) {
   const grid = Array.from({ length: h }, () => Array(w).fill(' '));
 
   const cx = w / 2;
@@ -120,7 +123,7 @@ function rasterize(rotated, faceIndices, w, h, time) {
     return [cx + x * s, cy + y * s];
   });
 
-  const visibleFaces = [];
+  const visibleFaces: { verts: number[]; avgZ: number; ch: string }[] = [];
   for (const verts of faceIndices) {
     const n = cross(rotated[verts[0]], rotated[verts[1]], rotated[verts[2]]);
     // Backface cull: camera looks down -z, so visible faces have normal.z > 0
@@ -150,7 +153,7 @@ function rasterize(rotated, faceIndices, w, h, time) {
 
 const { vertices: BASE_VERTICES, faces: FACES } = buildGeometry();
 
-function renderFrame(angle, time) {
+function renderFrame(angle: number, time: number) {
   const rotated = rotateY(BASE_VERTICES, angle);
   return rasterize(rotated, FACES, COLS, ROWS, time);
 }
@@ -159,10 +162,10 @@ export default function AsciiW() {
   const [frame, setFrame] = useState(() => renderFrame(0, 0));
   const angleRef = useRef(0);
   const timeRef = useRef(0);
-  const lastTimeRef = useRef(null);
-  const rafRef = useRef(null);
+  const lastTimeRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
 
-  const animate = useCallback((timestamp) => {
+  const animate = useCallback((timestamp: number) => {
     if (lastTimeRef.current === null) {
       lastTimeRef.current = timestamp;
     }
@@ -180,7 +183,7 @@ export default function AsciiW() {
 
     const onVisibility = () => {
       if (document.hidden) {
-        cancelAnimationFrame(rafRef.current);
+        cancelAnimationFrame(rafRef.current!);
         lastTimeRef.current = null;
       } else {
         rafRef.current = requestAnimationFrame(animate);
@@ -189,7 +192,7 @@ export default function AsciiW() {
     document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(rafRef.current!);
       document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [animate]);

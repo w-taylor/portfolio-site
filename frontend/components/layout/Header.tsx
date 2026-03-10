@@ -6,10 +6,10 @@ import Link from 'next/link';
 import styles from './Header.module.css';
 
 export default function Header() {
-  const [menuDisplay, setMenuDisplay] = useState("none");
+  const [menuDisplay, setMenuDisplay] = useState<'none' | 'flex'>('none');
 
   function toggleMenu() {
-    setMenuDisplay(prev => prev === "none" ? "flex" : "none");
+    setMenuDisplay(prev => prev === 'none' ? 'flex' : 'none');
   }
 
   return (

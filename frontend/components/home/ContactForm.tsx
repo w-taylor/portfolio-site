@@ -6,13 +6,13 @@ import styles from './ContactForm.module.css';
 const ACCESS_KEY = '1f45d9ac-dac7-4e04-8987-9f2bac1b65b6'; // Fine to commit, basically the same as publishing my email address
 
 export default function ContactForm() {
-  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const mountedAt = useRef(Date.now());
-  const cooldownTimer = useRef(null);
+  const cooldownTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => clearTimeout(cooldownTimer.current), []);
+  useEffect(() => () => clearTimeout(cooldownTimer.current!), []);
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (Date.now() - mountedAt.current < 3000) {
@@ -21,7 +21,7 @@ export default function ContactForm() {
 
     setStatus('sending');
 
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
     formData.append('access_key', ACCESS_KEY);
 
     try {
@@ -32,7 +32,7 @@ export default function ContactForm() {
       const data = await res.json();
       if (data.success) {
         setStatus('sent');
-        e.target.reset();
+        e.currentTarget.reset();
         cooldownTimer.current = setTimeout(() => setStatus('idle'), 10000);
       } else {
         setStatus('error');

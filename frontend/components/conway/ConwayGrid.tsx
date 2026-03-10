@@ -8,9 +8,9 @@ export default function ConwayGrid() {
   const [simGrid, setSimGrid] = useState(createEmptyGrid);
   const [cycleNum, setCycleNum] = useState(0);
   const [running, setRunning] = useState(false);
-  const [startBtnTxt, setStartBtnTxt] = useState("Start");
-  const [modalDisplay, setModalDisplay] = useState("none");
-  const simLoopRef = useRef(null);
+  const [startBtnTxt, setStartBtnTxt] = useState('Start');
+  const [modalDisplay, setModalDisplay] = useState<'none' | 'block'>('none');
+  const simLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (running) {
@@ -18,7 +18,7 @@ export default function ConwayGrid() {
         setSimGrid(prev => computeNextGrid(prev));
         setCycleNum(prev => prev + 1);
       }, 500);
-      return () => clearInterval(simLoopRef.current);
+      return () => clearInterval(simLoopRef.current!);
     }
   }, [running]);
 
@@ -30,7 +30,7 @@ export default function ConwayGrid() {
     };
   }, []);
 
-  function toggleCell(rIdx, cIdx) {
+  function toggleCell(rIdx: number, cIdx: number) {
     setSimGrid(prev =>
       prev.map((row, ri) =>
         row.map((cell, ci) => (ri === rIdx && ci === cIdx ? !cell : cell))
@@ -55,15 +55,15 @@ export default function ConwayGrid() {
   function runContinuous() {
     if (running) {
       setRunning(false);
-      setStartBtnTxt("Start");
+      setStartBtnTxt('Start');
     } else {
       setRunning(true);
-      setStartBtnTxt("Stop");
+      setStartBtnTxt('Stop');
     }
   }
 
   function toggleModal() {
-    setModalDisplay(prev => prev === "none" ? "block" : "none");
+    setModalDisplay(prev => prev === 'none' ? 'block' : 'none');
   }
 
   return (

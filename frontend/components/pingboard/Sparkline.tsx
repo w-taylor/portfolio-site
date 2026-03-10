@@ -1,6 +1,14 @@
 'use client';
 
-export default function Sparkline({ data = [], width = 200, height = 40, color = '#00b300', showAxes = false }) {
+interface SparklineProps {
+  data?: number[];
+  width?: number;
+  height?: number;
+  color?: string;
+  showAxes?: boolean;
+}
+
+export default function Sparkline({ data = [], width = 200, height = 40, color = '#00b300', showAxes = false }: SparklineProps) {
   if (!data || data.length === 0) return null;
 
   const filtered = data.filter(v => v != null);
@@ -32,7 +40,7 @@ export default function Sparkline({ data = [], width = 200, height = 40, color =
 
   const stepX = (width - padding * 2) / (filtered.length - 1);
 
-  const toY = (val) => padding + chartHeight - ((val - min) / range) * chartHeight;
+  const toY = (val: number) => padding + chartHeight - ((val - min) / range) * chartHeight;
 
   const points = filtered
     .map((val, i) => {
