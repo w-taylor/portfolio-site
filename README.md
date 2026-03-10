@@ -4,6 +4,7 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)
@@ -58,7 +59,7 @@ Client → Nginx (port 80/443)
            └── /ws/node-sweep → FastAPI backend (WebSocket)
 ```
 
-- **Frontend** — Next.js 15 App Router with React 19. Server Components for data fetching; Client Components for interactive pages. CSS Modules for scoped styles.
+- **Frontend** — Next.js 15 App Router with React 19 and TypeScript. Server Components for data fetching; Client Components for interactive pages. CSS Modules for scoped styles.
 - **Backend** — FastAPI with async request handling via `asyncpg`. APScheduler runs service health checks hourly. Served by Uvicorn.
 - **Database** — PostgreSQL 15. Schema initialized via shell script on first container start; seed data populates monitored services.
 - **Reverse Proxy** — Nginx handles TLS termination, HTTP→HTTPS redirect, security headers, and WebSocket proxying.
