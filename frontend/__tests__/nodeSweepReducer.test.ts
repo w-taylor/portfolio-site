@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { gameReducer, initialState } from '@/components/node-sweep/NodeSweepClient';
+import type { GameState, GameAction } from '@/components/node-sweep/NodeSweepClient';
 import { createEmptyGrid } from '@/components/node-sweep/nodeSweepLogic';
 
-function freshState(overrides = {}) {
+function freshState(overrides: Partial<GameState> = {}): GameState {
   return { ...initialState, myGrid: createEmptyGrid(), attackGrid: createEmptyGrid(), ...overrides };
 }
 
@@ -45,27 +46,27 @@ describe('gameReducer', () => {
   describe('game lifecycle', () => {
     it('GAME_CREATED with gameCode sets phase to waiting', () => {
       const result = gameReducer(freshState(), {
-        type: 'GAME_CREATED', player: 1, gameCode: 'XYZ123',
+        type: 'GAME_CREATED', player: '1', gameCode: 'XYZ123',
       });
       expect(result.phase).toBe('waiting');
       expect(result.gameCode).toBe('XYZ123');
-      expect(result.player).toBe(1);
+      expect(result.player).toBe('1');
       expect(result.status).toBe('Waiting for opponent...');
     });
 
     it('GAME_CREATED without gameCode (bot) sets phase to setup', () => {
       const result = gameReducer(freshState(), {
-        type: 'GAME_CREATED', player: 1, gameCode: undefined,
+        type: 'GAME_CREATED', player: '1', gameCode: undefined,
       });
       expect(result.phase).toBe('setup');
-      expect(result.player).toBe(1);
+      expect(result.player).toBe('1');
       expect(result.status).toContain('Place a server node');
     });
 
     it('GAME_JOINED sets player and phase to setup', () => {
-      const result = gameReducer(freshState(), { type: 'GAME_JOINED', player: 2 });
+      const result = gameReducer(freshState(), { type: 'GAME_JOINED', player: '2' });
       expect(result.phase).toBe('setup');
-      expect(result.player).toBe(2);
+      expect(result.player).toBe('2');
       expect(result.status).toContain('Place a server node');
     });
 
@@ -138,8 +139,8 @@ describe('gameReducer', () => {
         type: 'PROBE_RESULT', row: 1, col: 1, hit: true, isServer: false, distance: 0,
         invalidated: [[0, 0]],
       });
-      expect(result.attackGrid[0][0].invalidated).toBe(true);
-      expect(result.attackGrid[1][1].hit).toBe(true);
+      expect(result.attackGrid[0][0]!.invalidated).toBe(true);
+      expect(result.attackGrid[1][1]!.hit).toBe(true);
     });
 
     it('PROBE_RESULT does not invalidate cells that were hits', () => {
@@ -150,7 +151,7 @@ describe('gameReducer', () => {
         invalidated: [[0, 0]],
       });
       // Hit cell should NOT get invalidated flag
-      expect(result.attackGrid[0][0].invalidated).toBeUndefined();
+      expect(result.attackGrid[0][0]!.invalidated).toBeUndefined();
     });
 
     it('OPPONENT_PROBED marks cell as probed on myGrid', () => {
@@ -203,7 +204,7 @@ describe('gameReducer', () => {
 
     it('STATS_LOADED sets loading false and stores stats', () => {
       const state = freshState({ phase: 'stats', statsLoading: true });
-      const stats = { total_games: 10, bot_winrate: 0.5 };
+      const stats = { total_games: 10, bot_winrate: 0.5, avg_probes_to_win: null };
       const result = gameReducer(state, { type: 'STATS_LOADED', stats });
       expect(result.statsLoading).toBe(false);
       expect(result.stats).toEqual(stats);
@@ -220,7 +221,7 @@ describe('gameReducer', () => {
   describe('default', () => {
     it('unknown action type returns state unchanged', () => {
       const state = freshState({ phase: 'playing', myTurn: true });
-      const result = gameReducer(state, { type: 'NONEXISTENT' });
+      const result = gameReducer(state, { type: 'NONEXISTENT' } as unknown as GameAction);
       expect(result).toBe(state);
     });
   });

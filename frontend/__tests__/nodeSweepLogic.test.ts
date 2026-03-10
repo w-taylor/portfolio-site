@@ -6,6 +6,7 @@ import {
   getMyGridCellState,
   getAttackGridCellState,
 } from '@/components/node-sweep/nodeSweepLogic';
+import type { Position } from '@/components/node-sweep/nodeSweepLogic';
 
 describe('createEmptyGrid', () => {
   it('creates a 6x6 grid of all null', () => {
@@ -76,7 +77,7 @@ describe('isValidPlacement', () => {
 
 describe('getMyGridCellState', () => {
   const emptyGrid = createEmptyGrid();
-  const placedNodes = [[0, 0], [1, 1], [2, 2]];
+  const placedNodes: Position[] = [[0, 0], [1, 1], [2, 2]];
 
   it('identifies server node during setup', () => {
     const cell = getMyGridCellState(0, 0, emptyGrid, placedNodes, 0, 'setup');

@@ -4,10 +4,10 @@ import ShortcutClient from '@/components/shortcut/ShortcutClient';
 
 // Mock localStorage
 const localStorageMock = (() => {
-  let store = {};
+  let store: Record<string, string> = {};
   return {
-    getItem: vi.fn((key) => store[key] ?? null),
-    setItem: vi.fn((key, value) => { store[key] = value; }),
+    getItem: vi.fn((key: string) => store[key] ?? null),
+    setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
     clear: () => { store = {}; },
   };
 })();
@@ -43,7 +43,7 @@ describe('ShortcutClient', () => {
         ok: true,
         json: () => Promise.resolve({ shortUrl: 'abc123' }),
       })
-    );
+    ) as unknown as typeof fetch;
 
     render(<ShortcutClient />);
     const input = screen.getByRole('textbox');
@@ -63,7 +63,7 @@ describe('ShortcutClient', () => {
   });
 
   it('shows error on network failure', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+    global.fetch = vi.fn(() => Promise.reject(new Error('Network error'))) as unknown as typeof fetch;
 
     render(<ShortcutClient />);
     const input = screen.getByRole('textbox');

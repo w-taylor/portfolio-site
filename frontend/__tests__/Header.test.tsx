@@ -9,10 +9,10 @@ describe('Header', () => {
     expect(mobileMenu).toHaveStyle({ display: 'none' });
 
     const hamburger = document.querySelector('[class*="hamburger"]');
-    fireEvent.click(hamburger);
+    fireEvent.click(hamburger!);
     expect(mobileMenu).toHaveStyle({ display: 'flex' });
 
-    fireEvent.click(hamburger);
+    fireEvent.click(hamburger!);
     expect(mobileMenu).toHaveStyle({ display: 'none' });
   });
 });

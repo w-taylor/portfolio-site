@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { GRID_SIZE, createEmptyGrid, checkCell, getNeighbors, computeNextGrid } from '@/components/conway/conwayLogic';
 
-function gridWith(aliveCells) {
+function gridWith(aliveCells: [number, number][]) {
   const grid = createEmptyGrid();
   for (const [r, c] of aliveCells) {
     grid[r][c] = true;
