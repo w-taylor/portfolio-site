@@ -2,10 +2,18 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './ProjectEntry.module.css';
 
-export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, linkText }) {
+interface ProjectEntryProps {
+  imgSrc: string;
+  projTitle: string;
+  descText: string;
+  projLink: string;
+  linkText: string;
+}
+
+export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, linkText }: ProjectEntryProps) {
   const isExternal = linkText !== 'Live Project';
-  const linkProps = isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
-  const LinkTag = isExternal ? 'a' : Link;
+  const linkProps = isExternal ? { target: '_blank' as const, rel: 'noopener noreferrer' } : {};
+  const LinkTag: typeof Link | 'a' = isExternal ? 'a' : Link;
 
   return (
     <div className={styles['project-container']}>
