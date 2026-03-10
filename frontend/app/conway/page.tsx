@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import ConwayGrid from '@/components/conway/ConwayGrid';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Conway's Game of Life | wtaylor.xyz",
 };
 

@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import ShortcutClient from '@/components/shortcut/ShortcutClient';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'ShortCut | wtaylor.xyz',
 };
 

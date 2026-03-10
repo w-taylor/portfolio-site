@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
@@ -10,12 +11,12 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'wtaylor.xyz',
   icons: { icon: '/favicon.png' },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={geistMono.className} suppressHydrationWarning>

@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import NodeSweepClient from '@/components/node-sweep/NodeSweepClient';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Node Sweep | wtaylor.xyz',
 };
 
