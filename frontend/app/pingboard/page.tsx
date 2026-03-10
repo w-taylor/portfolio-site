@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import PingboardClient from '@/components/pingboard/PingboardClient';
+import type { Service } from '@/components/pingboard/PingboardClient';
 
 export const metadata: Metadata = {
   title: 'Pingboard | wtaylor.xyz',
 };
 
-async function getServices(): Promise<{ loadedServices: Record<string, unknown>[]; loadError: string | null }> {
+async function getServices(): Promise<{ loadedServices: Service[]; loadError: string | null }> {
   try {
     const response = await fetch('http://backend:3000/api/pingboard/services', {
       cache: 'no-store',

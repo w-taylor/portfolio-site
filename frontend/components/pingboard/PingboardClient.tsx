@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import styles from './PingboardClient.module.css';
 import Sparkline from './Sparkline';
 
-interface Service {
+export interface Service {
   id: number;
   name: string;
   url: string;
