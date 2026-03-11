@@ -43,7 +43,10 @@ async def shorten_link(url: str = Body(embed=True)) -> dict[str, str]:
         if not found_code:
             raise ValueError("Could not generate shortcode")
         
-        await pool.execute("INSERT INTO short_urls (short_code, original_url) VALUES ($1, $2) RETURNING *", shortcode, url)
+        await pool.execute(
+            """INSERT INTO short_urls (short_code, original_url) 
+            VALUES ($1, $2) RETURNING *""", 
+            shortcode, url)
 
         return {"shortUrl": shortcode}
     
