@@ -25,9 +25,11 @@ export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, li
 
       <div className={styles['description-box']}>
         <div className={styles['project-title']}>
+          {/* biome-ignore lint/security/noDangerouslySetInnerHtml: hardcoded content, no XSS risk */}
           <b dangerouslySetInnerHTML={{ __html: projTitle }} />
         </div>
         <br />
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: hardcoded content, no XSS risk */}
         <div className={styles['description-text']} dangerouslySetInnerHTML={{ __html: descText }} />
         <br />
         <div className={styles['project-link']}>

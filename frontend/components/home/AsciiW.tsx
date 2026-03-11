@@ -198,7 +198,7 @@ export default function AsciiW() {
   }, [animate]);
 
   return (
-    <pre className={styles.ascii} aria-label="Rotating 3D ASCII art of <w>">
+    <pre className={styles.ascii} role="img" aria-label="Rotating 3D ASCII art of <w>">
       {frame}
     </pre>
   );

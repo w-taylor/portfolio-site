@@ -26,6 +26,7 @@ export default function ShortcutClient() {
     setTimeout(() => setCopiedUrl(prev => prev === url ? '' : prev), 1500);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only initialization effect
   useEffect(() => {
     setBaseUrl(`${window.location.origin}/link/`);
     const saved = localStorage.getItem('recentLinks');

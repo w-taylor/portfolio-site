@@ -1,5 +1,7 @@
 'use client';
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: Next.js error boundary convention
+// biome-ignore lint/correctness/noUnusedFunctionParameters: Next.js error boundary signature
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <div style={{ textAlign: 'center', padding: '4em 1em', minHeight: '50vh' }}>

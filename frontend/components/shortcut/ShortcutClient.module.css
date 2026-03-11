@@ -81,7 +81,7 @@
 }
 
 .result-link {
-  text-decoration: underline !important;
+  text-decoration: underline;
   text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
@@ -134,7 +134,7 @@
 .short-link {
   font-size: 1.15em;
   font-weight: bold;
-  text-decoration: underline !important;
+  text-decoration: underline;
   text-underline-offset: 3px;
 }
 
