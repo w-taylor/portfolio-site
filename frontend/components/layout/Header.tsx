@@ -26,11 +26,11 @@ export default function Header() {
         </nav>
 
         <div className={styles['mobile-only']}>
-          <label className={styles.hamburger} onClick={toggleMenu}>
+          <button type="button" className={styles.hamburger} onClick={toggleMenu} aria-label="Toggle menu">
             <span></span>
             <span></span>
             <span></span>
-          </label>
+          </button>
 
           <div className={styles['mobile-menu']} style={{ display: menuDisplay }}>
             <a href="https://github.com/w-taylor" className={styles['github-link']} target="_blank" rel="noopener noreferrer" onClick={toggleMenu}>

@@ -78,7 +78,7 @@ export default function ConwayGrid() {
       <br />
       <div className={styles['conway-modal']} style={{ display: modalDisplay }}>
         <div className={styles['modal-content']}>
-          <div onClick={toggleModal} style={{ float: 'right', fontSize: '2em', cursor: 'pointer' }}>&times;</div>
+          <button type="button" onClick={toggleModal} style={{ float: 'right', fontSize: '2em', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit' }}>&times;</button>
           <br />
           <p>
             This is a simple implementation of British mathematician John Conway&apos;s <i>Game of Life</i>.
@@ -112,7 +112,10 @@ export default function ConwayGrid() {
             {gridRow.map((gridCell, colIdx) => (
               <div
                 key={colIdx}
+                role="button"
+                tabIndex={0}
                 onClick={() => toggleCell(rowIdx, colIdx)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleCell(rowIdx, colIdx); }}
                 className={gridCell ? styles['alive-cell'] : styles['dead-cell']}
               >
                 <div className={styles.dot}></div>

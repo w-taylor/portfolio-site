@@ -532,7 +532,10 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
       <div
         key={`my-${row}-${col}`}
         className={className}
+        role={phase === 'setup' ? 'button' : undefined}
+        tabIndex={phase === 'setup' ? 0 : undefined}
         onClick={phase === 'setup' ? () => actions.handleSetupClick(row, col) : undefined}
+        onKeyDown={phase === 'setup' ? (e) => { if (e.key === 'Enter' || e.key === ' ') actions.handleSetupClick(row, col); } : undefined}
       >
         {cell.content}
       </div>
@@ -554,7 +557,10 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
       <div
         key={`atk-${row}-${col}`}
         className={className}
+        role={cell.isClickable ? 'button' : undefined}
+        tabIndex={cell.isClickable ? 0 : undefined}
         onClick={cell.isClickable ? () => actions.probe(row, col) : undefined}
+        onKeyDown={cell.isClickable ? (e) => { if (e.key === 'Enter' || e.key === ' ') actions.probe(row, col); } : undefined}
       >
         {cell.content}
       </div>

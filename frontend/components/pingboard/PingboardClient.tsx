@@ -120,7 +120,7 @@ export default function PingboardClient({ loadedServices, loadError }: Pingboard
     <div className={styles['pingboard-content']}>
       <div className={styles['pb-modal']} style={{ display: modalDisplay }}>
         <div className={styles['pb-modal-content']}>
-          <div onClick={toggleModal} style={{ float: 'right', fontSize: '2em', cursor: 'pointer' }}>&times;</div>
+          <button type="button" onClick={toggleModal} style={{ float: 'right', fontSize: '2em', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit', color: 'inherit' }}>&times;</button>
 
           {showAppInfo ? (
             <>
