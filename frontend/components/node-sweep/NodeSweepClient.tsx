@@ -529,6 +529,7 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
     });
 
     return (
+      // biome-ignore lint/a11y/noStaticElementInteractions: interactive only during setup phase
       <div
         key={`my-${row}-${col}`}
         className={className}
@@ -554,6 +555,7 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
     });
 
     return (
+      // biome-ignore lint/a11y/noStaticElementInteractions: interactive only when clickable
       <div
         key={`atk-${row}-${col}`}
         className={className}

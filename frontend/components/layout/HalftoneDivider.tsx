@@ -17,7 +17,7 @@ export default function HalftoneDivider() {
   ];
 
   const dots: { cx: number; cy: number; r: number; fill: string }[] = [];
-  rows.forEach(({ y, r, fill }, rowIndex) => {
+  rows.forEach(({ y, r, fill }) => {
     const offset = 0;
     for (let x = dotSpacing / 2 + offset; x < width + dotSpacing; x += dotSpacing) {
       dots.push({ cx: x, cy: y, r, fill });

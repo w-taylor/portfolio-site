@@ -110,6 +110,7 @@ export default function ConwayGrid() {
         {simGrid.map((gridRow, rowIdx) => (
           <div className={styles.row} key={rowIdx}>
             {gridRow.map((gridCell, colIdx) => (
+              // biome-ignore lint/a11y/useSemanticElements: grid cell needs to stay as div for layout
               <div
                 key={colIdx}
                 role="button"

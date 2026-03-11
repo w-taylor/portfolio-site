@@ -42,7 +42,7 @@ const colorMap: Record<string, string> = {
 function formatTimestamp(utcTimestamp: string | null): string {
   if (!utcTimestamp) return "-";
   const date = new Date(utcTimestamp);
-  if (isNaN(date.getTime())) return "-";
+  if (Number.isNaN(date.getTime())) return "-";
   return date.toISOString().replace('T', ' ').slice(0, 16);
 }
 
@@ -50,7 +50,7 @@ function relativeTime(utcTimestamp: string | null): string {
   try {
     if (!utcTimestamp) return "";
     const date = new Date(utcTimestamp);
-    if (isNaN(date.getTime())) return "";
+    if (Number.isNaN(date.getTime())) return "";
     const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
     if (seconds < 60) return "just now";
     const minutes = Math.floor(seconds / 60);

@@ -95,7 +95,7 @@ export default function ShortcutClient() {
         setErrorMsg(data.error || 'Failed to shorten URL - plesase try again');
         setShortUrl('');
       }
-    } catch (err) {
+    } catch {
       setErrorMsg('Network error - please try again');
       setShortUrl('');
     }
@@ -118,11 +118,11 @@ export default function ShortcutClient() {
           )}
 
           <form className={styles['shorten-form']} onSubmit={getCode}>
-            <label className={styles['label']}>
+            <label className={styles.label}>
               Enter URL
               <input
                 type="text"
-                className={styles['input']}
+                className={styles.input}
                 value={longUrl}
                 onChange={(e) => setLongUrl(e.target.value)}
               />

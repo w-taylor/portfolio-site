@@ -29,7 +29,7 @@ describe('ShortcutClient', () => {
   it('shows error for URLs that are too long', async () => {
     render(<ShortcutClient />);
     const input = screen.getByRole('textbox');
-    const longUrl = 'https://example.com/' + 'a'.repeat(2000);
+    const longUrl = `https://example.com/${'a'.repeat(2000)}`;
 
     fireEvent.change(input, { target: { value: longUrl } });
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
