@@ -1,13 +1,18 @@
 import time
+from unittest.mock import AsyncMock, patch
+
 import pytest
 
-from unittest.mock import AsyncMock, patch
-from app.game.models import Grid, GameState
-from app.game.logic import manhattan_distance, nearest_unrevealed_distance, process_probe, validate_placement, get_invalidated_cells
 from app.game.bot import NodeSweepBot
+from app.game.logic import (
+    get_invalidated_cells,
+    manhattan_distance,
+    process_probe,
+    validate_placement,
+)
+from app.game.models import GameState, Grid
 from app.main import app
 from tests.conftest import noop_lifespan
-
 
 # --- Pure logic tests ---
 
@@ -200,7 +205,7 @@ class TestWebSocket:
             assert data["type"] == "error"
 
     def test_create_game_server_full(self, ws_client):
-        from app.routes.node_sweep import games, MAX_GAMES
+        from app.routes.node_sweep import MAX_GAMES, games
 
         # Pre-fill games dict with MAX_GAMES dummy entries
         dummy_ids = []
@@ -224,7 +229,7 @@ class TestWebSocket:
                 games.pop(gid, None)
 
     def test_join_rate_limit(self, ws_client):
-        from app.routes.node_sweep import join_failures, MAX_JOIN_FAILURES
+        from app.routes.node_sweep import MAX_JOIN_FAILURES, join_failures
 
         test_hash = "test-rate-limit-hash"
         now = time.time()

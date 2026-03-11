@@ -1,5 +1,6 @@
-import asyncpg
 import os
+
+import asyncpg
 
 pool: asyncpg.Pool | None = None
 

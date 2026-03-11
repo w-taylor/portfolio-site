@@ -1,12 +1,14 @@
-from fastapi import FastAPI
+from contextlib import asynccontextmanager
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from .routes import pingboard, link, shorten, node_sweep
-from .routes.pingboard import run_all_checks
+from fastapi import FastAPI
+
+from .db import close_pool, get_pool
+from .routes import link, node_sweep, pingboard, shorten
 from .routes.node_sweep import reap_stale_games
-from .db import get_pool, close_pool
-from contextlib import asynccontextmanager
+from .routes.pingboard import run_all_checks
 
 scheduler = AsyncIOScheduler()
 

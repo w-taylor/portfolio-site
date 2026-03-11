@@ -1,16 +1,16 @@
-import uuid
-import random
-import string
 import asyncio
 import hashlib
+import random
+import string
 import time
+import uuid
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from ..game.models import GameState, Grid
-from ..game.logic import process_probe, validate_placement, get_invalidated_cells
-from ..game.bot import NodeSweepBot
 from ..db import get_pool
+from ..game.bot import NodeSweepBot
+from ..game.logic import get_invalidated_cells, process_probe, validate_placement
+from ..game.models import GameState, Grid
 
 router = APIRouter()
 

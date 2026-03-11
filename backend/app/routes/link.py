@@ -1,5 +1,6 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import RedirectResponse
+
 from ..db import get_pool
 
 router = APIRouter(

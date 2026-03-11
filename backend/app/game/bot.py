@@ -1,5 +1,4 @@
 import random
-from .models import Grid
 
 
 class NodeSweepBot:
