@@ -33,7 +33,7 @@ export default function ProjectEntry({ imgSrc, projTitle, descText, projLink, li
         <div className={styles['description-text']} dangerouslySetInnerHTML={{ __html: descText }} />
         <br />
         <div className={styles['project-link']}>
-          <LinkTag href={projLink} {...linkProps}>&lt;{linkText}&gt;</LinkTag>
+          <LinkTag href={projLink} {...linkProps}>{linkText}</LinkTag>
         </div>
       </div>
     </div>
