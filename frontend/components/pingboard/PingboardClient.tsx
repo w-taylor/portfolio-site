@@ -243,7 +243,7 @@ export default function PingboardClient({ loadedServices, loadError }: Pingboard
         <div className={`${styles['pulse-light']} ${styles.red}`}></div>
       </div>
       <div className={`${styles['flex-center']} ${styles['info-button']}`}>
-        <button onClick={toggleAppInfoModal}>See Pingboard Info</button>
+        <button type="button" onClick={toggleAppInfoModal}>See Pingboard Info</button>
       </div>
 
       {loadError ? (
@@ -294,7 +294,7 @@ export default function PingboardClient({ loadedServices, loadError }: Pingboard
               </div>
             )}
             <div className={`${styles['flex-center']} ${styles['panel-actions']}`}>
-              <button onClick={() => getDetailInfo(service)}>Detail View</button>
+              <button type="button" onClick={() => getDetailInfo(service)}>Detail View</button>
             </div>
             {detailErrors[service.id] && (
               <div className={styles['detail-error']}>Failed to get Detail View, please try again.</div>

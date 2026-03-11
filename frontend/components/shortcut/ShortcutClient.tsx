@@ -141,6 +141,7 @@ export default function ShortcutClient() {
                 {shortUrl}
               </a>
               <button
+                type="button"
                 className={`${styles['copy-btn']} ${copiedUrl === shortUrl ? styles['copy-btn-copied'] : ''}`}
                 onClick={() => copyToClipboard(shortUrl)}
               >
@@ -182,6 +183,7 @@ export default function ShortcutClient() {
                       </span>
                     )}
                     <button
+                      type="button"
                       className={`${styles['copy-btn']} ${copiedUrl === link.shortUrl ? styles['copy-btn-copied'] : ''}`}
                       onClick={() => copyToClipboard(link.shortUrl)}
                     >

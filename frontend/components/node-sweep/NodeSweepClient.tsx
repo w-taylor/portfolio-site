@@ -376,16 +376,16 @@ function MenuPhase({ onStartBot, onCreateMultiplayer, onJoinGame, onStats, onHel
     <div className={styles.container}>
       <h1 className={styles.title}>NODE SWEEP</h1>
       <div className={styles.menu}>
-        <button className={styles.menuButton} onClick={onHelp}>How to Play</button>
+        <button type="button" className={styles.menuButton} onClick={onHelp}>How to Play</button>
         <span className={styles.menuLabel}>Play vs Bot</span>
-        <button className={styles.menuButton} onClick={onStartBot}>Start Game</button>
+        <button type="button" className={styles.menuButton} onClick={onStartBot}>Start Game</button>
         <div className={styles.menuSection}>
           <span className={styles.menuLabel}>Multiplayer</span>
-          <button className={styles.menuButton} onClick={onCreateMultiplayer}>Create Game</button>
-          <button className={styles.menuButton} onClick={onJoinGame}>Join Game</button>
+          <button type="button" className={styles.menuButton} onClick={onCreateMultiplayer}>Create Game</button>
+          <button type="button" className={styles.menuButton} onClick={onJoinGame}>Join Game</button>
         </div>
         <span className={styles.menuLabel}>Global Stats</span>
-        <button className={styles.menuButton} onClick={onStats}>View Stats</button>
+        <button type="button" className={styles.menuButton} onClick={onStats}>View Stats</button>
       </div>
       {status && <div className={styles.statusBar}>{status}</div>}
     </div>
@@ -410,7 +410,7 @@ function HelpPhase({ onBack }: { onBack: () => void }) {
           - Find the Server to win</p>
       </div>
       <div className={styles.menu}>
-        <button className={styles.menuButton} onClick={onBack}>Back</button>
+        <button type="button" className={styles.menuButton} onClick={onBack}>Back</button>
       </div>
     </div>
   );
@@ -446,7 +446,7 @@ function StatsPhase({ stats, loading, error, onBack }: StatsPhaseProps) {
             </ul>
           )
         )}
-        <button className={styles.menuButton} onClick={onBack}>Back</button>
+        <button type="button" className={styles.menuButton} onClick={onBack}>Back</button>
       </div>
     </div>
   );
@@ -475,8 +475,8 @@ function JoiningPhase({ joinCode, onJoinCodeChange, onJoin, onBack, status }: Jo
           maxLength={6}
           autoFocus
         />
-        <button className={styles.menuButton} onClick={onJoin}>Connect</button>
-        <button className={styles.menuButton} onClick={onBack}>Back</button>
+        <button type="button" className={styles.menuButton} onClick={onJoin}>Connect</button>
+        <button type="button" className={styles.menuButton} onClick={onBack}>Back</button>
         {status && <div className={styles.statusBar}>{status}</div>}
       </div>
     </div>
@@ -505,10 +505,10 @@ function WaitingPhase({ gameCode, onBack, status }: WaitingPhaseProps) {
       <div className={styles.gameCode}>
         <div>Share this code with your opponent:</div>
         <div className={styles.gameCodeValue}>{gameCode}</div>
-        <button className={styles.copyButton} onClick={copyCode} title="Copy to clipboard">
+        <button type="button" className={styles.copyButton} onClick={copyCode} title="Copy to clipboard">
           {copied ? 'Copied!' : 'Copy'}
         </button>
-        <button className={styles.menuButton} onClick={onBack}>Back</button>
+        <button type="button" className={styles.menuButton} onClick={onBack}>Back</button>
       </div>
       <div className={buildClassName(styles.statusBar, { [styles.statusWaiting]: true })}>{status}</div>
     </div>
@@ -591,7 +591,7 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
               : 'Click a node to remove it.'}
           </div>
           {placedNodes.length === 3 && (
-            <button onClick={actions.confirmPlacement}>Confirm Placement</button>
+            <button type="button" onClick={actions.confirmPlacement}>Confirm Placement</button>
           )}
         </div>
       )}
@@ -606,7 +606,7 @@ function GamePhase({ state, actions }: { state: GameState; actions: GameActions 
             {winner === 'you' ? 'ACCESS GRANTED' : 'CONNECTION TERMINATED'}
           </div>
           <div>{winner === 'you' ? 'You Won!' : 'You Lost!'}</div>
-          <button onClick={actions.newGame}>New Game</button>
+          <button type="button" onClick={actions.newGame}>New Game</button>
         </div>
       )}
     </div>
@@ -674,7 +674,7 @@ export default function NodeSweepClient() {
         <div className={styles.container} style={{ textAlign: 'center' }}>
           <h1 className={styles.title}>NODE SWEEP</h1>
           <div className={styles.statusBar}>{state.status}</div>
-          <button className={styles.menuButton} onClick={actions.newGame}>Back to Menu</button>
+          <button type="button" className={styles.menuButton} onClick={actions.newGame}>Back to Menu</button>
         </div>
       );
 

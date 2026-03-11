@@ -72,7 +72,7 @@ export default function ConwayGrid() {
       <br />
 
       <div className={styles['grid-buttons']}>
-        <button className={styles['conway-btn']} onClick={toggleModal}>Instructions</button>
+        <button type="button" className={styles['conway-btn']} onClick={toggleModal}>Instructions</button>
       </div>
 
       <br />
@@ -122,9 +122,9 @@ export default function ConwayGrid() {
         ))}
       </div>
       <div className={styles['grid-buttons']}>
-        <button className={`${styles['conway-start']} ${styles['conway-btn']}`} onClick={runContinuous}>{startBtnTxt}</button>
-        <button className={`${styles['conway-step']} ${styles['conway-btn']}`} onClick={cycleOneStep}>Step 1 Cycle</button>
-        <button className={`${styles['conway-reset']} ${styles['conway-btn']}`} onClick={resetGrid}>Reset</button>
+        <button type="button" className={`${styles['conway-start']} ${styles['conway-btn']}`} onClick={runContinuous}>{startBtnTxt}</button>
+        <button type="button" className={`${styles['conway-step']} ${styles['conway-btn']}`} onClick={cycleOneStep}>Step 1 Cycle</button>
+        <button type="button" className={`${styles['conway-reset']} ${styles['conway-btn']}`} onClick={resetGrid}>Reset</button>
         <div className={`${styles['conway-counter']} ${styles['conway-btn']}`}>{cycleNum} Cycles</div>
       </div>
     </div>
